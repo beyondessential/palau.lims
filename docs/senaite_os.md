@@ -404,7 +404,7 @@ to the authorized keys file:
 ```shell
 $ nano ~/.ssh/authorized_keys
 ```
-````
+```
 # Jordi Puiggené (Naralabs)
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDIbHWNfaomvkwZCZXCeEXrgyyVFdFuimb5gzn+qHTglu6yF2Cp84YvLDAdU0hwJbK3DDzDrGOVJS5BJoUmY1r5mi6HSndSNPDK7JRMBg0ycyhDexzwwznvtGlVW7xNwbWQrRIDDgyXBzjYQhgbCH5zPIAZBIXl+HAmi7QOEvc1BHdMiiESf5ECDdEx0SHcnbgzDpTI/DMPmjao1diWX5tqHUf3s3Bb7NQ1wnE1p6k+OuqfQDiE39h5G0ITX1+F5qGppwIF+mvn+xKrueX8fkFyG1DLwNlAFcXHFqDfW+6xTQnT6puV5M+/ksFIOou9u9zFZJU3vaLWQRGvWpd6PMATaDLixNk9SYwkdYVmz+Dv2co1HrxSkhMc32668ZngX8RAbpe5Ek9Y0EOVHKMT4NtCP0XfW7ergK+uC7DMx26dWGeB4pD/YLGu0FraRSwtsl1Zf31HMv1kpFr23fPG4Y69Wop7pQfLs6rErpIbOHbK/hRI6MSuyT+ZM3njof5oSLVJZg5IH0gasgrrM7/CW9XITM0X0zvRaTleO2ZCLmRDsGmVXCeCL83g/eIzvBSDDCbyun3tRWwEyBXkcIAEZgM5/PepfRjGgSWC9qeuVJjMtKcPASTs2D7+APp+b+5SWA97DrjJxvo3NNjzx/J0LO5L49mESA/v02naMb05jbVU8w== jp@naralabs.com (buster)
 ```
