@@ -1,0 +1,122 @@
+---
+
+# Name of the SSH key to connect with source code repos
+ssh_key_filename: "github_lims"
+
+# Plone version
+plone_version: "5.2.12"
+
+# Name of the folder where SENAITE will be installed
+plone_instance_name: "senaite"
+
+# SENAITE's Site id (used by nginx for rev-proxy)
+plone_site_id: "senaite"
+
+# Default number of objects zeo clients will keep in cache
+plone_zodb_cache_size: "50000"
+
+# SENAITE Timezone
+plone_timezone: "Pacific/Palau"
+
+# SENAITE additional eggs
+plone_additional_eggs:
+  - palau.lims
+
+plone_sources:
+  - "palau.lims = git github_lims:beyondessential/palau.lims.git branch=master"
+  - "senaite.core = git https://github.com/senaite/senaite.core.git branch=2.x"
+  - "senaite.app.listing = git https://github.com/senaite/senaite.app.listing.git branch=2.x"
+  - "senaite.app.spotlight = git https://github.com/senaite/senaite.app.spotlight.git branch=2.x"
+  - "senaite.app.supermodel = git https://github.com/senaite/senaite.app.supermodel.git branch=2.x"
+  - "senaite.impress = git https://github.com/senaite/senaite.impress.git branch=2.x"
+  - "senaite.jsonapi = git https://github.com/senaite/senaite.jsonapi.git branch=2.x"
+  - "senaite.lims = git https://github.com/senaite/senaite.lims.git branch=2.x"
+  - "senaite.patient = git https://github.com/senaite/senaite.patient.git branch=master"
+  - "senaite.abx = git https://github.com/senaite/senaite.abx.git branch=master"
+  - "senaite.ast = git https://github.com/senaite/senaite.ast.git branch=master"
+  - "senaite.microorganism = git https://github.com/senaite/senaite.microorganism.git branch=master"
+  - "senaite.storage = git https://github.com/senaite/senaite.storage.git branch=2.x"
+  - "senaite.lis2a = git https://github.com/senaite/senaite.lis2a.git branch=2.x"
+
+# Plone additional links for eggs download
+plone_extra_find_links:
+  - https://dist.plone.org/thirdparty/
+
+# Extra buildout
+plone_buildout_extra: |
+  allow-hosts =
+      *.python.org
+      *.pythonhosted.org
+      *.plone.org
+      docutils.sourceforge.net
+      prdownloads.sourceforge.net
+      effbot.org
+
+# Total number of clients to register.
+plone_client_count: 4
+
+# Number of ZServer threads Zope starts to service requests
+# https://zope.readthedocs.io/en/latest/zopebook/MaintainingZope.html
+# Recipe default: 4
+plone_zserver_threads: 4
+
+# ZEO Pack every day at 3 AM
+plone_pack_at:
+  minute: 0
+  hour: 3
+  weekday: "*"
+
+# Do not keep transactions older than 1d
+plone_keep_days: 1
+
+# DB Backup every day at 7 PM
+plone_backup_at:
+  minute: 0
+  hour: 19
+  weekday: "*"
+
+# DB Backup: keep .fs backups for last 5d
+plone_keep_backups: 5
+# DB Backup: keep blob backups for last 5d
+plone_keep_blob_days: 5
+
+
+# SECURITY
+firewall_open_tcp_ports: [22, 80, 443]
+
+
+# NGINX
+# Server will close idle connection after this timeout.
+# Recipe default: 3600
+nginx_keepalive_timeout: "300s"
+
+# Total number of worker processes to spawn simultaneously. Recommended is
+# one worker per CPU.
+# Get the number of CPUs: grep processor /proc/cpuinfo | wc -l
+nginx_worker_processes: "{{ ansible_processor_vcpus | default(ansible_processor_count) }}"
+
+# Max number of simultaneous connections that each worker process can manage
+# Get our system core limits: ulimit -n
+# Recipe default: 2048
+nginx_worker_connections: "1024"
+
+
+# SWAPPINESS
+# This control is used to define how aggressive the kernel will swap memory
+# pages. Higher values will increase aggressiveness, lower values decrease the
+# amount of swap. (default = 60, recommended values between 1 and 60) Remove
+# your swap for 0 value, but usually not recommended in most cases.
+vm_swappiness: 10
+
+# SWAP CACHE PRESSURE
+# Controls the tendency of the kernel to reclaim the memory which is used for
+# caching of directory and inode objects. (default = 100, recommended 50 to 200)
+vm_vfs_cache_pressure: 100
+
+# Additional OS packages
+additional_system_packages:
+  - byobu
+  - htop
+  - iotop
+  - rsync
+  - jq

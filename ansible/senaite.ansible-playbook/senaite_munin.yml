@@ -1,0 +1,157 @@
+---
+
+- debug:
+    msg: "******************** SENAITE MUNIN [START] ********************"
+
+- include_role:
+    name: geerlingguy.munin
+
+- name: Install required Munin dependencies
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items: "{{ munin_dependencies }}"
+
+- name: Flush existing htpasswd file
+  file:
+    path: /etc/munin/munin-htpasswd
+    state: absent
+
+- name: Create Munin user via htpasswd.
+  htpasswd:
+    create: yes
+    name: "{{ munin_admin_user }}"
+    password: "{{ munin_admin_password }}"
+    path: /etc/munin/munin-htpasswd
+    state: present
+
+- name: Add Munin NGINX Configuration
+  blockinfile:
+    dest: "{{ nginx_administrative_config }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    insertbefore: "^}$"
+    content: "{{ munin_nginx_config }}"
+  notify:
+    - reload nginx
+
+- name: Copy Munin Configurations
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - src: munin-node.conf.j2
+      dest: /etc/munin/munin-node.conf
+    - src: munin.conf.j2
+      dest: /etc/munin/munin.conf
+    - src: munin-hosts.conf.j2
+      dest: "{{ munin_conf_d_directory }}/munin-hosts.conf"
+  notify:
+    - restart munin-node
+
+- name: Clone Munin Contribution Repository
+  git:  repo=https://github.com/munin-monitoring/contrib.git
+        dest=/etc/munin/contrib
+        update=no
+        force=yes
+
+- name: Add Munin Plugin Configurations
+  blockinfile:
+    dest: /etc/munin/plugin-conf.d/munin-node
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    content: "{{ munin_plugin_conf }}"
+  tags:
+    - munin-plugins
+    - munin-znagios
+
+- name: Ensure executable Plugins
+  file:
+    path: "{{ item.src }}"
+    state: touch
+    mode: 0755
+  with_items: "{{ munin_plugins }}"
+  tags:
+    - munin-plugins
+
+- name: Activate Plugins
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+    owner: root
+    group: root
+  with_items: "{{ munin_plugins }}"
+  notify:
+    - restart munin-node
+
+# https://pypi.python.org/pypi/Products.ZNagios
+- name: Find the first ZNagios Plugin
+  command: 'find {{ plone_target_path }}/buildout-cache/eggs -name Products.ZNagios-*.egg -print -quit'
+  register: znagios
+  tags:
+    - munin-znagios
+
+- name: Register ZNagios *munin_client* Executable
+  stat:
+    path: "{{ znagios.stdout }}/Products/ZNagios/munin_client.py"
+  register: znagios_client_plugin
+  tags:
+    - munin-znagios
+
+- name: Register ZNagios *munin_zeo* Executable
+  stat:
+    path: "{{znagios.stdout}}/Products/ZNagios/zeo_munin.py"
+  register: znagios_zeo_plugin
+  tags:
+    - munin-znagios
+
+# https://pypi.python.org/pypi/Products.ZNagios/#configure-munin
+- name: Activate (Symlink) ZNagios Client Plugins
+  when: znagios_client_plugin.stat.exists
+  shell: 'for p in {zope_activity_instance,zope_cacheconnections_instance,zope_cachetotals_instance,zope_dbsize_instance,zope_errors_instance,zope_refcount_instance,zope_uptime_instance};do ln -sf {{znagios_client_plugin.stat.path}} "$p"{{item}}; done'
+  args:
+    chdir: /etc/munin/plugins
+    executable: /bin/bash
+  with_sequence: count="{{ plone_client_count }}"
+  notify:
+    - restart munin-node
+  tags:
+    - munin-znagios
+
+- name: Activate (Symlink) ZNagios ZEO Plugins
+  when: znagios_zeo_plugin.stat.exists
+  shell: 'for p in {zeo_loadstores_ZEO1_1,zeo_clients_ZEO1_1};do ln -sf {{znagios_zeo_plugin.stat.path}} $p; done'
+  args:
+    chdir: /etc/munin/plugins
+    executable: /bin/bash
+  notify:
+    - restart munin-node
+  tags:
+    - munin-znagios
+
+- name: Ensure ZNagios Client Plugin is executable
+  when: znagios_client_plugin.stat.exists
+  file:
+    path: "{{ znagios_client_plugin.stat.path }}"
+    state: touch
+    mode: 0755
+  notify:
+    - restart munin-node
+  tags:
+    - munin-znagios
+
+- name: Ensure ZNagios ZEO Plugin is executable
+  when: znagios_zeo_plugin.stat.exists
+  file:
+    path: "{{ znagios_zeo_plugin.stat.path }}"
+    state: touch
+    mode: 0755
+  notify:
+    - restart munin-node
+  tags:
+    - munin-znagios
+
+- debug:
+    msg: "******************** SENAITE MUNIN [DONE] ********************"

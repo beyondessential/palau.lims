@@ -1,0 +1,139 @@
+# Redirect per default to HTTPS
+server {
+    server_name _;
+    listen 80 default_server;
+    listen [::]:80 default_server ipv6only=on;
+
+    # Redirect all to HTTPS
+    location / {
+        return 301 https://$host$request_uri;
+    }
+
+    # NGINX STATUS (needed for the Munin NGINX plugin)
+    # ... does not work with self signed certificate and HTTPS :(
+    location /nginx_status {
+        stub_status on;
+        access_log off;
+        allow all;
+    }
+}
+
+# Administrative HTTPS VHOST
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server ipv6only=on;
+
+    include snippets/ssl-cert.conf;
+    include snippets/ssl-params.conf;
+
+    root {{ nginx_html_root }};
+
+    # Static files
+    location ~* \.(?:jpg|jpeg|pdf|png|gif|ico|css|js|otf|ttf|eot|woff|woff2|svg)$ {
+        add_header "X-NGINX-Cache-Status" $upstream_cache_status;
+        add_header "X-NGINX-Cache-Date" $upstream_http_date;
+        add_header "X-NGINX-Cache" "ASSETS";
+
+        set $backend http://haproxy;
+        expires 1d;
+        access_log off;
+
+        # Cache
+        proxy_cache             senaite_nginx_cache;
+        proxy_cache_revalidate  on;
+        proxy_cache_min_uses    1;
+        proxy_cache_lock        on;
+        proxy_cache_valid   200 1d;
+
+        proxy_ignore_headers    Set-Cookie;
+        proxy_hide_header       Set-Cookie;
+
+        add_header              Cache-control private;
+
+        include       snippets/proxy-params.conf;
+        rewrite       ^(.*)$ /VirtualHostBase/$scheme/$host/{{ plone_site_id }}/VirtualHostRoot/$1 break;
+        proxy_pass    $backend;
+    }
+
+    # SENAITE Theme Icons
+    location ~ ^/senaite_theme/icon {
+        add_header "X-NGINX-Cache-Status" $upstream_cache_status;
+        add_header "X-NGINX-Cache-Date" $upstream_http_date;
+        add_header "X-NGINX-Cache" "SENAITE-THEME";
+
+        set $backend http://haproxy;
+        expires 1d;
+        access_log off;
+
+        # Cache
+        proxy_cache             senaite_nginx_cache;
+        proxy_cache_revalidate  on;
+        proxy_cache_min_uses    1;
+        proxy_cache_lock        on;
+        proxy_cache_valid   200 1d;
+
+        proxy_ignore_headers    Set-Cookie;
+        proxy_hide_header       Set-Cookie;
+
+        add_header              Cache-control private;
+
+        include      snippets/proxy-params.conf;
+        rewrite      ^(.*)$ /VirtualHostBase/$scheme/$host/{{ plone_site_id }}/VirtualHostRoot/$1 break;
+        proxy_pass   $backend;
+    }
+
+    location / {
+        set $backend http://haproxy;
+
+        if ($http_cookie ~* "__ac=([^;]+)(?:;|$)" ) {
+            add_header "X-AUTHENTICATED" "YES";
+        }
+
+        include                 snippets/proxy-params.conf;
+        rewrite                 ^(.*)$ /VirtualHostBase/$scheme/$host/{{ plone_site_id }}/VirtualHostRoot/$1 break;
+        proxy_pass              $backend;
+    }
+
+{% for client in range(0, plone_client_count|int ) %}
+    location /{{ plone_instance_name }}_{{ client + 1 }} {
+        include                 snippets/proxy-params.conf;
+        rewrite                 ^/{{ plone_instance_name }}_{{ client + 1 }}(.*)$ /VirtualHostBase/$scheme/$host/{{ plone_site_id }}/VirtualHostRoot/_vh_{{ plone_instance_name }}_{{ client + 1 }}$1 break;
+        proxy_pass              http://127.0.0.1:{{ plone_client_base_port | int + client }}/;
+    }
+{% endfor %}
+
+    # Control Panel
+    location /control_panel {
+        try_files $uri $uri.html /;
+    }
+
+    # HAProxy
+    location /haproxy {
+        proxy_set_header        Host            $host/haproxy;
+        proxy_set_header        X-Real-IP       $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass              http://haproxy/;
+    }
+
+{% if supervisor_with_http  %}
+    # Supervisor
+    location ^~ /supervisor/ {
+        index index.html;
+        proxy_set_header       Host            $host/supervisor;
+        proxy_set_header       X-Real-IP       $remote_addr;
+        proxy_set_header       X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass             http://{{ supervisor_http_port }}/;
+    }
+{% endif %}
+
+{% if haproxy_with_http_stats %}
+    # HAProxy
+    location /haproxy-status {
+        proxy_set_header        Host            $http_host;
+        proxy_set_header        X-Real-IP       $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass              http://haproxy/haproxy-status;
+    }
+{% endif %}
+
+}

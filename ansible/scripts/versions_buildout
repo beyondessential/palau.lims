@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+CWD=$(pwd)
+cd src || exit
+
+echo "[buildout]"
+echo "# Auto-generated from QA-System on $(date +%F)"
+echo ""
+echo "extends ="
+echo "    live.cfg"
+echo ""
+echo "always-checkout = true"
+echo ""
+echo "[sources]"
+
+for d in $(find . -mindepth 1 -maxdepth 1 -type d | sort -t '\0' -n)
+do
+    cd "$d" || exit
+
+    REPOS_NAME="${d#*\/}"
+    HASH_LOCAL=$(git rev-parse HEAD | cut -c 1-9)
+    URL=$(git remote get-url origin)
+    echo "$REPOS_NAME = git $URL rev=$HASH_LOCAL"
+    cd ..
+
+done
+echo ""
+
+cd "$CWD" || exit

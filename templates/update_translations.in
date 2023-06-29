@@ -1,0 +1,43 @@
+#!/bin/bash
+
+BASE=${buildout:directory}
+I18N=$BASE/bin/i18ndude
+SRC=${buildout:src-dir}/src/palau/lims
+LOCALES=$SRC/locales
+
+function die() {
+    echo "ERROR: $1"
+}
+
+# Check if we have i18n in place
+if test ! -x $I18N; then
+    echo "You must install i18ndude in your buildout: https://pypi.python.org/pypi/i18ndude"
+    echo "See https://github.com/collective/collective.developermanual/blob/master/source/i18n/localization.txt"
+    die "i18ndude not installed"
+fi
+
+# Clean all generated .mo files
+find $LOCALES -name "*.mo" -delete
+
+DOMAIN=palau.lims
+echo "Processing Domain $DOMAIN"
+# Flush the english .po files, other .po files won't be synced otherwise
+echo -n "" > $LOCALES/en/LC_MESSAGES/$DOMAIN.po
+# Scan the source code for new strings and create a .pot file
+$I18N rebuild-pot --pot $LOCALES/$DOMAIN-tmp.pot --exclude "build" --create $DOMAIN $SRC
+# Merge the manual translations of $DOMAIN-manual.pot into the temporary $DOMAIN-tmp.pot
+$I18N merge --pot $LOCALES/$DOMAIN-tmp.pot --merge $LOCALES/$DOMAIN-manual.pot
+# Overwrite the existing $DOMAIN.pot
+mv $LOCALES/$DOMAIN-tmp.pot $LOCALES/$DOMAIN.pot
+# Synchronize all .po files with the new $DOMAIN.pot
+$I18N sync --pot $LOCALES/$DOMAIN.pot $LOCALES/*/LC_MESSAGES/$DOMAIN.po
+echo "Processing Domain $DOMAIN [DONE]"
+
+DOMAIN=senaite.core
+# Flush the english .po files, other .po files won't be synced otherwise
+echo -n "" > $LOCALES/en/LC_MESSAGES/$DOMAIN.po
+# Synchronize all .po files with the new $DOMAIN.pot
+$I18N sync --pot $LOCALES/$DOMAIN.pot $LOCALES/*/LC_MESSAGES/$DOMAIN.po
+# Replace base .pot file with english .po file (so strings are sorted)
+cp $LOCALES/en/LC_MESSAGES/$DOMAIN.po $LOCALES/$DOMAIN.pot
+echo "Processing Domain $DOMAIN [DONE]"

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zope Instances Overview</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+          <h1>Administrative Links</h1>
+          <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+              </div>
+              <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                  <li><a href="/manage_main">ZMI</a></li>
+                  <li><a href="/{{ plone_site_id }}">Plone Site</a></li>
+                  <li><a href="/{{ plone_site_id }}/plone_control_panel">Plone Control Panel</a></li>
+                  <li><a href="/supervisor">Supervisor Control Panel</a></li>
+                  <li><a href="/haproxy-status">HAProxy Status</a></li>
+                  <li><a href="/munin/">Munin Monitoring</a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+          <h1>Control Panel</h1>
+          <table class="table table-striped table-bordered">
+            <tr>
+              <td colspan="2">
+                <a href="/supervisor/">Supervisor</a>
+              </td>
+            </tr>
+{% for client in range(0, plone_client_count|int ) %}
+            <tr>
+              <td><a href="/{{ plone_instance_name }}_{{ client + 1 }}">{{ plone_instance_name }}_{{ client + 1 }}</a></td>
+              <td><a href="/{{ plone_instance_name }}_{{ client + 1 }}/manage_main">ZMI</a></td>
+            </tr>
+{% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+---
+
+- debug:
+    msg: "******************** CUSTOM POST [START] *******************"
+
+- name: "Copy custom scripts to instance home"
+  copy:
+    src="scripts/"
+    dest="{{ plone_target_path }}/{{ plone_site_id }}/"
+    force=yes
+    owner={{ plone_buildout_user }}
+    group={{ plone_group }}
+    mode=preserve
+  tags:
+    - senaite-custom
+
+- name: "Grant access to senaite group and set sticky bit to plone var directory"
+  shell: |
+    chown -R {{ plone_daemon_user }}:{{ plone_group }} {{ plone_var_path }}
+    chmod -R g+s {{ plone_var_path }}
+  become: yes
+  tags:
+    - senaite-custom
+
+- name: "Set noatime attr for filestorage and blobstorage"
+  shell: |
+    chattr -R +A {{ plone_instance_var_path }}/filestorage
+    chattr -R +A {{ plone_instance_var_path }}/blobstorage
+  become: yes
+  tags:
+    - senaite-custom
+
+- name: "Rerun buildout to prevent WSGI's hop-by-hop header error"
+  shell: "bin/buildout -c live.cfg > buildout.log 2>&1"
+  args:
+    chdir: "{{ plone_instance_home }}"
+  become_user: "{{ plone_buildout_user }}"
+  notify: restart supervisor
+  tags:
+    - senaite-custom
+
+- debug:
+    msg: "******************** CUSTOM POST [DONE] ********************"

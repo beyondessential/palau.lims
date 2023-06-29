@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+CWD=$(pwd)
+cd src || exit
+
+echo ""
+echo "Looking for differences with remotes ..."
+
+# fetch from all repos first
+for d in $(find . -mindepth 1 -maxdepth 1 -type d | sort -t '\0' -n)
+do
+    cd "$d" || exit
+    git fetch
+    cd ..
+done
+
+for d in $(find . -mindepth 1 -maxdepth 1 -type d | sort -t '\0' -n)
+do
+    cd "$d" || exit
+
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    HASH_LOCAL=$(git rev-parse HEAD)
+    HASH_HEAD=$(git rev-parse origin/"$BRANCH")
+    if [ "$HASH_HEAD" != "$HASH_LOCAL" ]; then
+        URL=$(git remote get-url origin)
+        URL="${URL%\.git}"
+        URL="${URL#*:}"
+        URL="${URL#*github\.com/}"
+        echo "- https://github.com/$URL/compare/$HASH_LOCAL...$HASH_HEAD"
+    fi
+    cd ..
+
+done
+
+cd "$CWD" || exit

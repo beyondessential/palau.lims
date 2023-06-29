@@ -1,0 +1,26 @@
+---
+
+apt_packages:
+    - acl
+    - byobu
+    - gcc
+    - git
+    - gnuplot
+    - htop
+    - libcairo2
+    - libexpat1-dev
+    - libffi-dev
+    - libfreetype6-dev
+    - libgdk-pixbuf2.0-0
+    - libpango1.0-0
+    - libpcre2-dev
+    - libxslt1.1
+    - lynx
+    - net-tools
+    - rsync
+    - rsync
+    - screen
+    - ssl-cert
+    - tree
+    - zlib1g-dev
+    - zsh

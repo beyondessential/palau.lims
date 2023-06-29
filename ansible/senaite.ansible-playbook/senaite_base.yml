@@ -1,0 +1,11 @@
+---
+
+- debug:
+    msg: "******************** SENAITE BASE ********************"
+
+- name: Install additional system packages
+  apt:
+    pkg: "{{ additional_system_packages }}"
+    state: present
+  tags:
+    - senaite-base

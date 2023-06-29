@@ -1,0 +1,38 @@
+---
+
+- debug:
+    msg: "******************** SENAITE POSTFIX [START] ********************"
+
+- name: "Run POSTFIX Role"
+  include_role:
+    name: oefenweb.postfix
+
+- name: update configuration file
+  template:
+    src: templates/main.cf.j2
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart postfix
+  tags:
+    senaite-postfix
+
+- name: "Configure Postfix `smtp_generic_maps` in /etc/postfix/generic"
+  lineinfile:
+    dest: /etc/postfix/generic
+    create: yes
+    regexp: '^{{ item.user }}.*'
+    line: '{{ item.user }} {{ item.alias }}'
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ postfix_smtp_generic_maps }}"
+  notify:
+    - postmap generic_maps
+    - restart postfix
+  tags:
+    senaite-postfix
+
+- debug:
+    msg: "******************** SENAITE POSTFIX [DONE] ********************"

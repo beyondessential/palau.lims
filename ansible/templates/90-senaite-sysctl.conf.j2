@@ -1,0 +1,14 @@
+# This control is used to define how aggressive the kernel will swap memory
+# pages. Higher values will increase aggressiveness, lower values decrease the
+# amount of swap. (default = 60, recommended values between 1 and 60) Remove
+# your swap for 0 value, but usually not recommended in most cases.
+# https://haydenjames.io/linux-server-need-ram-upgrade-lets-check-free-top-vmstat-sar/
+# https://haydenjames.io/linux-performance-almost-always-add-swap-space/
+vm.swappiness={{ vm_swappiness }}
+
+# Controls the tendency of the kernel to reclaim the memory which is used for
+# caching of directory and inode objects. (default = 100, recommend value 50 to
+# 200)
+# https://haydenjames.io/linux-server-need-ram-upgrade-lets-check-free-top-vmstat-sar/
+# https://haydenjames.io/linux-performance-almost-always-add-swap-space/
+vm.vfs_cache_pressure={{ vm_vfs_cache_pressure }}

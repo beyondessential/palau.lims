@@ -1,0 +1,89 @@
+{% for vhost in custom_vhosts %}
+# HTTP VHOST: {{ vhost }}
+server {
+    listen 80;
+    server_name {{ vhost }};
+    return 301 https://$server_name$request_uri;
+}
+
+# HTTPS VHOST: {{ vhost }}
+server {
+    listen 443 ssl;
+    server_name {{ vhost }};
+
+    include snippets/ssl-cert.conf;
+    include snippets/ssl-params.conf;
+
+    access_log /var/log/nginx/{{ plone_site_id }}.access.log;
+    error_log /var/log/nginx/{{ plone_site_id }}.error.log error;
+
+    # Allow Cross-Origin Resource Sharing from our HTTP domain
+    add_header "Access-Control-Allow-Origin" "http://{{ vhost }}";
+    add_header "Access-Control-Allow-Credentials" "true";
+    add_header "Access-Control-Allow-Methods" "GET, POST, OPTIONS";
+    add_header "X-NGINX-Cache-Status" $upstream_cache_status;
+    add_header "X-NGINX-Cache-Date" $upstream_http_date;
+
+    # Static files
+    location ~* \.(?:jpg|jpeg|pdf|png|gif|ico|css|js|otf|ttf|eot|woff|woff2|svg)$ {
+        add_header "X-NGINX-Cache-Status" $upstream_cache_status;
+        add_header "X-NGINX-Cache-Date" $upstream_http_date;
+        add_header "X-NGINX-Cache" "ASSETS";
+
+        set $backend http://haproxy;
+        expires 1d;
+        access_log off;
+
+        # Cache
+        proxy_cache             senaite_nginx_cache;
+        proxy_cache_revalidate  on;
+        proxy_cache_min_uses    1;
+        proxy_cache_lock        on;
+        proxy_cache_valid   200 1d;
+
+        proxy_ignore_headers    Set-Cookie;
+        proxy_hide_header       Set-Cookie;
+
+        add_header              Cache-control private;
+
+        include       snippets/proxy-params.conf;
+        rewrite       ^(.*)$ /VirtualHostBase/$scheme/$host/{{ plone_site_id }}/VirtualHostRoot/$1 break;
+        proxy_pass    $backend;
+    }
+
+    # SENAITE Theme Icons
+    location ~ ^/senaite_theme/icon {
+        add_header "X-NGINX-Cache-Status" $upstream_cache_status;
+        add_header "X-NGINX-Cache-Date" $upstream_http_date;
+        add_header "X-NGINX-Cache" "SENAITE-THEME";
+
+        set $backend http://haproxy;
+        expires 1d;
+        access_log off;
+
+        # Cache
+        proxy_cache             senaite_nginx_cache;
+        proxy_cache_revalidate  on;
+        proxy_cache_min_uses    1;
+        proxy_cache_lock        on;
+        proxy_cache_valid   200 1d;
+
+        proxy_ignore_headers    Set-Cookie;
+        proxy_hide_header       Set-Cookie;
+
+        add_header              Cache-control private;
+
+        include      snippets/proxy-params.conf;
+        rewrite      ^(.*)$ /VirtualHostBase/$scheme/$host/{{ plone_site_id }}/VirtualHostRoot/$1 break;
+        proxy_pass   $backend;
+    }
+
+    location / {
+        set $backend http://haproxy;
+
+        include      snippets/proxy-params.conf;
+        rewrite      ^(.*)$ /VirtualHostBase/$scheme/$host/{{ plone_site_id }}/VirtualHostRoot/$1 break;
+        proxy_pass   $backend;
+    }
+}
+{% endfor %}

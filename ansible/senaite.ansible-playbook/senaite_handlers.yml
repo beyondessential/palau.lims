@@ -1,0 +1,13 @@
+---
+
+- name: restart supervisor
+  shell: "service supervisor restart"
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: restart munin-node
+  service: name=munin-node state=restarted
+
+- name: postmap generic_maps
+  command: postmap hash:/etc/postfix/generic

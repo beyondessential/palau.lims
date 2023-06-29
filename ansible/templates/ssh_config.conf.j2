@@ -1,0 +1,7 @@
+# Secure access to source code repos
+Host {{ ssh_key_filename }}
+  HostName ssh.github.com
+  Port 443
+  User git
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/{{ ssh_key_filename }}

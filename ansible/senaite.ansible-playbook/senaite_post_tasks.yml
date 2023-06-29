@@ -1,0 +1,8 @@
+---
+
+- debug:
+    msg: "******************** SENAITE POST-TASKS [START] ********************"
+
+
+- debug:
+    msg: "******************** SENAITE POST-TASKS [DONE] ********************"

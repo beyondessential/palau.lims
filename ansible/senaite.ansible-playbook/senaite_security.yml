@@ -1,0 +1,11 @@
+---
+
+- debug:
+    msg: "******************** SENAITE SECURITY [START] ********************"
+
+- name: "Run SECURITY Role"
+  include_role:
+    name: HanXHX.firewall
+
+- debug:
+    msg: "******************** SENAITE SECURITY [DONE] ********************"

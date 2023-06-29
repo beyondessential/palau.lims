@@ -1,0 +1,21 @@
+[core]
+  excludesfile = ~/.gitignore
+  whitespace = fix
+
+[pull]
+        rebase = false
+
+[color]
+  status = auto
+  diff = auto
+  branch = auto
+  interactive = auto
+
+[alias]
+  st = status --short
+  ci = commit
+  co = checkout
+  br = branch
+  df = diff
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  log = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
