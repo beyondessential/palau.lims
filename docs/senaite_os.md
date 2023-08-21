@@ -374,6 +374,34 @@ may be monitored if unauthorized usage is suspected.
 ************************************************************************
 ```
 
+## Display OS version and code name in login message
+
+The message that is actually printed on login is `/vat/run/mot.dynamic`. This
+file is updated by `/etc/init.d/motd` at every boot. It is also updated by PAM
+by running the scripts in `/etc/update-motd.d/`, if they exist. Add the
+following file if it does not exist yet:
+
+```shell
+$ sudo nano /etc/update-motd.d/20-lsb-release
+```
+
+with these contents:
+
+```bash
+#!/bin/sh
+lsb_release -ds
+```
+
+Give it exec privileges afterwards:
+
+```shell
+$ sudo chmod +x /etc/update-motd.d/20-lsb-release
+```
+
+With this change, the system will display the operating system's description,
+along with current version and codename.
+
+
 ## Setup logrotate for mail
 
 System processes (e.g. cron) will keep sending emails to the local mail
@@ -413,6 +441,199 @@ $ nano ~/.ssh/authorized_keys
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDIbHWNfaomvkwZCZXCeEXrgyyVFdFuimb5gzn+qHTglu6yF2Cp84YvLDAdU0hwJbK3DDzDrGOVJS5BJoUmY1r5mi6HSndSNPDK7JRMBg0ycyhDexzwwznvtGlVW7xNwbWQrRIDDgyXBzjYQhgbCH5zPIAZBIXl+HAmi7QOEvc1BHdMiiESf5ECDdEx0SHcnbgzDpTI/DMPmjao1diWX5tqHUf3s3Bb7NQ1wnE1p6k+OuqfQDiE39h5G0ITX1+F5qGppwIF+mvn+xKrueX8fkFyG1DLwNlAFcXHFqDfW+6xTQnT6puV5M+/ksFIOou9u9zFZJU3vaLWQRGvWpd6PMATaDLixNk9SYwkdYVmz+Dv2co1HrxSkhMc32668ZngX8RAbpe5Ek9Y0EOVHKMT4NtCP0XfW7ergK+uC7DMx26dWGeB4pD/YLGu0FraRSwtsl1Zf31HMv1kpFr23fPG4Y69Wop7pQfLs6rErpIbOHbK/hRI6MSuyT+ZM3njof5oSLVJZg5IH0gasgrrM7/CW9XITM0X0zvRaTleO2ZCLmRDsGmVXCeCL83g/eIzvBSDDCbyun3tRWwEyBXkcIAEZgM5/PepfRjGgSWC9qeuVJjMtKcPASTs2D7+APp+b+5SWA97DrjJxvo3NNjzx/J0LO5L49mESA/v02naMb05jbVU8w== jp@naralabs.com (buster)
 ```
 
+## Install fail2ban
+
+[Fail2ban][fail2ban] is an internet security utility tool for Linux server and
+web-host admins. You can use the Fail2ban tool to control, monitor, and add
+rules on your Linux server.
+
+```shell
+$ sudo apt install fail2ban
+```
+
+Create a jail.local file and enable your own jails:
+
+```shell
+$ sudo nano /etc/fail2ban/jail.local
+```
+```ini
+[DEFAULT]
+# "ignoreip" can be a list of IP addresses, CIDR masks or DNS hosts. Fail2ban
+# will not ban a host which matches an address in this list. Several addresses
+# can be defined using space (and/or comma) separator.
+ignoreip = 127.0.0.1/8 ::1
+
+# Number of seconds that a host is banned.
+bantime  = 10m
+
+# A host is banned if it has generated "maxretry" during the last "findtime"
+findtime  = 10m
+
+# Number of failures before a host get banned.
+maxretry = 5
+
+[sshd]
+# To use more aggressive sshd modes set filter parameter "mode" in jail.local:
+# normal (default), ddos, extra or aggressive (combines all).
+# See "tests/files/logs/sshd" or "filter.d/sshd.conf" for usage example.
+mode    = normal
+enabled = true
+port    = ssh
+logpath = %(sshd_log)s
+backend = %(sshd_backend)s
+```
+
+Start fail2ban service:
+
+```shell
+$ sudo service fail2ban start
+```
+
+You can now monitor the Fail2ban work functions from your Linux system:
+
+```shell
+$ sudo fail2ban-client status
+$ sudo fail2ban-client status sshd
+```
+
+To add the Fail2ban package on your startup application list, use the following
+system control command-line on your Linux terminal:
+
+```shell
+$ sudo systemctl enable fail2ban
+```
+
+### Fail2ban jail for badbots
+
+If the server has to be reachable over internet, is also strongly recommended
+to setup fail2ban to automatically ban bad bots. For this, create a filter
+first as follows:
+
+```shell
+$ sudo nano /etc/fail2ban/filter.d/nginx-badbots.conf
+```
+```ini
+[Definition]
+
+# Add the bot names to ban in this regex expression
+badbots = %badbots%
+
+failregex = (?i)<HOST> -.*"(GET|POST|HEAD) (.*?)" \d+ \d+ "(.*?)" ".*(?:%(badbots)s).*"$
+
+ignoreregex =
+```
+
+Replace `%badbots%` with the output from this command:
+
+```shell
+$ wget -q -O- "https://raw.githubusercontent.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/master/_generator_lists/bad-user-agents.list" | sed -E 's/\\ / /g' | sed -E 's/([.:|()+/])/\\\1/g' | tr '\n' '|' | sed -E 's/\|$//g'
+```
+
+> [!NOTE]
+> Updated list of bad bots can be found here:
+> https://github.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/blob/master/_generator_lists/bad-user-agents.list
+> You can create a cron script to automatically update the badbots file at
+> regular intervals of time (e.g. once a week).
+
+Add a jail in your fail2ban local file:
+
+```shell
+$ sudo nano /etc/fail2ban/jail.local
+```
+
+```ini
+[nginx-badbots]
+enabled  = true
+port     = http,https
+filter   = nginx-badbots
+logpath  = %(nginx_access_log)s
+maxretry = 1
+bantime  = 10d
+```
+
+> [!WARNING]
+> Enable this jail only after you installed nginx. Fail2Ban will fail to
+> start otherwise, cause no ``/var/log/nginx/*access.log`` is available
+> yet.
+
+Restart fail2ban:
+
+```shell
+$ sudo service fail2ban restart
+```
+
+### Auto-update list of badbots for Fail2ban
+
+Create the `nginx-badbots.conf.template`
+
+```shell
+$ sudo nano /etc/fail2ban/filter.d/nginx-badbots.conf.template
+```
+```ini
+[Definition]
+
+# Add the bot names to ban in this regex expression
+badbots = %badbots%
+
+failregex = (?i)<HOST> -.*"(GET|POST|HEAD) (.*?)" \d+ \d+ "(.*?)" ".*(?:%(badbots)s).*"$
+
+ignoreregex =
+```
+
+Login as a root user and create a cron entry as follows:
+
+```ini
+# Update badbots every month
+0 0 1 * * wget -q -O- "https://raw.githubusercontent.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/master/_generator_lists/bad-user-agents.list" | sed -E 's/\\ / /g' | sed -E 's/([.:|()+/])/\\\1/g' | tr '\n' '|' | sed -E 's/\|$//g' > /tmp/badbots.txt && awk 'BEGIN{getline l < "/tmp/badbots.txt"}/%badbots%/{gsub("%badbots%",l)}1' /etc/fail2ban/filter.d/nginx-badbots.conf.template >/etc/fail2ban/filter.d/nginx-badbots.conf && service fail2ban restart
+```
+
+### Fail2ban jail for WP
+
+[Wordpress][wordpress] is the most widely used CMS and as a result, there are
+plenty of bots out there that try to login through http/https. We can block all
+requests against common WS pages with the following jail. This is useful, even
+if we do not install Wordpress, cause this will reduce the hits to our server
+significantly:
+
+```shell
+$ sudo nano /etc/fail2ban/filter.d/wordpress.conf
+```
+```ini
+[Definition]
+failregex = ^<HOST> .* "POST .*wp-login.php
+            ^<HOST> .* "POST .*xmlrpc.php
+ignoreregex =
+```
+Add a jail in your fail2ban local file:
+
+```shell
+$ sudo nano /etc/fail2ban/jail.local
+```
+
+```ini
+[wordpress]
+enabled  = true
+port     = http,https
+filter   = wordpress
+logpath  = %(nginx_access_log)s
+# Ban if 5 attempts in less than 15 minutes
+findtime = 15m
+maxretry = 5
+bantime  = 5d
+```
+
+> [!WARNING]
+> Enable this jail only after you installed nginx. Fail2Ban will fail to
+> start otherwise, cause no ``/var/log/nginx/*access.log`` is available
+> yet.
+
+Restart fail2ban:
+
+```shell
+$ sudo service fail2ban restart
+```
+
+
 ## Configure static IP
 
 First, identify the ethernet interface on which we will configure static IP
@@ -436,7 +657,7 @@ interface you identified above. The section for the configuration of the
 interface with an static IP should look similar to:
 
 ```shell
-$sudo nano /etc/network/interfaces
+$ sudo nano /etc/network/interfaces
 ```
 ```ini
 # The primary network interface
@@ -474,3 +695,5 @@ $ sudo reboot -h now
 [ssh-copy-id]: https://manpages.debian.org/bullseye/openssh-client/ssh-copy-id.1.en.html
 [postfix]: https://en.wikipedia.org/wiki/Postfix_(software)
 [logrotate]: https://linux.die.net/man/8/logrotate
+[fail2ban]: https://www.fail2ban.org
+[wordpress]: https://wordpress.org/
