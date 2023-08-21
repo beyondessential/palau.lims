@@ -473,13 +473,15 @@
             <table class="table table-sm table-condensed">
               <colgroup>
                 <!-- Category -->
-                <col style="width: 40%;">
+                <col style="width: 40%;"/>
                 <!-- Result -->
-                <col style="width: 30%">
+                <col style="width: 20%"/>
+                <!-- Result range -->
+                <col style="width: 10%"/>
                 <!-- Captured Date -->
-                <col style="width: 20%">
+                <col style="width: 20%"/>
                 <!-- Out of Range -->
-                <col style="width: 5%">
+                <col style="width: 5%"/>
               </colgroup>
               <thead>
                 <tr class="small">
@@ -488,6 +490,9 @@
                   </th>
                   <th class="result">
                     <span class="font-weight-bold" i18n:translate="">Result</span>
+                  </th>
+                  <th class="result-range">
+                    <span class="font-weight-bold" i18n:translate="">Range</span>
                   </th>
                   <th class="captured">
                     <span class="font-weight-bold" i18n:translate="">Captured Date</span>
@@ -539,12 +544,11 @@
                       <tal:result_uncertainty condition="analysis/Uncertainty">
                         &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
                       </tal:result_uncertainty>
-
-                      <tal:result_specs define="specs python:sample.get_formatted_specs(analysis);"
-                                        condition="specs">
-                        &nbsp;<span tal:content="specs">50 - 60</span>
-                      </tal:result_specs>
-
+                    </td>
+                    <td>
+                      <span tal:define="specs python:sample.get_formatted_specs(analysis);"
+                            tal:condition="specs"
+                            tal:content="specs"/>
                     </td>
                     <td>
                       <span class="captured font-weight-normal"
