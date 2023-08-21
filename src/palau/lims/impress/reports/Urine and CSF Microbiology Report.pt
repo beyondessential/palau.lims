@@ -83,7 +83,7 @@
        height: 20mm;
        width: 100%;
        text-align: left;
-       font-size: 8pt;
+       font-size: 7pt;
      }
      .report .section-footer #footer-line {
        width: 100%;
@@ -208,9 +208,8 @@
           </td>
           <td class="info-header">
             <!-- Header Middle Text -->  
-            <h1 i18n:translate="" tal:content=""/>
+            <h1 i18n:translate="" tal:content="laboratory/title|nothing"/>
             <h2 i18n:translate="">Clinical Laboratory Services</h2>
-            <h2>Microbiology Lab</h2>
           </td>
           <td class="client-logo">
             <!-- Client/Hospital logo -->
@@ -636,16 +635,36 @@
           <td>
             <div>
               <strong tal:content="laboratory/Name|nothing">Lab Name</strong>
-              • <span tal:content="laboratory/PhysicalAddress/address|nothing">Lab Street and Number</span>
-              • <span tal:content="laboratory/PhysicalAddress/zip|nothing">Lab ZIP</span>
-                <span tal:content="laboratory/PhysicalAddress/city|nothing">Lab City</span>
-              • <span tal:content="laboratory/PhysicalAddress/country|nothing">Lab Country</span>
+              <tal:address
+                  define="street  laboratory/PhysicalAddress/address|nothing;
+                          zip     laboratory/PhysicalAddress/zip|nothing;
+                          city    laboratory/PhysicalAddress/city|nothing;
+                          country laboratory/PhysicalAddress/country|nothing;
+                          address python: [street, zip, city, country];
+                          address python: filter(None, address);
+                          address python: [' '] + address if address else [];
+                          address python: ' • '.join(address);">
+                <span tal:content="address"/>
+              </tal:address>
             </div>
             <div>
-              <span i18n:translate="">Phone</span>:
-              <span tal:content="laboratory/Phone|nothing">Lab Phone Number</span>
-              • <span i18n:translate="">Fax</span>:
-                <span tal:content="laboratory/Fax|nothing">Lab Fax Number</span>
+              <tal:phone condition="laboratory/Phone|nothing">
+                <span i18n:translate="">Phone</span>:
+                <span tal:content="laboratory/Phone|nothing"/>
+              </tal:phone>
+              <tal:phone condition="laboratory/Fax|nothing">
+                • <span i18n:translate="">Fax</span>:
+                <span tal:content="laboratory/Fax|nothing"/>
+              </tal:phone>
+              <tal:mail define="email laboratory/EmailAddress|nothing"
+                        condition="email">
+                • <a tal:attributes="href string:mailto:${email}"
+                     tal:content="email"/>
+              </tal:mail>
+              <tal:web define="website laboratory/LabURL|nothing"
+                       condition="website">
+                • <a tal:attributes="href website" tal:content="website"/>
+              </tal:web>
               • <span i18n:translate="">Report v1</span>
             </div>
           </td>
