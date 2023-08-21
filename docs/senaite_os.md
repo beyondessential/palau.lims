@@ -189,7 +189,7 @@ The recommended configuration is as follows:
   practice to not permit agent forwarding.
 
 - **`X11Forwarding no`**: The security risk of using X11 forwarding is that the
-  client's X11 display server may be	exposed	to attack when the SSH client
+  client's X11 display server may be exposed to attack when the SSH client
   requests forwarding.
 
 - **`PermitEmptyPasswords no`**: Explicitly disallow remote login from accounts
@@ -441,8 +441,6 @@ iface ens192 inet static
 address 192.168.1.100
 netmask 255.255.255.0
 gateway 192.168.1.1
-dns-domain sweet.home
-dns-nameservers 8.8.8.8 192.168.1.1
 ```
 
 Reboot for the changes to take effect:
