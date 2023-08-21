@@ -146,6 +146,15 @@ source code repository and notify back to you. Press enter to resume the
 process as soon as you receive our confirmation that the deployment key has
 been added to the repository.
 
+It is strongly recommended to restart nginx, haproxy and supervisor on the
+target server after the Ansible recipe finishes:
+
+```shell
+$ sudo service supervisor restart
+$ sudo service haproxy restart
+$ sudo service nginx restart
+```
+
 ## Create a new SENAITE site
 
 After Ansible playbook is run and succeed, there is still one action that must
