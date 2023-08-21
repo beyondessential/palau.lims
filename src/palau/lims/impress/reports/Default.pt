@@ -1,5 +1,5 @@
 <tal:report
-  i18n:domain="acme.lims"
+  i18n:domain="palau.lims"
   define="model python:view.model;
           laboratory view/laboratory;
           client model/Client;
