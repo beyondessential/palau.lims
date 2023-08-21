@@ -1,6 +1,6 @@
 <tal:report
-  i18n:domain="palau.lims"
-  define="model python:view.model;
+    i18n:domain="palau.lims"
+    define="model python:view.model;
           laboratory view/laboratory;
           client model/Client;
           contact model/Contact;
@@ -15,6 +15,10 @@
           content_width options/content_width|nothing;
           content_height options/content_height|nothing;
           primary model/PrimaryAnalysisRequest|nothing;">
+
+  <!-- Documentation
+  https://pagetemplates.readthedocs.io/en/latest/tal.html
+  -->
 
   <!-- Custom Report Controls -->
   <div id="controls" class="noprint">
@@ -48,22 +52,23 @@
 
   <tal:css>
     <style type="text/css">
-     .report * { font: 9pt; }
-     .report h1 { font-size: 140%; }
-     .report h2 { font-size: 120%; }
+     .report * { font: 8pt; }
+     .report h1 { font-size: 150%; margin-top: 0rem; font-weight:bold; }
+     .report h2 { font-size: 120%; padding-top: 0.2rem; margin-bottom: 0.3rem; }
      .report h3 { font-size: 110%; }
+     .report h4 { font-size: 100%; }
      .report .font-size-140 { font-size: 140%; }
      .report .font-size-120 { font-size: 120%; }
      .report .font-size-100 { font-size: 100%; }
      .report .colon-after:after { content: ":"; }
-     .report address { margin: 1rem 0; }
+     .report address { margin: 0rem 0; font-size: 8pt; line-height: 1.2; }
      .report table.noborder td, .report table.noborder th { border: none; }
      .report table.nopadding td { padding: 0; }
-     .report table td.label { padding-right: 0.3rem; font-weight: bold; }
-     .report table { border-color: #999; }
-     .report table td, .report table th { border-top: 1px solid black; border-bottom: 1px solid black; }
-     .report table th { border-bottom: 1px solid black; }
-     .report table.range-table td { padding: 0 0.3rem 0 0; border: none; }
+     .report table td.label { padding-right: 0.2rem; padding: 0.1rem; font-weight: bold; }
+     .report table { border-color: #999; margin-bottom: 0.4rem; line-height: 1.2; }
+     .report table td, .report table th { border-top: 0px solid black; border-bottom: 0px solid black; }
+     .report table th { border-bottom: 1px solid black; font-size: 8pt }
+     .report table.range-table td { padding: 0 0.2rem 0 0; border: none; }
      .report .section-header h1 { font-size: 175%; }
      .report .section-header img.logo { height: 100px; margin: 20px 0; }
      .report .section-results-provisional { padding-bottom: 20px; color:red; font-size:90%; }
@@ -85,12 +90,29 @@
        height: 2mm;
        border-top: 1px solid black;
      }
-     .report .table td.lab-logo,
-     .report .table td.client-logo {
-       width: 50%;
+     .report .table td.lab-logo {
+       width: 20%;
        vertical-align: middle;
      }
+     .report .table td.client-logo {
+       width: 20%;
+       vertical-align: middle;
+       text-align: right;
+     }
+     .report .table td.info-header {
+       vertical-align: top;
+       text-align: center;
+     }
      .report .section-summary table {
+       font-size: 90%;
+     }
+     .report .section-results {
+       margin-top: 10px;
+     }
+     .report .section-results table {
+       font-size: 90%;
+     }
+     .report .section-resultsinterpretation, .report .section-signatures {
        font-size: 90%;
      }
      .report .section-info table td,
@@ -98,7 +120,6 @@
        border-top:none;
        border-bottom:none;
      }
-
      .sample_ancestry_id {
       padding-top:15px;
      }
@@ -164,121 +185,48 @@
 
   <!-- INFO -->
   <tal:render condition="python:True">
-  <div class="row section-info no-gutters">
-    <div class="w-100">
-      <!-- Client Info -->
-      <table class="table table-sm table-condensed w-100">
-        <colgroup>
-          <!-- Client Address -->
-          <col style="width: 40%;">
-          <!-- Lab Address -->
-          <col style="width: 40%">
-          <!-- Accreditation Logo -->
-          <col style="width: 20%">
-        </colgroup>
-        <tr>
-          <td class="client-logo">
-            <!-- Client/Hospital logo -->
-            <div tal:define="client_logo python: view.get_client_logo_src(client)"
-                 tal:condition="client_logo">
-              <img class="img-fluid"
-                   style="max-width:125px;"
-                   tal:attributes="src client_logo;"/>
-            </div>
-          </td>
-          <td class="lab-logo">
-            <!-- Laboratory logo -->
-            <div tal:define="lab_logo python: view.get_lab_logo_src()"
-                 tal:condition="lab_logo">
-              <img class="img-fluid"
-                   style="max-width:125px;"
-                   tal:attributes="src lab_logo;"/>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <address class="client-address">
-              <div class="client-name font-weight-bold">
-                <div tal:replace="client/Name|nothing"></div>
+    <div class="row section-info no-gutters">
+      <div class="w-100">
+        <!-- Client Info -->
+        <table class="table table-sm table-condensed w-100">
+          <colgroup>
+            <!-- Lab Address -->
+            <col style="width: 20%"/>
+            <col style="width: *"/>
+            <col style="width: 20%"/>
+          </colgroup>
+          <tr>
+            <td class="lab-logo">
+              <!-- Laboratory logo -->
+              <div tal:define="lab_logo python: view.get_lab_logo_src()"
+                   tal:condition="lab_logo">
+                <img class="img-fluid"
+                     style="width:130px;"
+                     tal:attributes="src lab_logo;"/>
               </div>
-              <div class="client-street">
-                <div tal:replace="client/PostalAddress/address|nothing"></div>
+            </td>
+            <td class="info-header">
+              <!-- Header Middle Text -->
+              <h1 i18n:translate="" tal:content="laboratory/title|nothing"/>
+              <h2 i18n:translate="">Clinical Laboratory Services</h2>
+            </td>
+            <td class="client-logo">
+              <!-- Client/Hospital logo -->
+              <div tal:define="client_logo python: view.get_client_logo_src(client)"
+                   tal:condition="client_logo">
+                <img class="img-fluid"
+                     style="width:100px"
+                     tal:attributes="src client_logo;"/>
               </div>
-              <span class="client-zip">
-                <div tal:replace="client/PostalAddress/zip|nothing"></div>
-              </span>
-              <span class="client-city">
-                <div tal:replace="client/PostalAddress/city|nothing"></div>
-              </span>
-              <div class="client-country">
-                <div tal:replace="client/PostalAddress/country|nothing"></div>
-              </div>
-              <div class="contact-email">
-                <a tal:content="contact/EmailAddress|nothing"
-                   tal:attributes="href string:mailto:${contact/EmailAddress}"/>
-              </div>
-              <div class="contact-phone">
-                <div tal:replace="contact/Phone|nothing"></div>
-              </div>
-              <div class="contact-fax">
-                <div tal:replace="contact/Fax|nothing"></div>
-              </div>
-            </address>
-          </td>
-          <td>
-            <!-- Laboratory Info -->
-            <address class="laboratory-address">
-              <div class="lab-title font-weight-bold">
-                <div tal:replace="laboratory/title|nothing"></div>
-              </div>
-              <div class="lab-url">
-                <a tal:attributes="href laboratory/LabURL"
-                   tal:content="laboratory/LabURL"/>
-              </div>
-              <div class="lab-supervisor" tal:condition="laboratory/Supervisor">
-                <span i18n:translate="">Supervisor</span>:
-                <div tal:replace="laboratory/Supervisor/Fullname|nothing"></div>
-              </div>
-              <div class="lab-address">
-                <div class="lab-street">
-                  <div tal:replace="laboratory/PostalAddress/address|nothing"></div>
-                </div>
-                <span class="lab-zip">
-                  <div tal:replace="laboratory/PostalAddress/zip|nothing"></div>
-                </span>
-                <span class="lab-city">
-                  <div tal:replace="laboratory/PostalAddress/city|nothing"></div>
-                </span>
-                <div class="lab-country">
-                  <div tal:replace="laboratory/PostalAddress/country|nothing"></div>
-                </div>
-              </div>
-            </address>
-          </td>
-          <td>
-            <div class="accreditation-logo text-left"
-                 tal:define="accredited laboratory/LaboratoryAccredited;
-                             accreditation_logo laboratory/AccreditationBodyLogo"
-                 tal:condition="accredited">
-              <img class="img-fluid"
-                   style="max-width:200px;"
-                   tal:condition="accreditation_logo"
-                   tal:attributes="src accreditation_logo/absolute_url"/>
-              <img class="img-fluid"
-                   style="max-width:200px;"
-                   tal:condition="not:accreditation_logo"
-                   tal:attributes="src python:view.get_resource_url('AccreditationBodyLogo.png', prefix='bika.lims.images')"/>
-            </div>
-          </td>
-        </tr>
-      </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- Clear Floats
+           https://github.com/Kozea/WeasyPrint/issues/36
+      -->
+      <div class="clearfix"></div>
     </div>
-    <!-- Clear Floats
-         https://github.com/Kozea/WeasyPrint/issues/36
-    -->
-    <div class="clearfix"></div>
-  </div>
   </tal:render>
 
   <!-- ALERTS -->
@@ -302,7 +250,7 @@
           <div>
             <span i18n:translate="">Supplementary report for</span>
             <a tal:attributes="href primary/absolute_url"
-                     tal:content="primary/getId"/>
+               tal:content="primary/getId"/>
           </div>
         </div>
 
@@ -320,7 +268,6 @@
         <div class="alert alert-info" tal:condition="model/is_provisional">
           <div i18n:translate="">Provisional report</div>
         </div>
-
       </div>
     </div>
   </tal:render>
@@ -337,22 +284,22 @@
       <div class="w-100">
 
         <!-- Barcode -->
-        <div class="text-center float-right barcode-container">
-          <div class="barcode"
-               data-code="code128"
-               data-showHRI="true"
-               data-barHeight="15"
-               data-addQuietZone="true"
-               tal:attributes="data-id model/getId">
-          </div>
-        </div>
+        <!--  <div class="text-center float-right barcode-container">
+            <div class="barcode"
+                 data-code="code128"
+                 data-showHRI="true"
+                 data-barHeight="15"
+                 data-addQuietZone="true"
+                 tal:attributes="data-id model/getId">
+            </div>
+          </div> -->
 
-        <h1 i18n:translate="">Patient details</h1>
+        <!-- <h1 i18n:translate="">Patient details</h1> -->
         <table class="table table-sm table-condensed">
           <tr>
             <!-- Patient name -->
-            <td width="20%" class="label" i18n:translate="">Patient name</td>
-            <td width="30%"
+            <td width="15%" class="label" i18n:translate="">Patient name</td>
+            <td width="20%"
                 tal:define="patient python:model.PatientFullName or {};
                             firstname python:patient.get('firstname','');
                             lastname python:patient.get('lastname', '');
@@ -360,21 +307,13 @@
                             fullname python: ' '.join(fullname);"
                 tal:content="fullname"/>
 
-            <!-- Doctor name-->
-            <td width="20%" class="label" i18n:translate="">Doctor</td>
-            <td width="30%" tal:content="model/Contact/Fullname|nothing"/>
-          </tr>
-          <tr>
-            <!-- Patient address -->
-            <td class="label" i18n:translate="">Patient address</td>
-            <td tal:content="model/PatientAddress|nothing"/>
+            <!-- Patient MRN -->
+            <td width="15%" class="label" i18n:translate="">MRN</td>
+            <td width="20%" tal:content="model/MedicalRecordNumber/value|nothing"/>
 
-            <!-- CC Contacts-->
-            <td class="label" i18n:translate="">CC Contacts</td>
-            <td tal:define="contacts model/CCContact;
-                            contacts python:map(lambda con: con.getFullname(), contacts);
-                            contacts python:', '.join(contacts);"
-                tal:content="contacts"/>
+            <!-- Patient sex -->
+            <td width="15%" class="label" i18n:translate="">Sex</td>
+            <td width="15%" tal:content="python:view.get_sex(model)"/>
           </tr>
           <tr>
             <!-- Patient age -->
@@ -384,67 +323,47 @@
               <span tal:content="python:view.get_age(dob, sampled)"/>
               <span class="age-estimated" i18n:translate=""
                     tal:condition="python: view.is_estimated_age(model)">
-                (estimated)
+                (Estimated)
               </span>
             </td>
-            <!-- CC Emails-->
-            <td class="label" i18n:translate="">CC Emails</td>
-            <td tal:content="model/CCEmails"/>
+
+            <!-- Patient address -->
+            <td class="label" i18n:translate="">Place of residence</td>
+            <td tal:content="model/PatientAddress|nothing"/>
+
+            <!-- Date Received -->
+            <td class="label" i18n:translate="">Date received</td>
+            <td tal:content="python:view.to_localized_time(model.DateReceived)"/>
           </tr>
           <tr>
-            <!-- Patient sex -->
-            <td class="label" i18n:translate="">Sex</td>
-            <td tal:content="python:view.get_sex(model)"/>
+            <!-- Doctor name-->
+            <td class="label" i18n:translate="">Doctor</td>
+            <td tal:content="model/Contact/Fullname|nothing"/>
 
             <!-- Hospital clinic -->
-            <td class="label" i18n:translate="">Hospital clinic</td>
+            <td class="label" i18n:translate="">Hospital/Clinic</td>
             <td tal:content="client/Name"/>
-          </tr>
-          <tr>
-            <!-- Patient MRN -->
-            <td class="label" i18n:translate="">MRN</td>
-            <td tal:content="model/MedicalRecordNumber/value|nothing"/>
 
             <!-- Ward -->
             <td class="label" i18n:translate="">Ward</td>
             <td tal:content="model/Ward/title|nothing"/>
           </tr>
           <tr>
+            <!-- Sample Id -->
+            <td class="label" i18n:translate="">Sample ID</td>
+            <td tal:content="model/getId|nothing"/>
+
             <!-- Sample Type -->
             <td class="label" i18n:translate="">Sample type</td>
             <td tal:content="model/SampleType/title|nothing"/>
 
-            <!-- Clinical information -->
-            <td class="label" i18n:translate="">Clinical information</td>
-            <td tal:define="clinic model/ClinicalInformation;
-                            clinic python:map(lambda obj: obj.Title(), clinic);
-                            clinic python:', '.join(clinic)"
-                tal:content="clinic"/>
-          </tr>
-          <tr>
             <!-- Sample Point + Sample Point Additional information -->
-            <td class="label" i18n:translate="">Sample point</td>
+            <td class="label" i18n:translate="">Site</td>
             <td tal:define="sp model/SamplePoint/title|nothing;
                             additional model/EnvironmentalConditions;
                             sp python: filter(None, [sp, additional]);
                             sp python: ', '.join(sp);"
                 tal:content="sp"/>
-
-            <!-- Current Antibiotics -->
-            <td class="label" i18n:translate="">Current antibiotics</td>
-            <td tal:define="abx model/CurrentAntibiotics;
-                            abx python:map(lambda obj: obj.Title(), abx);
-                            abx python:', '.join(abx)"
-                tal:content="abx"/>
-          </tr>
-          <tr>
-            <!-- Date Received -->
-            <td class="label" i18n:translate="">Date Received</td>
-            <td tal:content="python:view.to_localized_time(model.DateReceived)"/>
-
-            <!-- Date Published -->
-            <td class="label" i18n:translate="">Date Published</td>
-            <td tal:content="python:view.to_localized_time(view.timestamp)"/>
           </tr>
         </table>
       </div>
@@ -455,7 +374,7 @@
   <tal:render condition="python:True">
     <div class="row section-results no-gutters" tal:define="global analyses_remarks python:[]">
       <div class="w-100">
-        <h1 i18n:translate="">Results</h1>
+        <h2 i18n:translate="">Results</h2>
 
         <!-- Group by lineage (primary, secondary) -->
         <tal:ancestry define="samples python: view.get_ancestry(model);"
@@ -484,78 +403,86 @@
                 <col style="width: 5%"/>
               </colgroup>
               <thead>
-                <tr class="small">
-                  <th class="analysis">
-                    <span class="font-weight-bold" tal:content="category/Title">Category</span>
-                  </th>
-                  <th class="result">
-                    <span class="font-weight-bold" i18n:translate="">Result</span>
-                  </th>
-                  <th class="result-range">
-                    <span class="font-weight-bold" i18n:translate="">Range</span>
-                  </th>
-                  <th class="captured">
-                    <span class="font-weight-bold" i18n:translate="">Captured Date</span>
-                  </th>
-                  <th class="outofrange">
-                    <span i18n:translate=""/>
-                  </th>
-                </tr>
+              <tr class="small">
+                <th class="analysis">
+                  <span class="font-weight-bold" tal:content="category/Title">Category</span>
+                </th>
+                <th class="result">
+                  <span class="font-weight-bold" i18n:translate="">Result</span>
+                </th>
+                <th class="result-range">
+                  <span class="font-weight-bold" i18n:translate="">Range</span>
+                </th>
+                <th class="captured">
+                  <span class="font-weight-bold" i18n:translate="">Captured Date</span>
+                </th>
+                <th class="outofrange">
+                  <span i18n:translate=""/>
+                </th>
+              </tr>
               </thead>
               <tbody>
-                <tal:analyses tal:repeat="analysis python:analyses_by_category.get(category)">
-                  <tr>
-                    <td class="analysis">
-                      <tal:result_not_verified condition="python:not analysis.getDateVerified()">
-                        <strong style="color:red;">*</strong>&nbsp;
-                      </tal:result_not_verified>
-                      <span class="text-success"
-                            tal:content="accredited_symbol"
-                            style="font-family:Lucida Console, Courier, monospace;"
-                            tal:condition="analysis/Accredited">
+              <tal:analyses tal:repeat="analysis python:analyses_by_category.get(category)">
+                <tr>
+                  <td class="analysis">
+                    <tal:result_not_verified condition="python:not analysis.getDateVerified()">
+                      <strong style="color:red;">*</strong>&nbsp;
+                    </tal:result_not_verified>
+                    <span class="text-success"
+                          tal:content="accredited_symbol"
+                          style="font-family:Lucida Console, Courier, monospace;"
+                          tal:condition="analysis/Accredited">
                       </span>
-                      <tal:growth_number condition="analysis/GrowthNumber|nothing">
-                        <span tal:content="string:#${analysis/GrowthNumber}"/>
-                      </tal:growth_number>
-                      <span tal:condition="not:analysis/ScientificName">
+                    <tal:growth_number condition="analysis/GrowthNumber|nothing">
+                      <span tal:content="string:#${analysis/GrowthNumber}"/>
+                    </tal:growth_number>
+                    <span tal:condition="not:analysis/ScientificName">
                         <span class="font-weight-normal"
                               tal:condition="analysis/ShortTitle"
                               tal:content="analysis/ShortTitle"/>
-                        <span class="font-weight-normal"
-                              tal:condition="not:analysis/ShortTitle"
-                              tal:content="analysis/title"/>
+
+                        <tal:micro_cond define="is_isolate python:analysis.title == 'Microorganism identification'"
+                                        condition="not:analysis/ShortTitle">
+                          <span class="font-weight-normal"
+                                tal:condition="not:is_isolate"
+                                tal:content="analysis/title"/>
+                          <span class="font-weight-normal"
+                                tal:condition="is_isolate">Isolate</span>
+                        </tal:micro_cond>
+
+
                       </span>
-                      <span tal:condition="analysis/ScientificName">
+                    <span tal:condition="analysis/ScientificName">
                         <span class="font-italic" tal:content="analysis/ScientificName"/>
                       </span>
-                      <tal:remarks tal:condition="analysis/Remarks"
-                          tal:define="remarks analysis/Remarks">
-                        <sup tal:define="dummy python:analyses_remarks.append(remarks)"
-                             tal:content="python: len(analyses_remarks)"/>
-                      </tal:remarks>
-                    </td>
-                    <td>
-                      <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)">23</span>
+                    <tal:remarks tal:condition="analysis/Remarks"
+                                 tal:define="remarks analysis/Remarks">
+                      <sup tal:define="dummy python:analyses_remarks.append(remarks)"
+                           tal:content="python: len(analyses_remarks)"/>
+                    </tal:remarks>
+                  </td>
+                  <td>
+                    <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)">23</span>
 
-                      <tal:result_unit condition="analysis/Unit">
-                        &nbsp;<span class="units font-italic" tal:content="structure python:sample.get_formatted_unit(analysis)"/>
-                      </tal:result_unit>
+                    <tal:result_unit condition="analysis/Unit">
+                      &nbsp;<span class="units font-italic" tal:content="structure python:sample.get_formatted_unit(analysis)"/>
+                    </tal:result_unit>
 
-                      <tal:result_uncertainty condition="analysis/Uncertainty">
-                        &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
-                      </tal:result_uncertainty>
-                    </td>
-                    <td>
+                    <tal:result_uncertainty condition="analysis/Uncertainty">
+                      &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
+                    </tal:result_uncertainty>
+                  </td>
+                  <td>
                       <span tal:define="specs python:sample.get_formatted_specs(analysis);"
                             tal:condition="specs"
                             tal:content="specs"/>
-                    </td>
-                    <td>
+                  </td>
+                  <td>
                       <span class="captured font-weight-normal"
                             tal:condition="analysis/ResultCaptureDate"
                             tal:content="python:view.to_localized_time(analysis.ResultCaptureDate)"/>
-                    </td>
-                    <td class="text-center align-middle">
+                  </td>
+                  <td class="text-center align-middle">
                       <span tal:condition="python:sample.is_out_of_range(analysis)"
                             class="font-weight-light">
                         <span class="outofrange text-danger"
@@ -563,19 +490,19 @@
                               tal:content="outofrange_symbol">
                         </span>
                       </span>
-                    </td>
-                  </tr>
-                </tal:analyses>
-              </tbody>
-              <tfoot tal:define="category_comments python:category.Comments">
-                <tr tal:condition="category_comments">
-                  <td colspan="3">
-                    <div class="category_comments"
-                         tal:content="category_comments">
-                      Category Comments
-                    </div>
                   </td>
                 </tr>
+              </tal:analyses>
+              </tbody>
+              <tfoot tal:define="category_comments python:category.Comments">
+              <tr tal:condition="category_comments">
+                <td colspan="3">
+                  <div class="category_comments"
+                       tal:content="category_comments">
+                    Category Comments
+                  </div>
+                </td>
+              </tr>
               </tfoot>
             </table>
           </tal:categories>
@@ -605,10 +532,10 @@
          tal:define="ris python:model.get_resultsinterpretation();
                      has_ri python:any(map(lambda r: r.get('richtext'), ris));">
       <div class="" tal:condition="has_ri">
-        <h1 i18n:translate="">Results interpretation</h1>
+        <!-- <h1 i18n:translate="">Results interpretation</h1> -->
 
         <tal:ri repeat="ri ris">
-          <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2>
+          <!-- <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2> -->
           <div class="text-info" tal:content="structure ri/richtext|nothing"></div>
         </tal:ri>
       </div>
@@ -616,7 +543,7 @@
   </tal:render>
 
   <!-- ATTACHMENTS -->
-  <tal:render condition="python:True">
+  <tal:render condition="python:False">
     <div class="row section-attachments no-gutters">
       <tal:attachment tal:define="attachments python:model.get_sorted_attachments('r');">
         <h2 i18n:translate=""
@@ -626,7 +553,7 @@
         <table class="table w-100" tal:condition="attachments">
           <colgroup tal:condition="python:len(attachments) > 1">
             <col tal:repeat="col python:range(attachments_per_row)"
-                  tal:attributes="style python:'width:{}%'.format(100/attachments_per_row)">
+                 tal:attributes="style python:'width:{}%'.format(100/attachments_per_row)">
           </colgroup>
           <tr tal:repeat="chunk python:view.group_into_chunks(attachments, attachments_per_row)">
             <td class="align-bottom"
@@ -660,91 +587,43 @@
   <tal:render condition="python:True">
     <div class="row section-signatures no-gutters">
       <div class="w-100">
-        <h1 i18n:translate="">Authorised by</h1>
+        <h4 i18n:translate="">Authorised <span tal:content="python:view.to_localized_time(view.timestamp)"/> by</h4>
         <table class="table table-sm table-condensed">
           <tr>
-            <tal:manager repeat="manager python:model.managers">
-              <td style="border:none">
-                <div>
-                  <img tal:condition="manager/Signature"
-                       tal:attributes="src string:${manager/absolute_url}/Signature" style="height:75px"/>
-                </div>
-                <div class="font-weight-bold">
-                  <span tal:content="manager/Salutation"/>
-                  <span tal:condition="manager/Salutation">&nbsp;</span>
-                  <span tal:content="manager/Fullname"/>
-                </div>
-                <div>
-                  <span tal:content="manager/JobTitle"/>
-                </div>
-                <div>
-                  <span tal:content="manager/DefaultDepartment/title|nothing"/>
-                </div>
-              </td>
-            </tal:manager>
             <tal:reporter define="reporter python:view.current_user" condition="reporter">
               <td style="border:none">
-                <div class="label" i18n:translate="">Published by</div>
-                <div>
+                <div class="font-weight-bold">
                   <span tal:content="reporter/fullname|reporter/username"/>
-                  <tal:email tal:condition="reporter/email|nothing"
+                  <!-- <tal:email tal:condition="reporter/email|nothing"
                              tal:define="email reporter/email|nothing">
                     (<a tal:content="email"
                         tal:attributes="href string:mailto:${email}"/>)
-                  </tal:email>
+                  </tal:email> -->
                 </div>
               </td>
             </tal:reporter>
+            <tal:supervisor define="supervisor laboratory/Supervisor" condition="supervisor">
+              <td style="border:none">
+                <div class="font-weight-bold">
+                  <span tal:content="supervisor/Salutation" />
+                  <span tal:condition="supervisor/Salutation">&nbsp;</span>
+                  <span tal:content="supervisor/Fullname"/>
+                </div>
+                <div>
+                  <span tal:content="supervisor/JobTitle"/>
+                </div>
+                <!--
+                <div>
+                  <span tal:content="supervisor/DefaultDepartment/title|nothing"/>
+                </div>
+                -->
+              </td>
+            </tal:supervisor>
+            <!-- <div class="lab-supervisor" tal:condition="laboratory/Supervisor">
+                <div tal:replace="laboratory/Supervisor/Fullname|nothing"></div>
+            </div> -->
           </tr>
         </table>
-      </div>
-    </div>
-  </tal:render>
-
-  <!-- DISCREETER -->
-  <tal:render condition="python:True"
-              define="laboratory python:view.laboratory;
-                      contact model/Contact">
-    <div class="row section-discreeter no-gutters">
-      <div class="w-100 text-muted font-weight-light small">
-        <div class="discreeter-outofrange">
-          <span class="outofrange text-danger"
-                style="font-family:Lucida Console, Courier, monospace;"
-                tal:content="outofrange_symbol">
-          </span>
-          <span i18n:translate="">Result out of client specified range.</span>
-        </div>
-        <div class="discreeter-not-invoiced"
-             tal:condition="model/InvoiceExclude"
-             i18n:translate="">
-          Not invoiced
-        </div>
-        <div class="discreeter-methods"
-             tal:condition="laboratory/LaboratoryAccredited">
-          <span class="accredited-symbol text-success"
-                style="font-family: Lucida Console, Courier, monospace;"
-                tal:content="accredited_symbol">
-          </span>
-          <span class="" i18n:translate="">
-            Methods included in the
-            <tal:block replace="laboratory/AccreditationBody" i18n:name="accreditation_body"/>
-            schedule of Accreditation for this Laboratory. Analysis remarks are not
-            accredited
-          </span>
-        </div>
-        <div class="discreeter-disclaimer"
-             i18n:translate="">
-          Analysis results relate only to the samples tested.
-        </div>
-        <div class="discreeter-copyright"
-             i18n:translate="">
-          This document shall not be reproduced except in full, without the written approval of
-          <tal:block replace="laboratory/title" i18n:name="name_lab"/>
-        </div>
-        <div tal:define="confidence_level laboratory/Confidence"
-             tal:condition="confidence_level" i18n:translate="">
-          Test results are at a <tal:block replace="confidence_level" i18n:name="lab_confidence"/>% confidence level
-        </div>
       </div>
     </div>
   </tal:render>
@@ -799,6 +678,7 @@
                        condition="website">
                 • <a tal:attributes="href website" tal:content="website"/>
               </tal:web>
+              • <span i18n:translate="">Report v1</span>
             </div>
           </td>
         </tr>
