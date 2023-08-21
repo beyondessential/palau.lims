@@ -137,7 +137,7 @@ system is alywas in sync.
 # apt -y install ntp
 ```
 
-## Secure SSH access
+## Install SSH OpenSSH server
 
 The remote access to this server will be done through a
 [Secure Shell (SSH)][ssh] connection, that provides a
@@ -151,6 +151,54 @@ not yet installed, as follows:
 
 Once installed, `sshd` (`OpenSSH Daemon`), that listens for connections from
 clients, will start automatically. `sshd` process will also start at boot.
+
+## Setup your public SSH key
+
+Add **your public key** to the server's authorized keys. If you don't yet have
+your pair of private/public SSH keys, **create one in your local machine** as
+follows:
+
+```shell
+me@local:~$ ssh-keygen -t rsa -b 4096
+```
+
+> **Note**
+> More information: [ssh-keygen at Wikipedia][ssh_keygen_wikipedia]
+
+Install your SSH key on the server as an authorized key by typing the following
+command in your **local machine**:
+
+```shell
+me@local:~$ ssh-copy-id -i ~/.ssh/id_rsa.pub senaite@host
+```
+
+where:
+- `host`: the IP of the server we are setting up
+
+> **Note**
+> `id_rsa.pub` is the file name linux uses by default when creating your
+> key pair. Change the file name if required. `host` is the host name or IP
+> of the server we are configuring. More information:
+> [`ssh-copy-id` manpage][ssh-copy-id]
+
+You now will be able to access to your server without password. Type the
+following command in your **local machine**:
+
+```shell
+me@local:~$ ssh senaite@host
+Linux Debian-bullseye-64-minimal 5.10.0-23-amd64 #1 SMP Debian 5.10.179-1 (2023-05-12) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Sat Jun 10 22:35:16 2023 from 197.155.238.158
+senaite@Debian-bullseye-64-minimal:~$
+```
+
+## Secure SSH access
 
 In order to properly secure the system, it is recommended to ensure your SSH
 server is configured according to best practices. SSH configuration involves
@@ -203,51 +251,7 @@ message:
 # sshd -t
 ```    
 
-Add **your public key** to the server's authorized keys. If you don't yet have
-your pair of private/public SSH keys, **create one in your local machine** as
-follows:
-
-```shell
-$ ssh-keygen -t rsa -b 4096
-```
-
-> **Note**
-> More information: [ssh-keygen at Wikipedia][ssh_keygen_wikipedia]
-
-Install your SSH key on the server as an authorized key by typing the following
-command in your **local machine**:
-
-```shell
-me@local:~$ ssh-copy-id -i ~/.ssh/id_rsa.pub senaite@host
-```
-
-where:
-- `host`: the IP of the server we are setting up
-
-> **Note**
-> `id_rsa.pub` is the file name linux uses by default when creating your
-> key pair. Change the file name if required. `host` is the host name or IP
-> of the server we are configuring. More information:
-> [`ssh-copy-id` manpage][ssh-copy-id]
-
-You now will be able to access to your server without password. Type the
-following command in your **local machine**:
-
-```shell
-me@local:~$ ssh senaite@host
-Linux Debian-bullseye-64-minimal 5.10.0-23-amd64 #1 SMP Debian 5.10.179-1 (2023-05-12) x86_64
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-Last login: Sat Jun 10 22:35:16 2023 from 197.155.238.158
-senaite@Debian-bullseye-64-minimal:~$
-```
-
-Go back to the terminal session in the server and restart the `sshd` process:
+If no (error) message is displayed, restart the `sshd` process:
 
 ```shell
 # service sshd restart
