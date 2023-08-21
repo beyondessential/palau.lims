@@ -1,0 +1,63 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="palau.lims">
+
+  <five:registerPackage package="." initialize=".initialize"/>
+
+  <!-- Register locales -->
+  <i18n:registerTranslations directory="locales"/>
+
+  <!-- Filesystem directory view -->
+  <cmf:registerDirectory name="skins" directory="skins" recursive="True"/>
+
+  <!-- Import senaite.core permissions -->
+  <include package="bika.lims" file="permissions.zcml" />
+
+  <!-- Import palau.lims permissions -->
+  <include file="permissions.zcml" />
+
+  <!-- Package includes -->
+  <include package=".adapters" />
+  <include package=".behaviors" />
+  <include package=".browser" />
+  <include package=".catalog" />
+  <include package=".content" />
+  <include package=".impress" />
+  <include package=".reflex" />
+  <include package=".monkeys" />
+  <include package=".subscribers" />
+  <include package=".workflow" />
+
+  <!-- Default profile -->
+  <genericsetup:registerProfile
+    name="default"
+    title="PALAU LIMS"
+    directory="profiles/default"
+    description="Extension profile for SENAITE: PALAU LIMS"
+    pre_handler=".setuphandlers.pre_install"
+    post_handler=".setuphandlers.post_install"
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
+  <!-- Generic Setup Handler -->
+  <genericsetup:importStep
+    name="palau.lims.setup_handler"
+    title="PALAU.LIMS Setup Handler"
+    description="Run various configuration actions"
+    handler=".setuphandlers.setup_handler">
+    <depends name="typeinfo"/>
+  </genericsetup:importStep>
+
+  <!-- Uninstall profile -->
+  <genericsetup:registerProfile
+    name="uninstall"
+    title="PALAU LIMS (uninstall)"
+    directory="profiles/uninstall"
+    description="Extension profile for SENAITE: PALAU LIMS"
+    post_handler=".setuphandlers.post_uninstall"
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
+</configure>

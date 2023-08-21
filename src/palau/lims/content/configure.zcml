@@ -1,0 +1,79 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="palau.lims">
+
+  <include package="archetypes.schemaextender" />
+
+  <!-- Schema modifier for AnalysisRequest (Sample) -->
+  <adapter
+    name="palau.lims.analysisrequest.schemamodifier"
+    provides="archetypes.schemaextender.interfaces.ISchemaModifier"
+    factory=".analysisrequest.AnalysisRequestSchemaModifier" />
+
+  <!-- Schema extender for AnalysisRequest (Sample) -->
+  <adapter
+    name="palau.lims.analysisrequest.schemaextender"
+    provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+    factory=".analysisrequest.AnalysisRequestSchemaExtender" />
+
+  <!-- Schema extender for Sample Type -->
+  <adapter
+    name="palau.lims.sampletype.schemaextender"
+    provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+    factory=".sampletype.SampleTypeSchemaExtender" />
+
+  <!-- Schema modifier for Sample Type -->
+  <adapter
+      name="palau.lims.sampletype.schemamodifier"
+      provides="archetypes.schemaextender.interfaces.ISchemaModifier"
+      factory=".sampletype.SampleTypeSchemaModifier" />
+
+  <!-- Schema extender for AR Template -->
+  <adapter
+      name="palau.lims.artemplate.schemaextender"
+      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+      factory=".artemplate.ARTemplateSchemaExtender" />
+
+  <!-- Schema modifier for AR Template -->
+  <adapter
+      name="palau.lims.artemplate.schemamodifier"
+      provides="archetypes.schemaextender.interfaces.ISchemaModifier"
+      factory=".artemplate.ARTemplateSchemaModifier" />
+
+  <!-- Schema extender for LIMS Setup -->
+  <adapter
+      name="palau.lims.setup.schemaextender"
+      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+      factory=".limssetup.LimsSetupSchemaExtender" />
+
+  <!-- Schema extender for Client -->
+  <adapter
+      name="palau.lims.client.schemaextender"
+      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+      factory=".client.ClientSchemaExtender" />
+
+  <!-- Schema extender for ContainerType -->
+  <adapter
+      name="palau.lims.container.schemaextender"
+      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+      factory=".containertype.ContainerTypeSchemaExtender" />
+
+  <!-- Schema extender for LabContact -->
+  <adapter
+      name="palau.lims.labcontact.schemaextender"
+      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+      factory=".labcontact.LabContactSchemaExtender" />
+
+  <!-- Schema modifier for Service/Analysis-like types -->
+  <adapter
+      name="palau.lims.baseanalysis.schemamodifier"
+      provides="archetypes.schemaextender.interfaces.ISchemaModifier"
+      factory=".baseanalysis.BaseAnalysisSchemaModifier" />
+
+  <!-- Schema extender for Analysis-like types -->
+  <adapter
+      name="palau.lims.analysis.schemaextender"
+      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+      factory=".analysis.AnalysisSchemaExtender" />
+
+</configure>

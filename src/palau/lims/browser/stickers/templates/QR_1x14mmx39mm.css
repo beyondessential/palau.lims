@@ -1,0 +1,46 @@
+/*
+Sticker Dimensions: 14mm x 39mm
+Sticker margins: 4mm, 1mm
+*/
+.sticker {
+    margin: 0 auto;
+    padding: 4mm 1mm;
+    width: 12mm;    /* Total width  = 1 + 1 + 12 = 14mm */
+    height: 29mm;   /* Total height = 4 + 4 + 29 = 37mm */
+    font-family: Helvetica, Arial;
+    font-size: 6pt;
+    text-align: center;
+    overflow: hidden;
+}
+
+
+.sticker .error {
+    color: red;
+    font-size: 8pt;
+    z-index: 1000;
+}
+
+.sticker .barcode {
+    margin: 0 auto;
+    padding: 1mm 0 !important;
+    text-align: center;
+}
+
+.sticker div.patient_name {
+    font-size: 5pt;
+}
+.sticker div.date_received {
+    font-size: 5pt;
+}
+
+@media print {
+    @page {
+        size:  14mm 39mm !important;
+        margin: 0mm !important;
+    }
+    html, body {
+        height: 39mm !important;
+        width: 14mm !important;
+        margin: 0mm !important;
+    }
+}

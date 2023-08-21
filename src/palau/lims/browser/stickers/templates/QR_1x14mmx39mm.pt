@@ -1,0 +1,34 @@
+<tal:sticker define="item python:view.current_item;
+                     sample_id item/getId">
+
+  <!-- QR Code -->
+  <div class="qrcode"
+       data-size="36"
+       tal:attributes="data-code sample_id">
+  </div>
+
+  <!--
+
+    Sample ID number
+    Patient name
+    Date sample received (this is optional depending on the space to include)
+
+   -->
+
+
+  <div class="sample_id" tal:content="sample_id">Sample ID</div>
+
+  <div class="patient_name"
+       tal:define="patient python:item.PatientFullName or {};
+                   firstname python:patient.get('firstname','');
+                   lastname python:patient.get('lastname', '');
+                   fullname python:filter(None, [firstname, lastname]);
+                   fullname python: ' '.join(fullname);"
+       tal:content="fullname">Patient name</div>
+
+  <div class="date_received"
+       tal:define="received python:item.DateReceived;
+                   received python:view.short_date(received) if received else '-- due --'"
+       tal:content="received">Date received</div>
+
+</tal:sticker>

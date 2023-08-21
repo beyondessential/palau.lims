@@ -1,0 +1,12 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="palau.lims">
+
+  <monkey:patch
+      class="bika.lims.utils.analysisrequest"
+      ignoreOriginal="False"
+      original="get_rejection_pdf"
+      replacement=".analysisrequest.get_rejection_pdf" />
+
+</configure>

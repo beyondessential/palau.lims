@@ -1,0 +1,45 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="palau.lims">
+
+  <!-- Unknown Doctor viewlet -->
+  <browser:viewlet
+    for="bika.lims.interfaces.IAnalysisRequest"
+    name="palau.lims.unknown_doctor_viewlet"
+    class=".UnknownDoctorViewlet"
+    manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+    template="templates/unknown_doctor_viewlet.pt"
+    permission="zope2.View"
+    layer="palau.lims.interfaces.IPalauLimsLayer" />
+
+  <!-- Not enough sample viewlet -->
+  <browser:viewlet
+      for="bika.lims.interfaces.IAnalysisRequest"
+      name="palau.lims.not_enough_sample_viewlet"
+      class=".NotEnoughSampleViewlet"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+      template="templates/not_enough_sample_viewlet.pt"
+      permission="zope2.View"
+      layer="palau.lims.interfaces.IPalauLimsLayer" />
+
+  <!-- Over sample viewlet -->
+  <browser:viewlet
+      for="bika.lims.interfaces.IAnalysisRequest"
+      name="palau.lims.over_sample_viewlet"
+      class=".OverSampleViewlet"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+      template="templates/over_sample_viewlet.pt"
+      permission="zope2.View"
+      layer="palau.lims.interfaces.IPalauLimsLayer" />
+
+  <!-- Date Of Admission error viewlet -->
+  <browser:viewlet
+      for="bika.lims.interfaces.IAnalysisRequest"
+      name="palau.lims.error_date_of_admission_viewlet"
+      class=".ErrorDateOfAdmissionViewlet"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+      template="templates/error_date_of_admission_viewlet.pt"
+      permission="zope2.View"
+      layer="palau.lims.interfaces.IPalauLimsLayer" />
+</configure>

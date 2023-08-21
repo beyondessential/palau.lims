@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<rolemap>
+  <roles>
+    <!-- SENAITE ROLES -->
+    <role name="Analyst"/>
+    <role name="Client"/>
+    <role name="LabClerk"/>
+    <role name="LabManager"/>
+    <role name="Preserver"/>
+    <role name="Publisher"/>
+    <role name="RegulatoryInspector"/>
+    <role name="Sampler"/>
+    <role name="SamplingCoordinator"/>
+    <role name="Verifier"/>
+
+    <!-- PLONE ROLES -->
+    <role name="Anonymous"/>
+    <role name="Authenticated"/>
+    <role name="Contributor"/>
+    <role name="Editor"/>
+    <role name="Manager"/>
+    <role name="Member"/>
+    <role name="Owner"/>
+    <role name="Reader"/>
+    <role name="Reviewer"/>
+    <role name="Site Administrator"/>
+  </roles>
+
+  <permissions>
+    <!-- Add Permissions -->
+    <permission name="palau.lims: Add Ward" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Owner"/>
+    </permission>
+    <permission name="palau.lims: Add Ward Department" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Owner"/>
+    </permission>
+
+    <!-- Field permissions -->
+    <permission name="palau.lims: Field: Edit Bottles" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+    <permission name="palau.lims: Field: Edit Clinical Information" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+    <permission name="palau.lims: Field: Edit Current Antibiotics" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+    <permission name="palau.lims: Field: Edit Volume" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+    <permission name="palau.lims: Field: Edit Ward" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+    <permission name="palau.lims: Field: Edit Ward Department" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+    <permission name="palau.lims: Field: Edit Location" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+    <permission name="palau.lims: Field: Edit Date Of Admission" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+    <permission name="senaite.core: Field: Edit Results Interpretation" acquire="False">
+      <role name="Analyst"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Verifier"/>
+    </permission>
+
+    <!-- Transition permissions -->
+    <permission name="palau.lims: Transition: Create Supplementary" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Client"/>
+    </permission>
+
+  </permissions>
+
+</rolemap>

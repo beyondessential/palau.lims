@@ -1,0 +1,28 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="palau.lims">
+
+  <!-- Setter for Analysis's GrowthNumber field -->
+  <monkey:patch
+      description="Setter for Analysis's GrowthNumber field"
+      class="bika.lims.content.analysis.Analysis"
+      original="setGrowthNumber"
+      ignoreOriginal="True"
+      replacement=".analysis.setGrowthNumber" />
+
+  <!-- Getter for Analysis's GrowthNumber field -->
+  <monkey:patch
+      description="Getter for Analysis's GrowthNumber field"
+      class="bika.lims.content.analysis.Analysis"
+      original="getGrowthNumber"
+      ignoreOriginal="True"
+      replacement=".analysis.getGrowthNumber" />
+
+  <!-- Getter for Analysis's setInterimFields field -->
+  <monkey:patch
+      class="bika.lims.content.analysis.Analysis"
+      original="setInterimFields"
+      replacement=".analysis.setInterimFields" />
+
+</configure>

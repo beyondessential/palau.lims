@@ -1,0 +1,11 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="palau.lims">
+
+  <!-- Culture interpretation -->
+  <adapter
+    name="palau.lims.reflex.cinter.submit"
+    factory=".cinter.CultureInterpretationSubmitAdapter"
+    for="bika.lims.interfaces.analysis.IRequestAnalysis" />
+
+</configure>

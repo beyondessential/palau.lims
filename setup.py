@@ -32,7 +32,7 @@ setup(
     author_email="info@naralabs.com",
     url="https://github.com/beyondessential/palau.lims",
     license="GPLv2",
-    packages=find_packages("src", exclude=["ez_setup"]),
+    packages=find_packages("src", include=("palau*",)),
     package_dir={"": "src"},
     namespace_packages=["palau"],
     include_package_data=True,
@@ -41,8 +41,6 @@ setup(
         "senaite.lims>=2.5.0",
         "senaite.ast",
         "senaite.patient",
-        "senaite.storage",
-        "senaite.lis2a",
         # senaite.core does no longer provides schemaextender
         # https://github.com/senaite/senaite.core/pull/1931
         "archetypes.schemaextender",

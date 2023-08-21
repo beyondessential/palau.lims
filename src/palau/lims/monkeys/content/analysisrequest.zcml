@@ -1,0 +1,24 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="palau.lims">
+
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getRawWard"
+      ignoreOriginal="True"
+      replacement=".analysisrequest.getRawWard" />
+
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getWard"
+      ignoreOriginal="True"
+      replacement=".analysisrequest.getWard" />
+
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="setWard"
+      ignoreOriginal="True"
+      replacement=".analysisrequest.setWard" />
+
+</configure>

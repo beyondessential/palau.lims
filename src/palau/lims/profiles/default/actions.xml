@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<object xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  name="portal_actions"
+  meta_type="Plone Actions Tool"
+  purge="False">
+
+  <!-- Portal Tabs (Located in the upper right button) -->
+  <object name="portal_tabs" meta_type="CMF Action Category" purge="False">
+
+    <!-- WHONET export view -->
+    <object name="export_whonet" meta_type="CMF Action" i18n:domain="senaite.core">
+      <property name="title" i18n:translate="">Export to WHONET</property>
+      <property name="description" i18n:translate=""/>
+      <property name="url_expr">string:$portal_url/export_whonet</property>
+      <property name="link_target"/>
+      <property name="icon_expr"/>
+      <property name="available_expr"/>
+      <property name="permissions">
+        <element value="senaite.core: Manage Analysis Requests"/>
+      </property>
+      <property name="visible">True</property>
+    </object>
+	</object>
+
+</object>

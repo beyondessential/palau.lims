@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="palau.lims">
+
+  <include package="plone.behavior" file="meta.zcml"/>
+
+  <plone:behavior
+      name="palau.lims.behavior.samplecontainer"
+      title="ExtendedSampleContainer"
+      description="Extends SampleContainer with additional fields"
+      provides=".samplecontainer.IExtendedSampleContainerBehavior"
+      factory=".samplecontainer.ExtendedSampleContainer"
+      for="senaite.core.interfaces.ISampleContainer" />
+
+</configure>

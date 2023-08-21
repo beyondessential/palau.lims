@@ -1,13 +1,13 @@
 # Contributing to palau.lims
 
-Third-party contributions are essential for keeping `palau.lims` continuously
-improving. We want to keep it as easy as possible to contribute changes that
-get things working in your environment. There are a few guidelines that we need
-contributors to follow so that we can have a chance of keeping on top of
-things.
+Third-party contributions are essential for keeping `palau.lims`
+continuously improving. We want to keep it as easy as possible to contribute
+changes that get things working in your environment. There are a few guidelines
+that we need contributors to follow so that we can have a chance of keeping on
+top of things.
 
-The following is a set of guidelines for contributing to `palau.lims`. These
-are just guidelines, not rules. Use your best judgment, and feel free to
+The following is a set of guidelines for contributing to `palau.lims`.
+These are just guidelines, not rules. Use your best judgment, and feel free to
 propose changes to this document with a 
 [pull request](#how-to-submit-a-pull-request).
 
@@ -57,8 +57,8 @@ Also, tag the ticket with the label "improvement" or "addition".
 
 ### Preliminaries
 
-1. If you still have not done
-   so, [create your personal account on GitHub][join].
+1. If you still have not done so, 
+   [create your personal account on GitHub][join].
 
 2. [Fork this repository][fork]. This will copy the whole repository into your
    personal account at GitHub.

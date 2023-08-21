@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<object name="portal_skins" meta_type="Plone Skins Tool" allow_any="False"
+        cookie_persistence="False" default_skin="Plone Default"
+        request_varname="plone_skin">
+
+  <!-- png images -->
+  <object name="palau_images" meta_type="Filesystem Directory View"
+          directory="palau.lims:skins/palau_images"/>
+
+  <!-- png templates -->
+  <object name="palau_templates" meta_type="Filesystem Directory View"
+          directory="palau.lims:skins/palau_templates"/>
+
+  <skin-path name="*">
+    <layer name="palau_images" insert-after="custom"/>
+    <layer name="palau_templates" insert-after="palau_images"/>
+  </skin-path>
+</object>

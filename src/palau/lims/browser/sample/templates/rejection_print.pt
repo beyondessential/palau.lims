@@ -1,0 +1,15 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="palau.lims">
+
+  <head>
+    <link rel="stylesheet" tal:attributes="href string:${view/site_url}/++plone++senaite.core.static/bundles/main.css"/>
+    <link rel="stylesheet" tal:attributes="href string:${view/site_url}/++plone++senaite.core.static/bundles/senaite.core.css"/>
+  </head>
+
+  <body>
+    <span tal:replace="structure view/content"/>
+  </body>
+
+</html>

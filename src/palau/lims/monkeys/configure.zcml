@@ -1,0 +1,33 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="palau.lims">
+
+  <!-- Package includes -->
+  <include package=".browser"/>
+  <include package=".content"/>
+  <include package=".subscribers"/>
+  <include package=".utils"/>
+
+  <!-- Stickers available for sample depending on sample type -->
+  <monkey:patch
+      class="bika.lims.adapters.stickers.GetSampleStickers"
+      original="__call__"
+      replacement=".adapters.stickers.get_sample_stickers"/>
+
+  <monkey:patch
+      class="senaite.ast.datamanagers.ASTAnalysisDataManager"
+      original="is_field_writeable"
+      replacement=".datamanagers.is_field_writeable" />
+
+  <!-- Custom filename for results reports -->
+  <monkey:patch
+      class="bika.lims.browser.publish.emailview.EmailView"
+      original="get_report_filename"
+      replacement=".publish.get_report_filename" />
+  <monkey:patch
+      class="bika.lims.browser.publish.downloadview.DownloadView"
+      original="get_report_filename"
+      replacement=".publish.get_report_filename" />
+
+</configure>

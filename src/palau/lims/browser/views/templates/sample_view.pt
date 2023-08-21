@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="senaite.core">
+
+  <body>
+
+    <metal:content-title fill-slot="content-title">
+      <h1>
+        <!-- Sample icon -->
+        <i class="sample-icon" title="Sample" i18n:attributes="title">
+          <svg tal:replace="structure senaite_theme/icon_data/sample" />
+        </i>
+        <!-- Title -->
+        <span class="documentFirstHeading" tal:content="context/id"/>
+        <span class="small font-weight-light ml-3" tal:content="python:view.get_heading()"/>
+        <!-- Hazardous icon -->
+        <i class="hazardous-icon" title="Hazardous" i18n:attributes="title"
+           tal:condition="python:view.is_hazardous()">
+          <svg tal:replace="structure senaite_theme/icon_data/hazardous" />
+        </i>
+        <!-- Exclude Invoice Icon -->
+        <i class="exclude-from-invoice-icon" title="Exclude from invoice" i18n:attributes="title"
+           tal:condition="python:view.exclude_invoice()">
+          <svg tal:replace="structure senaite_theme/icon_data/invoice_exclude" />
+        </i>
+        <!-- Retest Icon -->
+        <i class="retest-icon" title="Results have been withdrawn" i18n:attributes="title"
+           tal:condition="python:view.is_retest()">
+          <svg tal:replace="structure senaite_theme/icon_data/retest" />
+        </i>
+      </h1>
+    </metal:content-title>
+
+    <metal:content-description fill-slot="content-description">
+    </metal:content-description>
+
+    <metal:content-core fill-slot="content-core">
+
+      <!-- Viewlet manager: sample header -->
+      <div class="row">
+        <div class="col-sm-12">
+          <span tal:replace="structure provider:senaite.sampleheader"/>
+        </div>
+      </div>
+
+      <!-- Viewlet manager: above sample sections -->
+      <div class="row" id="above-sample-sections">
+        <div class="col-sm-12">
+          <div tal:replace="structure provider:senaite.abovesamplesections"></div>
+        </div>
+      </div>
+
+      <!-- Viewlet manager: sample sections -->
+      <div class="row" id="sample-sections">
+        <div class="col-sm-12">
+          <div tal:replace="structure provider:senaite.samplesections"></div>
+        </div>
+      </div>
+
+      <!-- Viewlet manager: below sample sections -->
+      <div class="row" id="below-sample-sections">
+        <div class="col-sm-12">
+          <div tal:replace="structure provider:senaite.belowsamplesections"></div>
+        </div>
+      </div>
+
+      <!-- Viewlet manager: sample footer -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div tal:replace="structure provider:senaite.samplefooter"></div>
+        </div>
+      </div>
+
+    </metal:content-core>
+  </body>
+</html>

@@ -1,0 +1,311 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2023-01-26 09:40+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+
+#: png/lims/browser/content/clinicalinformations.py:50
+#: png/lims/browser/content/wards.py:50
+msgid "Active"
+msgstr ""
+
+#: png/lims/browser/content/clinicalinformations.py:31
+#: png/lims/browser/content/wards.py:31
+msgid "Add"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:115
+msgid "Age"
+msgstr ""
+
+#: png/lims/browser/content/clinicalinformations.py:62
+#: png/lims/browser/content/wards.py:62
+msgid "All"
+msgstr ""
+
+#: png/lims/content/artemplate.py:50
+#: png/lims/content/sampletype.py:67
+msgid "Auto-text for when there is not enough volume"
+msgstr ""
+
+#: png/lims/content/containertype.py:22
+msgid "BACTEC bottle"
+msgstr ""
+
+#: png/lims/content/sampletype.py:29
+msgid "BACTEC bottles control"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:153
+msgid "Bottle"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:188
+msgid "Bottles"
+msgstr ""
+
+#: png/lims/profiles/default/types/ClinicalInformation.xml
+msgid "Clinical Information"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:250
+msgid "Current antibiotic(s)"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:125
+msgid "Date received"
+msgstr ""
+
+#: png/lims/content/labcontact.py:29
+msgid "Default Hospital/Clinic"
+msgstr ""
+
+#: png/lims/browser/content/clinicalinformations.py:43
+#: png/lims/browser/content/wards.py:43
+#: png/lims/content/analysisrequest.py:202
+msgid "Description"
+msgstr ""
+
+#: png/lims/adapters/listing/samples.py:29
+#: png/lims/browser/sample/templates/rejection_content.pt:130
+#: png/lims/content/analysisrequest.py:65
+msgid "Doctor"
+msgstr ""
+
+#: png/lims/behaviors/samplecontainer.py:25
+msgid "Dry weight of the container. When set, the volume of the sample is calculated automatically by subtracting this value from the container's weight set on sample registration"
+msgstr ""
+
+#: png/lims/behaviors/configure.zcml:14
+msgid "ExtendedSampleContainer"
+msgstr ""
+
+#: png/lims/behaviors/configure.zcml:14
+msgid "Extends SampleContainer with additional fields"
+msgstr ""
+
+#: png/lims/configure.zcml:44
+msgid "Extension profile for SENAITE: PALAU LIMS"
+msgstr ""
+
+#: png/lims/content/baseanalysis.py:26
+msgid "Flag"
+msgstr ""
+
+#: png/lims/browser/whonet/templates/export.pt:49
+msgid "Generate CSV file"
+msgstr ""
+
+#: png/lims/content/sampletype.py:28
+msgid "Generic search control"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:134
+#: png/lims/content/analysisrequest.py:59
+msgid "Hospital/Clinic"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:154
+msgid "Identifier"
+msgstr ""
+
+#: png/lims/browser/content/clinicalinformations.py:56
+#: png/lims/browser/content/wards.py:56
+msgid "Inactive"
+msgstr ""
+
+#: png/lims/adapters/listing/samples.py:23
+msgid "Location"
+msgstr ""
+
+#: png/lims/adapters/listing/samples.py:26
+msgid "Location ID"
+msgstr ""
+
+#: png/lims/content/limssetup.py:25
+msgid "Logo to display in the header of results reports"
+msgstr ""
+
+#: png/lims/content/client.py:25
+msgid "Logo to display in the header of results reports for this client"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:106
+msgid "MRN"
+msgstr ""
+
+#: png/lims/skins/palau_templates/palau_widgets/bottleswidget.pt:285
+msgid "More"
+msgstr ""
+
+#: png/lims/content/baseanalysis.py:37
+msgid "Negative"
+msgstr ""
+
+#: png/lims/adapters/form.py:97
+msgid "Not a valid quantity or unit"
+msgstr ""
+
+#: png/lims/adapters/listing/samples.py:79
+msgid "Not enough sample"
+msgstr ""
+
+#: png/lims/configure.zcml:44
+msgid "PALAU LIMS"
+msgstr ""
+
+#: png/lims/configure.zcml:62
+msgid "PALAU LIMS (uninstall)"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:96
+msgid "Patient name"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:121
+msgid "Place of residence"
+msgstr ""
+
+#: png/lims/content/baseanalysis.py:38
+msgid "Positive"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:227
+msgid "Relevant clinical information"
+msgstr ""
+
+#: png/lims/content/client.py:24
+#: png/lims/content/limssetup.py:24
+msgid "Report Logo"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:143
+msgid "Sample ID"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:102
+msgid "Sample Point additional information"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:147
+msgid "Sample type"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:110
+msgid "Sex"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:151
+msgid "Site"
+msgstr ""
+
+#: png/lims/browser/viewlets/templates/unknown_doctor_viewlet.pt:13
+msgid "The Doctor assigned to this sample is unknown"
+msgstr ""
+
+#: png/lims/content/labcontact.py:30
+msgid "The hospital or clinic to be selected by default on sample creation"
+msgstr ""
+
+#: png/lims/browser/viewlets/templates/not_enough_sample_viewlet.pt:13
+msgid "There is not enough volume of sample"
+msgstr ""
+
+#: png/lims/browser/viewlets/templates/over_sample_viewlet.pt:13
+msgid "There is over volume of sample"
+msgstr ""
+
+#: png/lims/browser/viewlets/templates/error_date_of_admission_viewlet.pt:13
+msgid "Date of Admission must be before or equal the Sampled Date on"
+msgstr ""
+
+#: png/lims/browser/content/clinicalinformations.py:40
+#: png/lims/browser/content/wards.py:40
+msgid "Title"
+msgstr ""
+
+#: png/lims/adapters/actions.py:25
+msgid "Too many samples selected"
+msgstr ""
+
+#: png/lims/adapters/listing/samples.py:73
+msgid "Unknown doctor"
+msgstr ""
+
+#: png/lims/browser/whonet/templates/export.pt:34
+msgid "Verified and published analyses, from samples collected between"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:275
+msgid "Volume"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:156
+msgid "Volume (ml)"
+msgstr ""
+
+#: png/lims/adapters/addsample.py:71
+#: png/lims/adapters/form.py:71
+msgid "Volume is below {}"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:276
+msgid "Volume of sample, expressed as quantity and unit (e.g '10 ml')"
+msgstr ""
+
+#: png/lims/browser/whonet/templates/export.pt:12
+msgid "WHONET Export"
+msgstr ""
+
+#: png/lims/browser/sample/templates/rejection_content.pt:138
+#: png/lims/profiles/default/types/Ward.xml
+msgid "Ward"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:121
+msgid "Ward/Department"
+msgstr ""
+
+#: png/lims/profiles/default/types/ClinicalInformations.xml
+#: png/lims/profiles/default/types/Wards.xml
+msgid "Wards"
+msgstr ""
+
+#: png/lims/behaviors/samplecontainer.py:24
+msgid "Weight"
+msgstr ""
+
+#: png/lims/content/analysisrequest.py:155
+msgid "Weight (g)"
+msgstr ""
+
+#: png/lims/content/artemplate.py:51
+#: png/lims/content/sampletype.py:68
+msgid "When there is not enough volume, the contents entered here are automatically inserted in Results Interpretation after Sample verification"
+msgstr ""
+
+#: png/lims/content/containertype.py:23
+msgid "Whether containers from this type are available for selection when the default container for the selected sample type is a BACTEC bottle"
+msgstr ""
+
+#: png/lims/content/sampletype.py:51
+msgid "Widget for container selection"
+msgstr ""
+
+#: png/lims/content/sampletype.py:52
+msgid "Widget to display on sample view and add sample form for the selection of the sample container when this sample type is selected."
+msgstr ""
+
+#: png/lims/browser/whonet/templates/export.pt:42
+msgid "and"
+msgstr ""

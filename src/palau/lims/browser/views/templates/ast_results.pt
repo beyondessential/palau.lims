@@ -1,0 +1,107 @@
+<tal:contents_table
+    define="portal context/@@plone_portal_state/portal;"
+    i18n:domain="palau.lims">
+
+  <!-- Form for the assignment of an AST panel -->
+  <div class="row col-sm-12" tal:condition="python: view.can_add_analyses()">
+    <form id="add_ast_panel_form"
+          class="form"
+          method="post"
+          tal:attributes="action here/absolute_url">
+
+      <input type="hidden" name="submitted" value="1"/>
+      <input tal:replace="structure context/@@authenticator/authenticator"/>
+
+      <!-- ASP Panels selector -->
+      <div
+          class="input-group input-group-sm flex-nowrap d-inline-flex w-auto mb-3 astpanel-selector">
+        <div class="input-group-prepend">
+          <label for="ast_panel_selector"
+                 class="input-group-text"
+                 i18n:translate="">Panel</label>
+        </div>
+
+        <select id="ast_panel_selector"
+                name="ast_panel_selector"
+                class="custom-select">
+          <option value="" i18n:translate="">Select panel</option>
+          <option tal:repeat="panel python:view.get_panels()"
+                  tal:attributes="value panel/uid"
+                  tal:content="panel/title"/>
+        </select>
+
+        <!-- AST Panel add button -->
+        <div class="input-group-append">
+          <button id="astpanel_add"
+                  name="astpanel_add"
+                  type="submit"
+                  class="btn btn-outline-primary btn-sm"
+                  i18n:translate="">Add panel
+          </button>
+        </div>
+        <div class="input-group-append">
+          <a id="astpanel_custom"
+             class="btn btn-outline-primary btn-sm"
+             tal:attributes="href python:context.absolute_url() + '/ast_panel'"
+             i18n:translate="">Customize</a>
+        </div>
+        <div class="input-group-append">
+          <a class="btn btn-outline-secondary btn-sm"
+             tal:attributes="href python:context.absolute_url() + '/ast_reporting'"
+             i18n:translate="">Selective reporting</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Panels Description -->
+  <div tal:condition="python:view.is_panels_info_visible()">
+    <h4 i18n:translate="" style="font-weight:normal">Selected panels</h4>
+    <div id="portal-alert"
+         tal:repeat="panel python:view.get_context_panels_info()">
+      <div class="portlet-alert-item alert alert-info">
+        <p class="title" style="margin-bottom:0">
+          <span><strong tal:content="panel/title"/></span>:
+          <span tal:content="panel/description"/>.
+        </p>
+        <p tal:condition="panel/missing_microorganisms">
+          <span class="text-danger">
+            <strong i18n:translate="">
+              Removed microorganisms:
+            </strong> <span
+              tal:content="string:${panel/missing_microorganisms}"/>
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results entry listing -->
+  <form name="listing_form"
+        class="form form-inline"
+        method="post"
+        i18n:domain="palau.lims"
+        tal:omit-tag="view/omit_form"
+        tal:attributes="id python:view.form_id;
+                        action python:view.getPOSTAction()">
+
+    <input tal:condition="not: view/omit_form"
+           tal:replace="structure context/@@authenticator/authenticator"/>
+
+    <input tal:condition="not: view/omit_form"
+           type="hidden" name="submitted" value="1"/>
+
+    <!-- ReactJS managed component -->
+    <div class="ajax-contents-table w-100"
+         tal:attributes="data-form_id python:view.form_id;
+                         data-listing_identifier python:view.listing_identifier;
+                         data-enable_ajax_transitions python:view.ajax_transitions_enabled();
+                         data-pagesize python:view.pagesize;
+                         data-api_url python:view.get_api_url();
+                         data-columns python:view.ajax_columns();
+                         data-show_column_toggles python:view.ajax_show_column_toggles();
+                         data-review_states python:view.ajax_review_states();">
+    </div>
+  </form>
+
+</tal:contents_table>

@@ -1,0 +1,30 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="palau.lims">
+
+  <!-- Wards view -->
+  <browser:page
+    for="palau.lims.content.wards.IWards"
+    name="view"
+    class=".wards.WardsView"
+    permission="senaite.core.permissions.ManageBika"
+    layer="palau.lims.interfaces.IPalauLimsLayer" />
+
+  <!-- Clinical Informations view -->
+  <browser:page
+      for="palau.lims.interfaces.IClinicalInformations"
+      name="view"
+      class=".clinicalinformations.ClinicalInformationsView"
+      permission="senaite.core.permissions.ManageBika"
+      layer="palau.lims.interfaces.IPalauLimsLayer" />
+
+  <!-- Ward Departments view -->
+  <browser:page
+      for="palau.lims.content.warddepartments.IWardDepartments"
+      name="view"
+      class=".warddepartments.WardDepartmentsView"
+      permission="senaite.core.permissions.ManageBika"
+      layer="palau.lims.interfaces.IPalauLimsLayer" />
+
+</configure>

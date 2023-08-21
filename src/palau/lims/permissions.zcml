@@ -1,0 +1,22 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="palau.lims">
+
+  <!-- Add Permissions -->
+  <permission id="palau.lims.permissions.AddWard" title="palau.lims: Add Ward"/>
+  <permission id="palau.lims.permissions.AddWardDepartment" title="palau.lims: Add Ward Department"/>
+
+  <!-- Field Permissions (Sample, aka AnalysisRequest) -->
+  <permission id="palau.lims.permissions.FieldEditBottles" title="palau.lims: Field: Edit Bottles"/>
+  <permission id="palau.lims.permissions.FieldEditClinicalInformation" title="palau.lims: Field: Edit Clinical Information"/>
+  <permission id="palau.lims.permissions.FieldEditCurrentAntibiotics" title="palau.lims: Field: Edit Current Antibiotics"/>
+  <permission id="palau.lims.permissions.FieldEditVolume" title="palau.lims: Field: Edit Volume" />
+  <permission id="palau.lims.permissions.FieldEditWard" title="palau.lims: Field: Edit Ward"/>
+  <permission id="palau.lims.permissions.FieldEditWardDepartment" title="palau.lims: Field: Edit Ward Department"/>
+  <permission id="palau.lims.permissions.FieldEditLocation" title="palau.lims: Field: Edit Location"/>
+  <permission id="palau.lims.permissions.FieldEditDateOfAdmission" title="palau.lims: Field: Edit Date Of Admission"/>
+
+  <!-- Transition Permissions -->
+  <permission id="palau.lims.permissions.TransitionCreateSupplementary" title="palau.lims: Transition: Create Supplementary"/>
+
+</configure>

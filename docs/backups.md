@@ -9,17 +9,17 @@ recipe included in this extension profile. Please check
 [Deployment of the application stack with Ansible](ansible.md) for further 
 information.
 
-SENAITE uses [collective.recipe.backup][collective.recipe.backup] for the 
+Senaite uses [collective.recipe.backup][collective.recipe.backup] for the 
 creation and restore of database backups. This "recipe" is mostly a wrapper 
 around the `bin/repozo` script in Zope buildout, and is especially oriented 
 to Plone applications and the like.
 
-SENAITE relies on system's [cron][cron] to schedule backups regularly, as well 
+Senaite relies on system's [cron][cron] to schedule backups regularly, as well 
 as other maintenance tasks such as database packing.
 
 ## Database location and files
 
-SENAITE uses ZODB, an object-oriented database. This database has two
+Senaite uses ZODB, an object-oriented database. This database has two
 components:
 
 - filestorage: stores the objects (electronic records)
@@ -61,7 +61,7 @@ Virtual Appliance is configured to do zeopacks every day at 3 AM:
 ```
 
 Note that this cron job belongs to user `senaite_daemon`, that is the user that
-runs SENAITE services and owns the database. Thus, for the modification of the
+runs Senaite services and owns the database. Thus, for the modification of the
 periodicity of zeopack, the user `senaite_daemon` must be used. Hence, to 
 change the periodicity (e.g. every day at 4:00 AM), login as `senaite_daemon` 
 user: 
@@ -94,7 +94,7 @@ Virtual Appliance is configured to do backups via `cron` every day at 7:00 PM:
 0 19 * * * cd /home/senaite/senaite && bin/backup && echo "backup""_success for senaite"
 ```
 
-Backups are stored in `/home/senaite/data/backups`, but system is configured to 
+Backups are stored in `/home/senaite/data/backups`, but system is configured to
 keep the last 5 backups for filestorage, and the last 5 days for blobstorage. 
 Hence, is strongly recommend to setup a [rsync][rsync] script in another 
 machine to grab the backups from the VM in a regular basis (see section below).
@@ -242,8 +242,8 @@ Note that access through SSH needs to be granted in both cases.
 
 If the destination machine cannot be accessed through SSH, but is a NAS server
 with a shared folder, you can mount that folder in the machine that will run
-`rsync` (the one where SENAITE is installed probably). Note that NAS server does
-not need to be a Linux machine, can be a Windows system:
+`rsync` (the one where SENAITE is installed probably). Note that NAS server 
+does not need to be a Linux machine, can be a Windows system:
 
 ```bash
 # mount -v -t cifs "//<nas_ip>/<nas_shared_folder>" /mnt/nas -o username=<user>,password=<password>,exec,uid=1000,iocharset=utf8,noperm

@@ -1,0 +1,91 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="palau.lims">
+
+  <!-- Package includes -->
+  <include package=".listing" />
+
+  <!-- Guard handler for Sample (aka AnalysisRequest) content type -->
+  <adapter
+    for="bika.lims.interfaces.IAnalysisRequest"
+    provides="bika.lims.interfaces.IGuardAdapter"
+    factory=".guards.SampleGuardAdapter"
+    name="palau.lims.adapter.guard.sample" />
+
+  <!-- Visibility of Container field in AnalysisRequest context -->
+  <adapter
+    factory=".widgetvisibility.ContainerFieldVisibility"
+    provides="bika.lims.interfaces.IATWidgetVisibility"
+    for="bika.lims.interfaces.IAnalysisRequest"
+    name="palau.lims.adapter.widgetvisibility.analysisrequest.container" />
+
+  <!-- Visibility of Bottles field in AnalysisRequest context -->
+  <adapter
+    factory=".widgetvisibility.BottlesFieldVisibility"
+    provides="bika.lims.interfaces.IATWidgetVisibility"
+    for="bika.lims.interfaces.IAnalysisRequest"
+    name="palau.lims.adapter.widgetvisibility.analysisrequest.bottles" />
+
+  <!-- Visibility of PrimaryAnalysisRequest field in AnalysisRequest context -->
+  <adapter
+      factory=".widgetvisibility.PrimaryAnalysisRequestFieldVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="bika.lims.interfaces.IAnalysisRequest"
+      name="palau.lims.adapter.widgetvisibility.analysisrequest.primaryanalysisrequest" />
+
+  <!-- Edit form handler for ARTemplate -->
+  <adapter
+      for="bika.lims.interfaces.IARTemplate
+           palau.lims.interfaces.IPalauLimsLayer"
+      factory=".form.ARTemplateEditForm"/>
+
+  <!-- Edit form handler for Container -->
+  <adapter
+      for="senaite.core.interfaces.ISampleContainer
+           palau.lims.interfaces.IPalauLimsLayer"
+      factory=".form.ContainerEditForm"/>
+
+  <!-- Validator of records on Add Sample form -->
+  <adapter
+      for="palau.lims.interfaces.IPalauLimsLayer"
+      provides="bika.lims.interfaces.IAddSampleRecordsValidator"
+      factory=".addsample.RecordsValidator"
+      name="palau.lims.adapter.addsample.recordsvalidator" />
+
+  <!-- Default value for Client field in Add Sample form -->
+  <adapter
+      factory=".addsample.ClientDefaultValue"
+      for="*"
+      provides="bika.lims.interfaces.IGetDefaultFieldValueARAddHook"
+      name="Client_default_value_hook" />
+
+  <!-- Default value for PrimaryAnalysisRequest field in Add Sample form -->
+  <adapter
+      factory=".addsample.PrimaryAnalysisRequestDefaultValue"
+      for="*"
+      provides="bika.lims.interfaces.IGetDefaultFieldValueARAddHook"
+      name="PrimaryAnalysisRequest_default_value_hook" />
+
+  <!-- IGetStickerTemplates adapter to only return the stickers from png -->
+  <adapter
+    for="*"
+    provides="bika.lims.interfaces.IGetStickerTemplates"
+    factory=".stickers.StickerTemplates" />
+
+  <!-- PDF Report Storage Adapter -->
+  <adapter
+      for="zope.interface.Interface
+           palau.lims.interfaces.IPalauLimsLayer"
+      factory=".impress.PdfReportStorageAdapter"
+      permission="zope2.View"/>
+
+  <!-- Create supplementary test from existing samples -->
+  <adapter
+      for="*
+           palau.lims.interfaces.IPalauLimsLayer"
+      provides="bika.lims.interfaces.IWorkflowActionAdapter"
+      factory=".actions.CreateSupplementaryAdapter"
+      name="workflow_action_create_supplementary"
+      permission="zope.Public" />
+
+</configure>

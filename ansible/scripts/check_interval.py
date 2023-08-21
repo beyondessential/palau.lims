@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-#
+# coding=utf-8
 # Computes the optimal interpreter check interval for the machine it is run on
 
-import functools
 import sys
 import math
 
@@ -20,7 +19,7 @@ def check_interval():
         stones.append(pystone.pystones()[1])
         print(stones[-1])
 
-    raw = functools.reduce(lambda x, y: x+y, stones, 0.0) / (50.0*tries)
+    raw = sum(stones) / (50.0*tries)
     return int(math.ceil(raw))
 
 

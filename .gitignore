@@ -8,7 +8,6 @@
 *.wpr
 *.wpu
 *MANIFEST*
-*project
 *workspace
 *~
 .DS_Store*
@@ -80,11 +79,10 @@ node_modules
 package-lock.json
 *.lock
 
-
 # ANSIBLE recipe
 ansible/playbook.retry
-ansible/senaite.ansible-playbook/roles
 ansible/roles
+ansible/senaite.ansible-playbook/roles
 ansible/vault-password-file
 ansible/vault.txt
 /vm

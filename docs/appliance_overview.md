@@ -2,7 +2,7 @@
 
 At Naralabs, we have elaborated a [Virtual appliance][virtual_appliance] 
 containing a full application stack on top of trusted, robust and secure 
-technologies. This virtual appliance contains `palau.lims`, your extension 
+technologies. This virtual appliance contains "palau.lims", your extension
 profile for [SENAITE LIMS][senaite_lims], that can be fully customized to make
 the system to meet your present and future needs.
 
@@ -46,11 +46,11 @@ The following are the settings of the virtual appliance:
 * Processor: VM_PROCESSOR_CORES
 * RAM: VM_RAM_SIZE
 * Language: English
-* Location: TIMEZONE
+* Location: Pacific/Palau
 * Networks:
   * Adapter 1 (enp0s3): NAT (dynamic assigned over DHCP)
   * Adapter 2 (enp0s8): host-only (vboxnet0, static 192.168.33.10)
-* Hostname: senaite-buster
+* Hostname: palau
 * Username: senaite
 * Automatic security updates: enabled
 * HTTP/S Server: nginx (ports 80 and 443)
@@ -58,7 +58,7 @@ The following are the settings of the virtual appliance:
 * TCP/HTTP Load Balancer: HAProxy (frontend port: 8080, status port: 9002)
 * Process Control System: supervisor (port 9001)
 * Monitoring: Munin (port 9003)
-* Fireall: Ufw
+* Firewall: Ufw
 * Open Ports: 22, 80, 443
 * System's SENAITE User: senaite
 * System's SENAITE Daemon User: senaite_daemon

@@ -1,0 +1,230 @@
+<div id="rejection"
+     i18n:domain="palau.lims"
+     tal:define="sample     python:view.sample;
+                 client     python:view.client;
+                 laboratory python:view.laboratory;
+                 reasons    python:view.get_reasons();
+                 other      python:view.get_other_reasons();">
+
+  <tal:css>
+    <style type="text/css">
+     #rejection { font-size: 9pt; font-family: Helvetica, Arial, Sans-Serif; }
+     #rejection h1 { font-size:2em; font-weight:bold;margin-bottom:.3em;}
+     #rejection h2 { font-size:1.7em; font-weight:bold;margin:0 0 0.2em;}
+     #rejection h3 { font-size:1.6em; font-weight:normal;margin:0;}
+     #rejection table { border: none; }
+     #rejection table td { border: none; }
+     #rejection table th { border: none; }
+     #rejection .label { font-weight:bold; }
+     #rejection span.check { border: 1px solid black; margin: 0 4pt; padding: 0 5pt; }
+     #rejection span.check.check.checked { font-weight: bold; padding: 0 2pt; }
+     #rejection .section-footer {
+       position: fixed;
+       left: -20mm;
+       bottom: -20mm;
+       margin-left: 20mm;
+       margin-top: 10mm;
+       height: 20mm;
+       width: 100%;
+       text-align: left;
+       font-size: 9pt;
+     }
+     #rejection .section-footer #footer-line {
+      width: 100%; height: 2mm; border-top: 1px solid black;
+     }
+     @page {
+       @bottom-right {
+         vertical-align: top;
+         margin-top: 2mm;
+         font-size: 9pt;
+         content: "<tal:t i18n:translate=''>Page</tal:t> " counter(page) " <tal:t i18n:translate=''>of</tal:t> " counter(pages);
+       }
+     }
+    </style>
+  </tal:css>
+
+  <!-- Header -->
+  <div class="section-header" condition="python:True">
+    <div class="row no-gutters mb-4">
+      <div class="w-100">
+        <table class="table table-sm table-condensed w-100">
+          <colgroup>
+            <col style="width: 20%"/>
+            <col style="width: *"/>
+            <col style="width: 20%"/>
+          </colgroup>
+          <tr>
+
+            <!-- Laboratory logo -->
+            <td class="section-header-left">
+              <div tal:define="lab_logo python: view.get_lab_logo_src()"
+                   tal:condition="lab_logo">
+                <img class="img-fluid" style="width:130px;"
+                     tal:attributes="src lab_logo;"/>
+              </div>
+            </td>
+
+            <!-- Header Middle Text -->
+            <td class="section-header-center text-center">
+              <h1 tal:content="laboratory/title|nothing"/>
+              <h2 i18n:translate="">Clinical Laboratory Services</h2>
+            </td>
+
+            <!-- Client/Hospital logo -->
+            <td class="section-header-right text-right pr-5">
+              <div tal:define="client_logo python: view.get_client_logo_src(client)"
+                   tal:condition="client_logo">
+                <img class="img-fluid" style="width:100px"
+                     tal:attributes="src client_logo;"/>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <!-- Summary -->
+  <div class="section-summary" condition="python:True">
+    <div class="row no-gutters section-summary">
+      <div class="w-100">
+        <table class="table table-sm table-condensed">
+          <tr>
+            <!-- Patient name -->
+            <td width="15%" class="label" i18n:translate="">Patient name</td>
+            <td width="20%" tal:content="python:sample.getPatientFullName() or ''"/>
+
+            <!-- Patient MRN -->
+            <td width="15%" class="label" i18n:translate="">MRN</td>
+            <td width="20%" tal:content="sample/MedicalRecordNumber/value|nothing"/>
+
+            <!-- Patient sex -->
+            <td width="15%" class="label" i18n:translate="">Sex</td>
+            <td width="15%" tal:content="python:view.get_sex(sample)"/>
+          </tr>
+          <tr>
+            <!-- Patient age -->
+            <td class="label" i18n:translate="">Age</td>
+            <td tal:define="dob python:view.get_dob(sample);
+                            sampled sample/DateSampled;"
+                tal:content="python:view.get_age(dob, sampled)"/>
+
+            <!-- Patient address -->
+            <td class="label" i18n:translate="">Place of residence</td>
+            <td tal:content="sample/PatientAddress|nothing"/>
+
+            <!-- Date Received -->
+            <td class="label" i18n:translate="">Date received</td>
+            <td tal:content="python:view.localize(sample.DateReceived)"/>
+          </tr>
+          <tr>
+            <!-- Doctor name-->
+            <td class="label" i18n:translate="">Doctor</td>
+            <td tal:content="sample/Contact/Fullname|nothing"/>
+
+            <!-- Hospital clinic -->
+            <td class="label" i18n:translate="">Hospital/Clinic</td>
+            <td tal:content="client/Name"/>
+
+            <!-- Ward -->
+            <td class="label" i18n:translate="">Ward</td>
+            <td tal:content="sample/Ward/title|nothing"/>
+          </tr>
+          <tr>
+            <!-- Sample Id -->
+            <td class="label" i18n:translate="">Sample ID</td>
+            <td tal:content="sample/getId|nothing"/>
+
+            <!-- Sample Type -->
+            <td class="label" i18n:translate="">Sample type</td>
+            <td tal:content="sample/SampleType/title|nothing"/>
+
+            <!-- Sample Point + Sample Point Additional information -->
+            <td class="label" i18n:translate="">Site</td>
+            <td tal:define="sp sample/SamplePoint/title|nothing;
+                            additional sample/EnvironmentalConditions;
+                            sp python: filter(None, [sp, additional]);
+                            sp python: ', '.join(sp);"
+                tal:content="sp"/>
+          </tr>
+          <tr>
+            <!-- Analysis Template -->
+            <td class="label" i18n:translate="">Analysis Template</td>
+            <td colspan="5" tal:content="sample/Template/title|nothing"/>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="section-content" condition="python:True">
+    <div class="row no-gutters">
+      <div class="w-100">
+        <h2 class="text-center">Sample Rejection Notification</h2>
+      </div>
+    </div>
+    <div class="row no-gutters">
+      <div class="w-100">
+        <h3>Reasons for rejection</h3>
+        <tal:reason repeat="reason reasons">
+          <div class="mt-2"
+               tal:define="selected python:reason[0];
+                           text python:reason[1];">
+            <span tal:condition="selected" class="check checked">X</span>
+            <span tal:condition="not:selected" class="check pl-2 pr-2"
+                  tal:content="&nbsp;"/>
+            <span tal:content="text" class="ml-1"/>
+          </div>
+        </tal:reason>
+        <div class="mt-4" tal:condition="python: other">
+          <p tal:content="other"/>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <!-- Reject info -->
+  <div class="section-summary mt-4" condition="python:True">
+    <div class="row no-gutters">
+      <div class="w-100 pt-4">
+        <strong i18n:translate="">Sample rejected by</strong>
+        <span tal:content="python: view.get_rejected_by()"/> on
+        <span tal:define="date_rejected python:view.get_date_rejected()"
+              tal:content="python:view.localize(date_rejected)"/>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="section-footer" condition="python:True">
+    <div class="row no-gutters">
+      <div id="footer-line"></div>
+      <table class="w-100">
+        <tr>
+          <td>
+            <div>
+              <strong tal:content="laboratory/Name|nothing">Lab Name</strong>
+              • <span tal:content="laboratory/PhysicalAddress/address|nothing">Lab Street and Number</span>
+              • <span tal:content="laboratory/PhysicalAddress/zip|nothing">Lab ZIP</span>
+              <span tal:content="laboratory/PhysicalAddress/city|nothing">Lab City</span>
+              • <span tal:content="laboratory/PhysicalAddress/country|nothing">Lab Country</span>
+            </div>
+            <div>
+              <span>Phone</span>:
+              <span tal:content="laboratory/Phone|nothing">Lab Phone Number</span>
+              • <span>Fax</span>:
+              <span tal:content="laboratory/Fax|nothing">Lab Fax Number</span>
+              • <span>Report v1</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>

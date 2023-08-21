@@ -4,7 +4,7 @@
 ssh_key_filename: "github_lims"
 
 # Plone version
-plone_version: "5.2.12"
+plone_version: "5.2.13"
 
 # Name of the folder where SENAITE will be installed
 plone_instance_name: "senaite"
@@ -35,8 +35,6 @@ plone_sources:
   - "senaite.abx = git https://github.com/senaite/senaite.abx.git branch=master"
   - "senaite.ast = git https://github.com/senaite/senaite.ast.git branch=master"
   - "senaite.microorganism = git https://github.com/senaite/senaite.microorganism.git branch=master"
-  - "senaite.storage = git https://github.com/senaite/senaite.storage.git branch=2.x"
-  - "senaite.lis2a = git https://github.com/senaite/senaite.lis2a.git branch=2.x"
 
 # Plone additional links for eggs download
 plone_extra_find_links:
@@ -80,10 +78,8 @@ plone_keep_backups: 5
 # DB Backup: keep blob backups for last 5d
 plone_keep_blob_days: 5
 
-
 # SECURITY
 firewall_open_tcp_ports: [22, 80, 443]
-
 
 # NGINX
 # Server will close idle connection after this timeout.

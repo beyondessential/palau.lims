@@ -1,0 +1,20 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:plone="http://namespaces.plone.org/plone"
+  i18n_domain="palau.lims">
+
+  <!-- Results reports resource directory -->
+  <plone:static
+    directory="reports"
+    type="senaite.impress.reports" />
+
+  <!-- Product-specific controller view for Multi Results Reports -->
+  <adapter
+    for="zope.interface.Interface
+         palau.lims.interfaces.IPalauLimsLayer"
+    name="AnalysisRequest"
+    factory=".reportview.DefaultReportView"
+    provides="senaite.impress.interfaces.IReportView"
+    permission="zope2.View" />
+
+</configure>
