@@ -615,8 +615,11 @@ failregex = (?i)<HOST> -.*"(GET|POST|HEAD) (.*?)" \d+ \d+ "(.*?)" ".*(?:%(badbot
 ignoreregex =
 ```
 
-Login as a root user and create a cron entry as follows:
+Create a cron entry as follows:
 
+```shell
+$ sudo nano /etc/cron.d/nginx-badbots
+```
 ```ini
 # Update badbots every month
 0 0 1 * * wget -q -O- "https://raw.githubusercontent.com/mitchellkrogza/apache-ultimate-bad-bot-blocker/master/_generator_lists/bad-user-agents.list" | sed -E 's/\\ / /g' | sed -E 's/([.:|()+/])/\\\1/g' | tr '\n' '|' | sed -E 's/\|$//g' > /tmp/badbots.txt && awk 'BEGIN{getline l < "/tmp/badbots.txt"}/%badbots%/{gsub("%badbots%",l)}1' /etc/fail2ban/filter.d/nginx-badbots.conf.template >/etc/fail2ban/filter.d/nginx-badbots.conf && service fail2ban restart
