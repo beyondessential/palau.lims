@@ -196,14 +196,17 @@ def setup_handler(context):
     # Setup catalogs
     setup_catalogs(portal)
 
+    # Setup folders
+    add_setup_folders(portal)
+
+    # Configure visible navigation items
+    setup_navigation_types(portal)
+
     # Add behaviors
     setup_behaviors(portal)
 
     # Setup workflows
     setup_workflows(portal)
-
-    # Delete pre-existing objects we do not want to re-import
-    delete_ast_objects(portal)
 
     # Import baseline data
     import_content_structure(portal)
@@ -222,12 +225,6 @@ def setup_handler(context):
 
     # Apply patient default settings
     setup_patient_settings(portal)
-
-    # Setup folders
-    add_setup_folders(portal)
-
-    # Configure visible navigation items
-    setup_navigation_types(portal)
 
     # Sort fields from Add Sample form
     sort_sample_add_fields(portal)
@@ -287,6 +284,9 @@ def post_uninstall(portal_setup):
 
 def import_content_structure(portal):
     logger.info("Importing content structure ...")
+
+    # Delete pre-existing objects we do not want to re-import
+    delete_ast_objects(portal)
 
     # Get the tarball full path
     src_path = "/src/{}".format(PRODUCT_NAME.replace(".", "/"))
