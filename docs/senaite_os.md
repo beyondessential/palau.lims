@@ -127,6 +127,41 @@ group of `sudoers`:
 senaite ALL=(ALL) NOPASSWD:ALL
 ```
 
+## Set the timezone
+
+Using the correct time zone is essential for system related tasks and
+processes. For example, the cron daemon uses the system's time zone for
+executing cron jobs. The time zone is also used for logs timestamps. Likewise,
+SENAITE database may fail if the last modification date is in the future.
+
+Before changing the time zone, you'll need to find out the long name of the
+time zone you want to use. The time zone naming convention usually uses a
+"Region/City" format. To view all available time zones, use the
+[`timedatectl`][timedatectl] command:
+
+```shell
+$ timedatectl list-timezones
+```
+Once you identify which time zone is accurate to your location, run the following command as root or sudo user:
+
+```shell
+$ sudo timedatectl set-timezone Pacific/Palau
+```
+
+To verify the change, invoke the `timedatectl` command again:
+
+```shell
+$ timedatectl
+               Local time: Tue 2023-08-22 22:39:34 +09
+           Universal time: Tue 2023-08-22 13:39:34 UTC
+                 RTC time: Tue 2023-08-22 13:39:35
+                Time zone: Pacific/Palau (+09, +0900)
+System clock synchronized: yes
+              NTP service: n/a
+          RTC in local TZ: no
+```
+
+
 ## Synchronize the System Clock
 
 It is a good idea to synchronize the system clock with an [NTP (network time
@@ -697,3 +732,4 @@ $ sudo reboot -h now
 [logrotate]: https://linux.die.net/man/8/logrotate
 [fail2ban]: https://www.fail2ban.org
 [wordpress]: https://wordpress.org/
+[timedatectl]: https://man7.org/linux/man-pages/man1/timedatectl.1.html
