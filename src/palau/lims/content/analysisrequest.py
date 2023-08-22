@@ -116,6 +116,9 @@ UPDATED_FIELDS = [
         "widget": {
             "label": _("Site"),
         }
+    }),
+    ("Specification", {
+        "required": True
     })
 ]
 
