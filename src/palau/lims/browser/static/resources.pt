@@ -1,1 +1,1 @@
-<script tal:attributes="src string:${view/site_url}//++plone++palau.lims.static/bundles/palau.lims.js"></script><link href="#" rel="stylesheet" tal:attributes="href string:${view/site_url}//++plone++palau.lims.static/bundles/palau.lims.css"/>
+<script tal:attributes="src string:${view/site_url}//++plone++palau.lims.static/bundles/palau.lims.js"></script><link href="#" rel="stylesheet" tal:attributes="href string:${view/site_url}//++plone++palau.lims.static/bundles/palau.lims.325a5a96ae2c1681233d.css"/>

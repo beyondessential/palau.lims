@@ -20,7 +20,7 @@ class SampleTypeContainerController
 
     @debug "load"
 
-    @sample_type_selector = "input[id^='SampleType']"
+    @sample_type_selector = "div.uidreferencefield textarea[name^='SampleType']"
     @template_selector = "input[id^='Template']"
     @bottle_weights_selector = "input[id^='Bottles-'][id*='-Weight-']"
     @bottle_containers_selector = "input[id^='Bottles-'][id*='-Container-']"
@@ -28,9 +28,9 @@ class SampleTypeContainerController
     # Bind the event handler to the elements
     @bind_event_handler()
 
-    # Trigger the "selected" handle to show/Hide Container/Bottles
+    # Trigger the "select" event for SampleType to show/Hide Container/Bottles
     if "template-ar_add" in document.body.classList
-      $(el).trigger "selected" for el in document.querySelectorAll @sample_type_selector
+      $(el).trigger "select" for el in document.querySelectorAll @sample_type_selector
 
     else
       bottles = document.querySelector("div[data-fieldname='Bottles']")
@@ -57,7 +57,7 @@ class SampleTypeContainerController
   ###
   bind_event_handler: =>
     @debug "bind_event_handler"
-    $("body").on "selected", @sample_type_selector, @on_sample_type_selected
+    $("body").on "SampleType:after_change", @sample_type_selector, @on_sample_type_selected
     $("body").on "selected", @template_selector, @on_template_selected
     $("body").on "blur", @bottle_containers_selector, @on_bottle_container_blur
     $("body").on "change", @bottle_weights_selector, @on_bottle_weight_change
@@ -131,11 +131,8 @@ class SampleTypeContainerController
     # Get the index of the column (each column represents a Sample)
     idx = @get_sample_index el
 
-    # UID of the Sample Type selected
-    uid = $("##{ el.id }").attr "uid"
-
-    # Update the container
-    @update_container idx, uid
+    # Update the container with the selected UID
+    @update_container idx, el.value
 
 
   ###
@@ -371,5 +368,11 @@ class SampleTypeContainerController
   ###
   debug: (message) =>
     console.debug "[palau.lims]", "SampleTypeController::"+message
+
+  ###
+  Returns the AnalysisRequestAdd controller
+  ###
+  get_add_controller: =>
+    return window.bika.lims.AnalysisRequestAdd
 
 export default SampleTypeContainerController

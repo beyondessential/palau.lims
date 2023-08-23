@@ -5,6 +5,7 @@
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
 from AccessControl import ClassSecurityInfo
+from bika.lims import api
 from Products.Archetypes.Registry import registerWidget
 from senaite.core.browser.widgets import ReferenceWidget
 from senaite.core.browser.widgets.recordswidget import RecordsWidget
@@ -37,18 +38,44 @@ class ReferenceOtherWidget(ReferenceWidget):
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False):
 
-        out = super(ReferenceOtherWidget, self).process_form(
-            instance, field, form, empty_marker=empty_marker,
-            emptyReturnsMarker=emptyReturnsMarker)
+        field_name = field.getName()
+        value = form.get(field_name, None)
 
-        # Extract the value entered for Other field
-        other_id = "{}_other".format(field.getName())
-        other_value = form.get(other_id, u'')
+        if isinstance(value, dict):
+            uids = value.get("refs", [])
+            other = value.get("other_text", "")
+        else:
+            uids = value
+            check_subfield = "{}_checkbox".format(field_name)
+            other_subfield = "{}_other".format(field_name)
 
-        # Set the value for field's Other attr
-        field.setOtherText(instance, other_value)
+            other = ""
+            store_other = form.get(check_subfield)
+            if self.is_true(store_other):
+                other = form.get(other_subfield, "")
 
-        return out
+        # Resolve the uids
+        value = {
+            "refs": self.to_uids(uids),
+            "other_text": other
+        }
+        return value, {}
+
+    def to_uids(self, value):
+        uids = []
+        if api.is_string(value):
+            uids = value.split("\r\n")
+        if isinstance(value, (list, tuple, set)):
+            uids = filter(api.is_uid, value)
+        elif api.is_object(value):
+            uids = [api.get_uid(value)]
+        return uids
+
+    def is_true(self, value):
+        """Returns whether val evaluates to True
+        """
+        value = str(value).strip().lower()
+        return value in ["y", "yes", "1", "true", "on"]
 
 
 # Register widgets
