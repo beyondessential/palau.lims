@@ -8,7 +8,7 @@ from bika.lims import api
 from senaite.patient import api as patient_api
 from senaite.patient import logger
 from senaite.patient.subscribers.analysisrequest import get_patient_fields
-from senaite.patient import messageFactory as _
+from senaite.patient import messageFactory as _p
 
 
 def update_patient(instance):
@@ -39,9 +39,9 @@ def update_patient(instance):
             mrn = dict(mrn_field.get(instance))
             mrn["temporary"] = True
             mrn_field.set(instance, mrn)
-            message = _("You are not allowed to add a patient in {} folder. "
-                        "Medical Record Number set to Temporary."
-                        .format(api.get_title(container)))
+            message = _p("You are not allowed to add a patient in {} folder. "
+                         "Medical Record Number set to Temporary."
+                         .format(api.get_title(container)))
             instance.plone_utils.addPortalMessage(message, "error")
             return None
 

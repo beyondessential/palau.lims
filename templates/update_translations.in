@@ -33,6 +33,15 @@ mv $LOCALES/$DOMAIN-tmp.pot $LOCALES/$DOMAIN.pot
 $I18N sync --pot $LOCALES/$DOMAIN.pot $LOCALES/*/LC_MESSAGES/$DOMAIN.po
 echo "Processing Domain $DOMAIN [DONE]"
 
+DOMAIN=senaite.patient
+# Flush the english .po files, other .po files won't be synced otherwise
+echo -n "" > $LOCALES/en/LC_MESSAGES/$DOMAIN.po
+# Synchronize all .po files with the new $DOMAIN.pot
+$I18N sync --pot $LOCALES/$DOMAIN.pot $LOCALES/*/LC_MESSAGES/$DOMAIN.po
+# Replace base .pot file with english .po file (so strings are sorted)
+cp $LOCALES/en/LC_MESSAGES/$DOMAIN.po $LOCALES/$DOMAIN.pot
+echo "Processing Domain $DOMAIN [DONE]"
+
 DOMAIN=senaite.core
 # Flush the english .po files, other .po files won't be synced otherwise
 echo -n "" > $LOCALES/en/LC_MESSAGES/$DOMAIN.po

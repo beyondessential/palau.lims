@@ -307,8 +307,8 @@
                             fullname python: ' '.join(fullname);"
                 tal:content="fullname"/>
 
-            <!-- Patient MRN -->
-            <td width="15%" class="label" i18n:translate="">MRN</td>
+            <!-- Patient Hospital Number -->
+            <td width="15%" class="label" i18n:translate="">Hospital Number</td>
             <td width="20%" tal:content="model/MedicalRecordNumber/value|nothing"/>
 
             <!-- Patient sex -->

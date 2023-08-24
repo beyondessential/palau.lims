@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-08-21 09:20+0000\n"
+"POT-Creation-Date: 2023-08-24 09:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,13 +14,8 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: palau/lims/impress/reports/Microbiology Report.pt:324
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:309
+#: palau/lims/impress/reports/Default.pt:324
 msgid "(Estimated)"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:385
-msgid "(estimated)"
 msgstr ""
 
 #: palau/lims/adapters/listing/clients.py:33
@@ -45,8 +40,7 @@ msgid "Add panel"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:108
-#: palau/lims/impress/reports/Default.pt:381
-#: palau/lims/impress/reports/Microbiology Report.pt:320
+#: palau/lims/impress/reports/Default.pt:320
 msgid "Age"
 msgstr ""
 
@@ -56,9 +50,7 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:151
-#: palau/lims/impress/reports/Microbiology Report.pt:172
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:173
+#: palau/lims/impress/reports/Default.pt:172
 msgid "Analysis Report"
 msgstr ""
 
@@ -66,35 +58,20 @@ msgstr ""
 msgid "Analysis Template"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:735
-msgid "Analysis results relate only to the samples tested."
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:640
-#: palau/lims/impress/reports/Microbiology Report.pt:567
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:554
+#: palau/lims/impress/reports/Default.pt:567
 msgid "Attachment for"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:624
-#: palau/lims/impress/reports/Microbiology Report.pt:551
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:538
+#: palau/lims/impress/reports/Default.pt:551
 msgid "Attachments for ${DYNAMIC_CONTENT}"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:26
-#: palau/lims/impress/reports/Microbiology Report.pt:30
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:30
+#: palau/lims/impress/reports/Default.pt:30
 msgid "Attachments per Row"
 msgstr ""
 
-#: palau/lims/impress/reports/Microbiology Report.pt:590
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:577
+#: palau/lims/impress/reports/Default.pt:590
 msgid "Authorised <span>${DYNAMIC_CONTENT}</span> by"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:663
-msgid "Authorised by"
 msgstr ""
 
 #: palau/lims/content/artemplate.py:52
@@ -110,29 +87,19 @@ msgstr ""
 msgid "BACTEC bottles control"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:164
+#: palau/lims/content/analysisrequest.py:170
 msgid "Bottle"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:199
+#: palau/lims/content/analysisrequest.py:205
 msgid "Bottles"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:373
-msgid "CC Contacts"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:391
-msgid "CC Emails"
 msgstr ""
 
 #: palau/lims/content/labcontact.py:49
 msgid "Can reject samples"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:498
-#: palau/lims/impress/reports/Microbiology Report.pt:417
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:403
+#: palau/lims/impress/reports/Default.pt:417
 msgid "Captured Date"
 msgstr ""
 
@@ -141,26 +108,15 @@ msgid "Clinical Information"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:70
-#: palau/lims/impress/reports/Microbiology Report.pt:211
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:212
+#: palau/lims/impress/reports/Default.pt:211
 msgid "Clinical Laboratory Services"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:418
-msgid "Clinical information"
-msgstr ""
-
-#: palau/lims/content/analysisrequest.py:280
+#: palau/lims/content/analysisrequest.py:286
 msgid "Current antibiotic(s)"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:434
-msgid "Current antibiotics"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:21
-#: palau/lims/impress/reports/Microbiology Report.pt:25
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:25
+#: palau/lims/impress/reports/Default.pt:25
 msgid "Custom Report Options"
 msgstr ""
 
@@ -168,15 +124,7 @@ msgstr ""
 msgid "Customize"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:446
-msgid "Date Published"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:442
-msgid "Date Received"
-msgstr ""
-
-#: palau/lims/content/analysisrequest.py:260
+#: palau/lims/content/analysisrequest.py:266
 msgid "Date of Admission"
 msgstr ""
 
@@ -189,8 +137,7 @@ msgid "Date of Admission must be equal or before Sampled Date on {}"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:118
-#: palau/lims/impress/reports/Microbiology Report.pt:335
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:320
+#: palau/lims/impress/reports/Default.pt:335
 msgid "Date received"
 msgstr ""
 
@@ -198,7 +145,7 @@ msgstr ""
 msgid "Default Hospital/Clinic"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:323
+#: palau/lims/content/analysisrequest.py:329
 msgid "Department"
 msgstr ""
 
@@ -230,15 +177,11 @@ msgstr ""
 msgid "Extension profile for SENAITE: PALAU LIMS"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:790
-#: palau/lims/impress/reports/Microbiology Report.pt:669
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:656
+#: palau/lims/impress/reports/Default.pt:669
 msgid "Fax"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:647
-#: palau/lims/impress/reports/Microbiology Report.pt:574
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:561
+#: palau/lims/impress/reports/Default.pt:574
 msgid "Filename:"
 msgstr ""
 
@@ -254,17 +197,18 @@ msgstr ""
 msgid "Generic search control"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:400
-msgid "Hospital clinic"
+#: palau/lims/browser/sample/templates/rejection_content.pt:99
+#: palau/lims/impress/reports/Default.pt:311
+msgid "Hospital Number"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:127
 #: palau/lims/content/analysisrequest.py:63
-#: palau/lims/impress/reports/Microbiology Report.pt:344
+#: palau/lims/impress/reports/Default.pt:344
 msgid "Hospital/Clinic"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:165
+#: palau/lims/content/analysisrequest.py:171
 msgid "Identifier"
 msgstr ""
 
@@ -274,12 +218,12 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: palau/lims/config.py:2185
+#: palau/lims/config.py:203
 msgid "Inpatient"
 msgstr ""
 
 #: palau/lims/adapters/listing/samples.py:23
-#: palau/lims/content/analysisrequest.py:348
+#: palau/lims/content/analysisrequest.py:354
 msgid "Location"
 msgstr ""
 
@@ -295,19 +239,9 @@ msgstr ""
 msgid "Logo to display in the header of results reports for this client"
 msgstr ""
 
-#: palau/lims/browser/sample/templates/rejection_content.pt:99
-#: palau/lims/impress/reports/Default.pt:405
-#: palau/lims/impress/reports/Microbiology Report.pt:311
-msgid "MRN"
-msgstr ""
-
 #: palau/lims/adapters/listing/sampletypes.py:33
 #: palau/lims/content/sampletype.py:84
 msgid "Maximum Volume"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:730
-msgid "Methods included in the ${accreditation_body} schedule of Accreditation for this Laboratory. Analysis remarks are not accredited"
 msgstr ""
 
 #: palau/lims/skins/palau_templates/palau_widgets/bottleswidget.pt:285
@@ -326,21 +260,15 @@ msgstr ""
 msgid "Not enough sample"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:717
-msgid "Not invoiced"
-msgstr ""
-
-#: palau/lims/config.py:2187
+#: palau/lims/config.py:205
 msgid "Not specified"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:36
-#: palau/lims/impress/reports/Microbiology Report.pt:40
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:40
+#: palau/lims/impress/reports/Default.pt:40
 msgid "Number of attachments rendered within one row per Analysis Request"
 msgstr ""
 
-#: palau/lims/config.py:2186
+#: palau/lims/config.py:204
 msgid "Outpatient"
 msgstr ""
 
@@ -356,29 +284,17 @@ msgstr ""
 msgid "Panel"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:369
-msgid "Patient address"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:350
-msgid "Patient details"
-msgstr ""
-
 #: palau/lims/browser/sample/templates/rejection_content.pt:95
-#: palau/lims/impress/reports/Default.pt:354
-#: palau/lims/impress/reports/Microbiology Report.pt:301
+#: palau/lims/impress/reports/Default.pt:301
 msgid "Patient name"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:786
-#: palau/lims/impress/reports/Microbiology Report.pt:665
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:652
+#: palau/lims/impress/reports/Default.pt:665
 msgid "Phone"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:114
-#: palau/lims/impress/reports/Microbiology Report.pt:331
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:316
+#: palau/lims/impress/reports/Default.pt:331
 msgid "Place of residence"
 msgstr ""
 
@@ -386,23 +302,15 @@ msgstr ""
 msgid "Positive"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:321
-#: palau/lims/impress/reports/Microbiology Report.pt:269
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:247
+#: palau/lims/impress/reports/Default.pt:269
 msgid "Provisional report"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:687
-msgid "Published by"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:495
-#: palau/lims/impress/reports/Microbiology Report.pt:414
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:400
+#: palau/lims/impress/reports/Default.pt:414
 msgid "Range"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:238
+#: palau/lims/content/analysisrequest.py:244
 msgid "Relevant clinical information"
 msgstr ""
 
@@ -415,50 +323,29 @@ msgstr ""
 msgid "Report Logo"
 msgstr ""
 
-#: palau/lims/impress/reports/Microbiology Report.pt:681
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:668
+#: palau/lims/impress/reports/Default.pt:681
 msgid "Report v1"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:492
-#: palau/lims/impress/reports/Microbiology Report.pt:411
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:397
+#: palau/lims/impress/reports/Default.pt:411
 msgid "Result"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:715
-msgid "Result out of client specified range."
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:458
-#: palau/lims/impress/reports/Microbiology Report.pt:377
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:362
+#: palau/lims/impress/reports/Default.pt:377
 msgid "Results"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:588
-#: palau/lims/impress/reports/Microbiology Report.pt:515
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:502
+#: palau/lims/impress/reports/Default.pt:515
 msgid "Results are provisional as isolate is undergoing further standardised analysis"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:608
-msgid "Results interpretation"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:313
-#: palau/lims/impress/reports/Microbiology Report.pt:261
+#: palau/lims/impress/reports/Default.pt:261
 msgid "Revised report for sample"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:136
-#: palau/lims/impress/reports/Microbiology Report.pt:353
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:338
+#: palau/lims/impress/reports/Default.pt:353
 msgid "Sample ID"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:426
-msgid "Sample point"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:194
@@ -466,8 +353,7 @@ msgid "Sample rejected by"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:140
-#: palau/lims/impress/reports/Default.pt:414
-#: palau/lims/impress/reports/Microbiology Report.pt:357
+#: palau/lims/impress/reports/Default.pt:357
 msgid "Sample type"
 msgstr ""
 
@@ -484,14 +370,13 @@ msgid "Selective reporting"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:103
-#: palau/lims/impress/reports/Default.pt:396
-#: palau/lims/impress/reports/Microbiology Report.pt:315
+#: palau/lims/impress/reports/Default.pt:315
 msgid "Sex"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:144
-#: palau/lims/content/analysisrequest.py:117
-#: palau/lims/impress/reports/Microbiology Report.pt:361
+#: palau/lims/content/analysisrequest.py:120
+#: palau/lims/impress/reports/Default.pt:361
 msgid "Site"
 msgstr ""
 
@@ -499,18 +384,8 @@ msgstr ""
 msgid "Site additional information"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:240
-msgid "Supervisor"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:303
-#: palau/lims/impress/reports/Microbiology Report.pt:251
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:251
+#: palau/lims/impress/reports/Default.pt:251
 msgid "Supplementary report for"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:746
-msgid "Test results are at a ${lab_confidence}% confidence level"
 msgstr ""
 
 #: palau/lims/browser/viewlets/templates/unknown_doctor_viewlet.pt:13
@@ -537,20 +412,12 @@ msgstr ""
 msgid "There is over volume of sample"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:291
-#: palau/lims/impress/reports/Microbiology Report.pt:239
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:238
+#: palau/lims/impress/reports/Default.pt:239
 msgid "This Sample has been invalidated due to erroneously published results"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:294
-#: palau/lims/impress/reports/Microbiology Report.pt:242
-#: palau/lims/impress/reports/Urine and CSF Microbiology Report.pt:241
+#: palau/lims/impress/reports/Default.pt:242
 msgid "This Sample has been replaced by"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:742
-msgid "This document shall not be reproduced except in full, without the written approval of ${name_lab}"
 msgstr ""
 
 #: palau/lims/browser/content/clinicalinformations.py:40
@@ -571,11 +438,11 @@ msgstr ""
 msgid "Verified and published analyses, from samples collected between"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:305
+#: palau/lims/content/analysisrequest.py:311
 msgid "Volume"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:167
+#: palau/lims/content/analysisrequest.py:173
 msgid "Volume (ml)"
 msgstr ""
 
@@ -588,7 +455,7 @@ msgstr ""
 msgid "Volume is over {}"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:306
+#: palau/lims/content/analysisrequest.py:312
 msgid "Volume of sample, expressed as quantity and unit (e.g '10 ml')"
 msgstr ""
 
@@ -597,8 +464,8 @@ msgid "WHONET Export"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:131
-#: palau/lims/content/analysisrequest.py:132
-#: palau/lims/impress/reports/Default.pt:409
+#: palau/lims/content/analysisrequest.py:138
+#: palau/lims/impress/reports/Default.pt:348
 msgid "Ward"
 msgstr ""
 
@@ -619,7 +486,7 @@ msgstr ""
 msgid "Weight"
 msgstr ""
 
-#: palau/lims/content/analysisrequest.py:166
+#: palau/lims/content/analysisrequest.py:172
 msgid "Weight (g)"
 msgstr ""
 
@@ -642,10 +509,6 @@ msgstr ""
 
 #: palau/lims/content/sampletype.py:53
 msgid "Widget to display on sample view and add sample form for the selection of the sample container when this sample type is selected."
-msgstr ""
-
-#: palau/lims/monkeys/subscribers/analysisrequest.py:42
-msgid "You are not allowed to add a patient in {} folder. Medical Record Number set to Temporary."
 msgstr ""
 
 #: palau/lims/browser/whonet/templates/export.pt:42

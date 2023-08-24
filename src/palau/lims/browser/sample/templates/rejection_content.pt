@@ -95,8 +95,8 @@
             <td width="15%" class="label" i18n:translate="">Patient name</td>
             <td width="20%" tal:content="python:sample.getPatientFullName() or ''"/>
 
-            <!-- Patient MRN -->
-            <td width="15%" class="label" i18n:translate="">MRN</td>
+            <!-- Patient Hospital Number -->
+            <td width="15%" class="label" i18n:translate="">Hospital Number</td>
             <td width="20%" tal:content="sample/MedicalRecordNumber/value|nothing"/>
 
             <!-- Patient sex -->
