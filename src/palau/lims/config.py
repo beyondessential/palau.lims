@@ -98,7 +98,7 @@ ACTIONS_TO_HIDE = [
 ID_FORMATTING = [
     {
         "portal_type": "AnalysisRequest",
-        "form": "{year}{alpha:2a3d}",
+        "form": "{clientId}{sampleType}{year}{alpha:1a3d}",
         "prefix": "analysisrequest",
         "sequence_type": "generated",
         # Split length is the number of elements to join without taking the
