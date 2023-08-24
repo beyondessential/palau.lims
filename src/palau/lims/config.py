@@ -156,6 +156,7 @@ SAMPLE_ADD_FIELDS_TO_HIDE = [
     "EnvironmentalConditions",
     "Preservation",
     "SamplingDate",
+    "SamplePoint",
 ]
 
 # Display order of Sample fields
