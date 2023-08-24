@@ -116,3 +116,4 @@ additional_system_packages:
   - iotop
   - rsync
   - jq
+  - psmisc
