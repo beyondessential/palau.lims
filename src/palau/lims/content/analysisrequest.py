@@ -109,6 +109,9 @@ UPDATED_FIELDS = [
             }
         }
     }),
+    ("DateOfBirth", {
+        "required": True
+    }),
     ("Sex", {
        "required": True
     }),
