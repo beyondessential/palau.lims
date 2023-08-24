@@ -7,32 +7,32 @@
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
-from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.browser.widgets import DateTimeWidget
+from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.interfaces import IAnalysisRequest
 from palau.lims import messageFactory as _
 from palau.lims.browser.widgets import BottlesWidget
-from palau.lims.browser.widgets import ReferenceOtherWidget
 from palau.lims.config import LOCATIONS
 from palau.lims.config import SAMPLE_FIELDS_ORDER
 from palau.lims.content import disable_field
 from palau.lims.content import update_field
+from palau.lims.content.fields import ExtDateTimeField
 from palau.lims.content.fields import ExtRecordsField
 from palau.lims.content.fields import ExtStringField
+from palau.lims.content.fields import ExtTextField
 from palau.lims.content.fields import ExtUIDReferenceField
-from palau.lims.content.fields import ExtUIDReferenceOtherField
-from palau.lims.content.fields import ExtDateTimeField
 from palau.lims.interfaces import IPalauLimsLayer
 from palau.lims.permissions import FieldEditBottles
 from palau.lims.permissions import FieldEditClinicalInformation
 from palau.lims.permissions import FieldEditCurrentAntibiotics
+from palau.lims.permissions import FieldEditDateOfAdmission
 from palau.lims.permissions import FieldEditLocation
 from palau.lims.permissions import FieldEditVolume
 from palau.lims.permissions import FieldEditWard
 from palau.lims.permissions import FieldEditWardDepartment
-from palau.lims.permissions import FieldEditDateOfAdmission
 from palau.lims.validators import SampleVolumeValidator
 from Products.Archetypes.Widget import StringWidget
+from Products.Archetypes.Widget import TextAreaWidget
 from Products.CMFCore.permissions import View
 from senaite.core.browser.widgets import ReferenceWidget
 from senaite.core.catalog import SETUP_CATALOG
@@ -234,26 +234,17 @@ NEW_FIELDS = [
         ),
     ),
 
-    ExtUIDReferenceOtherField(
+    ExtTextField(
         "ClinicalInformation",
-        allowed_types=("ClinicalInformation",),
-        multiValued=True,
         read_permission=View,
         write_permission=FieldEditClinicalInformation,
-        widget=ReferenceOtherWidget(
+        widget=TextAreaWidget(
             label=_("Relevant clinical information"),
             render_own_label=True,
-            size=20,
+            rows=3,
             visible={
                 'add': 'edit',
             },
-            catalog_name=SETUP_CATALOG,
-            base_query={
-                "is_active": True,
-                "sort_on": "sortable_title",
-                "sort_order": "ascending",
-            },
-            showOn=True,
         )
     ),
 
