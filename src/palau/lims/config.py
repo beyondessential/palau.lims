@@ -72,6 +72,7 @@ IMPRESS_SETTINGS = [
 
 PATIENT_SETTINGS = [
     ("senaite.patient.gender_visible", False),
+    ("senaite.patient.age_supported", False),
     ("senaite.patient.patient_entry_mode", "first_last"),
 ]
 
