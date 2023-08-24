@@ -302,9 +302,7 @@ class WHONETExportView(BrowserView):
         sample_type = sample.getRawSampleType()
         date_sampled = sample.getDateSampled()
         date_received = sample.getDateReceived()
-        clinical_info = get_field_value(sample, "ClinicalInformation")
-        clinical_info = clinical_info or []
-        clinical_info = ", ".join(map(api.get_title, clinical_info))
+        clinical_info = sample.getClinicalInformation()
         antibiotics = get_field_value(sample, "CurrentAntibiotics")
         antibiotics = antibiotics or []
         antibiotics = ", ".join(map(api.get_title, antibiotics))

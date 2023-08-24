@@ -6,10 +6,6 @@
   <object name="Ward" meta_type="Dexterity FTI" />
   <object name="Wards" meta_type="Dexterity FTI" />
 
-  <!-- ClinicalInformation content type and folder -->
-  <object name="ClinicalInformation" meta_type="Dexterity FTI" />
-  <object name="ClinicalInformations" meta_type="Dexterity FTI" />
-
   <!-- WardDepartment content type and folder -->
   <object name="WardDepartment" meta_type="Dexterity FTI" />
   <object name="WardDepartments" meta_type="Dexterity FTI" />

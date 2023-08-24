@@ -8,7 +8,6 @@ import six
 from archetypes.schemaextender.interfaces import IExtensionField
 from bika.lims.browser.fields import UIDReferenceField
 from plone.app.blob.field import ImageField as BlobImageField
-from palau.lims.schema.uidreferenceotherfield import UIDReferenceOtherField
 from Products.Archetypes.Field import BooleanField
 from Products.Archetypes.Field import IntegerField
 from Products.Archetypes.Field import StringField
@@ -112,10 +111,6 @@ class ExtBlobImageField(ExtensionField, BlobImageField):
     """Field extender of plone.app.blob's ImageField
     """
 
-
-class ExtUIDReferenceOtherField(ExtensionField, UIDReferenceOtherField):
-    """Field extender of palau.lims.schema.UIDReferenceOtherField
-    """
 
 class ExtDateTimeField(ExtensionField, DateTimeField):
     """Field extender of senaite.core.browser.fields.DateTimeField

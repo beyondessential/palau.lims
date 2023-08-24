@@ -23,24 +23,12 @@ def setWard(self, value):
 
 
 def getClinicalInformation(self):
-    """Returns the clinical information objects assigned to the sample
+    """Returns the clinical information from the sample
     """
     return self.getField("ClinicalInformation").get(self)
 
 
-def getRawClinicalInformation(self):
-    """Returns the UIDs of the clinical informations assigned to this sample
+def setClinicalInformation(self, value):
+    """Assigns the clinical information to the sample
     """
-    return self.getField("ClinicalInformation").getRaw(self)
-
-
-def getClinicalInformationOtherText(self):
-    """Returns the "Other..." text assigned for ClinicalInformation field
-    """
-    return self.getField("ClinicalInforation").getOtherText(self)
-
-
-def setClinicalInformationOtherText(self, value):
-    """Sets the value for the "Other..." option for ClinicalInformation field
-    """
-    self.getField("ClinicalInformation").setOtherText(self, value)
+    self.getField("ClinicalInformation").set(self, value)

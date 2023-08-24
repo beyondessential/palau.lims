@@ -80,7 +80,6 @@ SORTED_SKIN_LAYERS = [
 # Tuples of ID, Title, FTI
 SETUP_FOLDERS = [
     ("wards", "Wards", "Wards"),
-    ("clinicalinformations", "Clinical Informations", "ClinicalInformations"),
     ("warddepartments", "Ward Departments", "WardDepartments"),
 ]
 

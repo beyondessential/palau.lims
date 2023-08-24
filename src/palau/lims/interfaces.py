@@ -23,13 +23,3 @@ class IPalauLimsLayer(ISenaiteCore,
     All views and viewlets register against this layer will appear in the site
     only when the add-on installer has been run.
     """
-
-
-class IClinicalInformations(IHideActionsMenu, IDoNotSupportSnapshots):
-    """Marker interface for the folder that contains Clinical Informations
-    """
-
-
-class IClinicalInformation(IHideActionsMenu, IDoNotSupportSnapshots):
-    """Marker interface for ClinicalInformation content type
-    """

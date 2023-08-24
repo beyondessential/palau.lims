@@ -11,14 +11,6 @@
     permission="senaite.core.permissions.ManageBika"
     layer="palau.lims.interfaces.IPalauLimsLayer" />
 
-  <!-- Clinical Informations view -->
-  <browser:page
-      for="palau.lims.interfaces.IClinicalInformations"
-      name="view"
-      class=".clinicalinformations.ClinicalInformationsView"
-      permission="senaite.core.permissions.ManageBika"
-      layer="palau.lims.interfaces.IPalauLimsLayer" />
-
   <!-- Ward Departments view -->
   <browser:page
       for="palau.lims.content.warddepartments.IWardDepartments"

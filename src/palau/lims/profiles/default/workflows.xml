@@ -6,18 +6,12 @@
     <type type_id="Wards">
       <bound-workflow workflow_id="senaite_one_state_workflow"/>
     </type>
-    <type type_id="ClinicalInformations">
-      <bound-workflow workflow_id="senaite_one_state_workflow"/>
-    </type>
     <type type_id="WardDepartments">
       <bound-workflow workflow_id="senaite_one_state_workflow"/>
     </type>
 
     <!-- Bindings to "senaite_deactivable_type_workflow" -->
     <type type_id="Ward">
-      <bound-workflow workflow_id="senaite_deactivable_type_workflow"/>
-    </type>
-    <type type_id="ClinicalInformation">
       <bound-workflow workflow_id="senaite_deactivable_type_workflow"/>
     </type>
     <type type_id="WardDepartment">

@@ -11,6 +11,18 @@
 
   <monkey:patch
       class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getClinicalInformation"
+      ignoreOriginal="True"
+      replacement=".analysisrequest.getClinicalInformation" />
+
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="setClinicalInformation"
+      ignoreOriginal="True"
+      replacement=".analysisrequest.setClinicalInformation" />
+
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
       original="getWard"
       ignoreOriginal="True"
       replacement=".analysisrequest.getWard" />
