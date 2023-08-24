@@ -13,6 +13,7 @@ from bika.lims.interfaces import IAnalysisRequest
 from palau.lims import messageFactory as _
 from palau.lims.browser.widgets import BottlesWidget
 from palau.lims.config import LOCATIONS
+from palau.lims.config import PRIORITIES
 from palau.lims.config import SAMPLE_FIELDS_ORDER
 from palau.lims.content import disable_field
 from palau.lims.content import update_field
@@ -122,6 +123,9 @@ UPDATED_FIELDS = [
     }),
     ("Specification", {
         "required": True
+    }),
+    ("Priority", {
+        "vocabulary": PRIORITIES,
     })
 ]
 

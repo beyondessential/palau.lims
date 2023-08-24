@@ -204,3 +204,9 @@ LOCATIONS = DisplayList((
     ("out", _("Outpatient")),
     ("", _("Not specified")),
 ))
+
+PRIORITIES = DisplayList((
+    ("1", _("Stat")),
+    ("3", _("Today")),
+    ("5", _("Routine AM")),
+))
