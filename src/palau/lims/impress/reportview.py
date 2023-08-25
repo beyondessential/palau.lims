@@ -4,11 +4,14 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
+import copy
 import json
 
 from bika.lims import api
 from bika.lims.api import mail
+from bika.lims.utils import get_link
 from Products.CMFPlone.utils import safe_unicode
+from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
@@ -19,6 +22,9 @@ from senaite.impress.decorators import returns_super_model
 from senaite.patient import api as patient_api
 from senaite.patient.config import SEXES
 from weasyprint.compat import base64_encode
+
+
+BOOL_TEXTS = {True: _("Yes"), False: _("No")}
 
 
 class DefaultReportView(SingleReportView):
@@ -311,6 +317,12 @@ class DefaultReportView(SingleReportView):
         items = []
         analysis = api.get_object(analysis)
 
+        # analysis (pre)conditions
+        conditions = analysis.getConditions()
+        conditions = filter(None, map(self.format_condition, conditions))
+        if conditions:
+            items.append({"type": "conditions", "data": conditions})
+
         # interim fields
         interims = self.get_result_variables(analysis)
         if interims:
@@ -322,3 +334,37 @@ class DefaultReportView(SingleReportView):
             items.append({"type": "remarks", "data": remarks})
 
         return items
+
+    def is_true(self, val):
+        """Returns whether val evaluates to True
+        """
+        val = str(val).strip().lower()
+        return val in ["y", "yes", "1", "true", "on"]
+
+    def format_condition(self, condition):
+        """Returns an string representation of the analysis condition value
+        """
+        title = condition.get("title")
+        value = condition.get("value", "")
+        if not any([title, value]):
+            return None
+
+        condition_type = condition.get("type")
+        if condition_type == "checkbox":
+            value = BOOL_TEXTS.get(self.is_true(value))
+
+        elif condition_type == "file":
+            attachment = api.get_object_by_uid(value, None)
+            if not attachment:
+                return None
+            value = self.get_attachment_link(attachment)
+
+        return ": ".join([title, str(value)])
+
+    def get_attachment_link(self, attachment):
+        """Returns a well-formed link for the attachment passed in
+        """
+        filename = attachment.getFilename()
+        att_url = api.get_url(attachment)
+        url = "{}/at_download/AttachmentFile".format(att_url)
+        return get_link(url, filename, tabindex="-1")
