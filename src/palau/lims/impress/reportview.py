@@ -306,3 +306,19 @@ class DefaultReportView(SingleReportView):
 
         # Delegate to 'standard' formatted result resolver
         return sample_model.get_formatted_result(analysis)
+
+    def get_analysis_footnotes(self, analysis):
+        items = []
+        analysis = api.get_object(analysis)
+
+        # interim fields
+        interims = self.get_result_variables(analysis)
+        if interims:
+            items.append({"type": "interims", "data": interims})
+
+        # analysis remarks
+        remarks = analysis.getRemarks()
+        if remarks:
+            items.append({"type": "remarks", "data": remarks})
+
+        return items

@@ -127,7 +127,7 @@
         content: ".:";
         font-weight:bold;
      }
-     .report .section-analyses-remarks div {
+     .report .section-analyses-footnotes {
          font-size: 0.9em;
      }
 
@@ -372,7 +372,8 @@
 
   <!-- RESULTS -->
   <tal:render condition="python:True">
-    <div class="row section-results no-gutters" tal:define="global analyses_remarks python:[]">
+    <div class="row section-results no-gutters"
+         tal:define="global analyses_footnotes python:[]">
       <div class="w-100">
         <h2 i18n:translate="">Results</h2>
 
@@ -455,11 +456,13 @@
                     <span tal:condition="analysis/ScientificName">
                         <span class="font-italic" tal:content="analysis/ScientificName"/>
                       </span>
-                    <tal:remarks tal:condition="analysis/Remarks"
-                                 tal:define="remarks analysis/Remarks">
-                      <sup tal:define="dummy python:analyses_remarks.append(remarks)"
-                           tal:content="python: len(analyses_remarks)"/>
-                    </tal:remarks>
+
+                    <tal:footnote tal:define="notes python: view.get_analysis_footnotes(analysis)"
+                                  tal:condition="notes">
+                      <sup tal:define="dummy python:analyses_footnotes.append(notes)"
+                           tal:content="python: len(analyses_footnotes)"/>
+                    </tal:footnote>
+
                   </td>
                   <td>
                     <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)">23</span>
@@ -516,12 +519,38 @@
           Results are provisional as isolate is undergoing further standardised analysis
         </span>
       </div>
-      <div class="w-100 section-analyses-remarks mb-4"
-           tal:condition="analyses_remarks">
-        <div tal:repeat="remarks analyses_remarks" class="mt-2">
-          <sup tal:content="repeat/remarks/number"/>
-          <span tal:content="remarks"/>
-        </div>
+      <div class="w-100 section-analyses-footnotes pt-2 mt-2 mb-4"
+           tal:condition="analyses_footnotes">
+        <ul class="list-unstyled">
+
+          <!-- List of analyses with a list of footnotes each -->
+          <li tal:repeat="analysis_footnotes analyses_footnotes" class="mt-1">
+            <sup tal:content="repeat/analysis_footnotes/number"/>
+
+            <tal:footnotes repeat="footnote analysis_footnotes">
+
+              <br tal:condition="repeat/footnote/index"/>
+              <span tal:condition="repeat/footnote/index" class="pl-2"/>
+
+              <!-- Analysis (reportable) interims -->
+              <tal:interims tal:condition="python: footnote['type'] == 'interims'">
+                <tal:interim repeat="interim footnote/data">
+                  <br tal:condition="repeat/interim/index"/>
+                  <span tal:condition="repeat/interim/index" class="pl-2"/>
+                  <span tal:content="interim/title"/>:
+                  <span tal:content="interim/formatted_value"/>
+                  <span tal:content="interim/formatted_unit"/>
+                </tal:interim>
+              </tal:interims>
+
+              <!-- Analysis remarks -->
+              <tal:remarks tal:condition="python: footnote['type'] == 'remarks'">
+                <span tal:content="footnote/data"/>
+              </tal:remarks>
+
+            </tal:footnotes>
+          </li>
+        </ul>
       </div>
     </div>
   </tal:render>
