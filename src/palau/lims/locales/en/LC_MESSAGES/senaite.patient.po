@@ -40,8 +40,8 @@ msgid "MRN"
 msgstr "Hospital Number"
 
 #: senaite/patient/browser/controlpanel.py:201
-msgid "Make the MRN field mandatory in the sample registration form and when creating or modifiying patients."
-msgstr "Make the Hospital Number field mandatory in the sample registration form and when creating or modifiying patients."
+msgid "Make the MRN field mandatory in the sample registration form and when creating or modifying patients."
+msgstr "Make the Hospital Number field mandatory in the sample registration form and when creating or modifying patients."
 
 #: senaite/patient/browser/patientfolder.py:75
 #: senaite/patient/content/analysisrequest.py:66

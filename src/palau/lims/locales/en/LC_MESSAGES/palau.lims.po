@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-08-24 10:34+0000\n"
+"POT-Creation-Date: 2023-08-25 13:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,11 +55,11 @@ msgstr ""
 msgid "Analysis Template"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:567
+#: palau/lims/impress/reports/Default.pt:605
 msgid "Attachment for"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:551
+#: palau/lims/impress/reports/Default.pt:589
 msgid "Attachments for ${DYNAMIC_CONTENT}"
 msgstr ""
 
@@ -67,7 +67,7 @@ msgstr ""
 msgid "Attachments per Row"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:590
+#: palau/lims/impress/reports/Default.pt:628
 msgid "Authorised <span>${DYNAMIC_CONTENT}</span> by"
 msgstr ""
 
@@ -96,7 +96,7 @@ msgstr ""
 msgid "Can reject samples"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:417
+#: palau/lims/impress/reports/Default.pt:418
 msgid "Captured Date"
 msgstr ""
 
@@ -170,11 +170,11 @@ msgstr ""
 msgid "Extension profile for SENAITE: PALAU LIMS"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:669
+#: palau/lims/impress/reports/Default.pt:707
 msgid "Fax"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:574
+#: palau/lims/impress/reports/Default.pt:612
 msgid "Filename:"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: palau/lims/config.py:203
+#: palau/lims/config.py:204
 msgid "Inpatient"
 msgstr ""
 
@@ -244,6 +244,10 @@ msgstr ""
 msgid "Negative"
 msgstr ""
 
+#: palau/lims/impress/reportview.py:27
+msgid "No"
+msgstr ""
+
 #: palau/lims/adapters/form.py:97
 msgid "Not a valid quantity or unit"
 msgstr ""
@@ -252,7 +256,7 @@ msgstr ""
 msgid "Not enough sample"
 msgstr ""
 
-#: palau/lims/config.py:205
+#: palau/lims/config.py:206
 msgid "Not specified"
 msgstr ""
 
@@ -260,7 +264,7 @@ msgstr ""
 msgid "Number of attachments rendered within one row per Analysis Request"
 msgstr ""
 
-#: palau/lims/config.py:204
+#: palau/lims/config.py:205
 msgid "Outpatient"
 msgstr ""
 
@@ -281,7 +285,7 @@ msgstr ""
 msgid "Patient name"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:665
+#: palau/lims/impress/reports/Default.pt:703
 msgid "Phone"
 msgstr ""
 
@@ -298,7 +302,7 @@ msgstr ""
 msgid "Provisional report"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:414
+#: palau/lims/impress/reports/Default.pt:415
 msgid "Range"
 msgstr ""
 
@@ -315,19 +319,19 @@ msgstr ""
 msgid "Report Logo"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:681
+#: palau/lims/impress/reports/Default.pt:719
 msgid "Report v1"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:411
+#: palau/lims/impress/reports/Default.pt:412
 msgid "Result"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:377
+#: palau/lims/impress/reports/Default.pt:378
 msgid "Results"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:515
+#: palau/lims/impress/reports/Default.pt:518
 msgid "Results are provisional as isolate is undergoing further standardised analysis"
 msgstr ""
 
@@ -335,7 +339,7 @@ msgstr ""
 msgid "Revised report for sample"
 msgstr ""
 
-#: palau/lims/config.py:211
+#: palau/lims/config.py:212
 msgid "Routine AM"
 msgstr ""
 
@@ -380,7 +384,7 @@ msgstr ""
 msgid "Site additional information"
 msgstr ""
 
-#: palau/lims/config.py:209
+#: palau/lims/config.py:210
 msgid "Stat"
 msgstr ""
 
@@ -425,7 +429,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: palau/lims/config.py:210
+#: palau/lims/config.py:211
 msgid "Today"
 msgstr ""
 
@@ -511,6 +515,10 @@ msgstr ""
 
 #: palau/lims/content/sampletype.py:53
 msgid "Widget to display on sample view and add sample form for the selection of the sample container when this sample type is selected."
+msgstr ""
+
+#: palau/lims/impress/reportview.py:27
+msgid "Yes"
 msgstr ""
 
 #: palau/lims/browser/whonet/templates/export.pt:42
