@@ -215,6 +215,9 @@ def setup_handler(context):
     # Setup laboratory information
     setup_laboratory(portal)
 
+    # Setup default settings
+    setup_default_settings(portal)
+
     # Apply ID format to content types
     setup_id_formatting(portal)
 
@@ -228,10 +231,7 @@ def setup_handler(context):
     setup_patient_settings(portal)
 
     # Sort fields from Add Sample form
-    sort_sample_add_fields(portal)
-
-    # Hide unused fields from Add Sample form
-    hide_sample_add_fields(portal)
+    setup_sample_add_fields(portal)
 
     # Hide actions from both navigation portlet and from control_panel
     hide_actions(portal)
@@ -371,19 +371,22 @@ def setup_skin_layers(portal):
     logger.info("Setup Skin layers [DONE]")
 
 
+def setup_default_settings(portal):
+    """Setup the settings by default
+    """
+    logger.info("Setup default settings ...")
+    setup = api.get_setup()
+    api.edit(setup, check_permissions=False, **dict(SETUP_SETTINGS))
+    logger.info("Setup default settings [DONE]")
+
+
 def setup_laboratory(portal):
     """Setup Laboratory
     """
     logger.info("Setup Laboratory ...")
-
-    # Apply general settings
     setup = api.get_setup()
-    api.edit(setup, check_permissions=False, **dict(SETUP_SETTINGS))
-
-    # Laboratory information
     lab = setup.laboratory
     api.edit(lab, check_permissions=False, **dict(LABORATORY_SETTINGS))
-
     logger.info("Setup Laboratory [DONE]")
 
 
@@ -486,30 +489,26 @@ def update_manage_add_storage(portal, storage):
     annotation[AR_CONFIGURATION_STORAGE] = storage
 
 
-def hide_sample_add_fields(portal):
-    """Hides unused fields from Sample Add Form
-    """
-    logger.info("Hiding default fields from Sample Add ...")
+def setup_sample_add_fields(portal):
+    logger.info("Setup Sample Add fields ...")
+
+    ordered_fields = SAMPLE_FIELDS_ORDER
+    to_hide = SAMPLE_ADD_FIELDS_TO_HIDE
+
+    # Sort fields
+    storage = get_manage_add_storage(portal)
+    storage.update({"order": ordered_fields})
+    update_manage_add_storage(portal, storage)
+
+    # Hide fields
     storage = get_manage_add_storage(portal)
     visibility = storage.get('visibility', {}).copy()
-    ordered = SAMPLE_FIELDS_ORDER
-    to_hide = SAMPLE_ADD_FIELDS_TO_HIDE
-    fields = list(set(visibility.keys() + to_hide + ordered))
+    fields = list(set(visibility.keys() + to_hide + ordered_fields))
     for field_name in fields:
         visibility[field_name] = field_name not in to_hide
     storage.update({"visibility": visibility})
     update_manage_add_storage(portal, storage)
-    logger.info("Hiding default fields from Sample Add [DONE]")
-
-
-def sort_sample_add_fields(portal):
-    """Sort Sample fields from Sample Add Form
-    """
-    logger.info("Sorting fields from Sample Add ...")
-    storage = get_manage_add_storage(portal)
-    storage.update({"order": SAMPLE_FIELDS_ORDER})
-    update_manage_add_storage(portal, storage)
-    logger.info("Sorting fields from Sample Add [DONE]")
+    logger.info("Setup Sample Add fields [DONE]")
 
 
 def add_setup_folders(portal):

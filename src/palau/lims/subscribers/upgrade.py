@@ -8,7 +8,6 @@ from bika.lims.api import get_portal
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME
 from palau.lims.setuphandlers import hide_actions
-from palau.lims.setuphandlers import hide_sample_add_fields
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_workflows
@@ -39,8 +38,5 @@ def afterUpgradeStepHandler(event):  # noqa CamelCase
 
     # Hide actions from both navigation portlet and from control_panel
     hide_actions(portal)
-
-    # Hide unused fields from Add Sample form
-    hide_sample_add_fields(portal)
 
     logger.info("Run {}.afterUpgradeStepHandler [DONE]".format(PRODUCT_NAME))
