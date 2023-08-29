@@ -142,7 +142,8 @@ time zone you want to use. The time zone naming convention usually uses a
 ```shell
 $ timedatectl list-timezones
 ```
-Once you identify which time zone is accurate to your location, run the following command as root or sudo user:
+Once you identify which time zone is accurate to your location, run the
+following command as root or sudo user:
 
 ```shell
 $ sudo timedatectl set-timezone Pacific/Palau
