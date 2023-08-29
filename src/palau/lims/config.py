@@ -92,7 +92,6 @@ REJECTION_REASONS = (
 # Tuples of (id, folder_id)
 # If folder_id is None, assume folder_id is portal
 ACTIONS_TO_HIDE = [
-    ("supplyorders", None),
 ]
 
 # An array of dicts. Each dict represents an ID formatting configuration
