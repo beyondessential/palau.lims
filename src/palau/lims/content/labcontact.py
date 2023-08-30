@@ -15,6 +15,7 @@ from Products.Archetypes.Widget import BooleanWidget
 from Products.CMFCore.permissions import ModifyPortalContent
 from Products.CMFCore.permissions import View
 from senaite.core.browser.widgets import ReferenceWidget
+from senaite.core.catalog import CLIENT_CATALOG
 from zope.component import adapter
 from zope.interface import implementer
 
@@ -33,7 +34,7 @@ NEW_FIELDS = [
                 u"The hospital or clinic to be selected by default on sample "
                 u"creation"
             ),
-            catalog_name="portal_catalog",
+            catalog_name=CLIENT_CATALOG,
             base_query={
                 "is_active": True,
                 "sort_on": "sortable_title",
