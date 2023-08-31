@@ -385,3 +385,11 @@ class DefaultReportView(SingleReportView):
             for interim in self.get_result_variables(analysis, report_only):
                 titles.add(interim.get("title"))
         return sorted(list(titles))
+
+    def get_current_contact(self):
+        """Returns the contact associated to current user, if any
+        """
+        user = api.get_user(self.current_user)
+        if not user:
+            return None
+        return api.get_user_contact(user)
