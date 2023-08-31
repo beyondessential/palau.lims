@@ -327,13 +327,8 @@
               </span>
             </td>
 
-            <!-- Patient address -->
-            <td class="label" i18n:translate="">Place of residence</td>
-            <td tal:content="model/PatientAddress|nothing"/>
+            <td colspan="2"/>
 
-            <!-- Date Received -->
-            <td class="label" i18n:translate="">Date received</td>
-            <td tal:content="python:view.to_localized_time(model.DateReceived)"/>
           </tr>
           <tr>
             <!-- Doctor name-->
@@ -357,13 +352,9 @@
             <td class="label" i18n:translate="">Sample type</td>
             <td tal:content="model/SampleType/title|nothing"/>
 
-            <!-- Sample Point + Sample Point Additional information -->
-            <td class="label" i18n:translate="">Site</td>
-            <td tal:define="sp model/SamplePoint/title|nothing;
-                            additional model/EnvironmentalConditions;
-                            sp python: filter(None, [sp, additional]);
-                            sp python: ', '.join(sp);"
-                tal:content="sp"/>
+            <!-- Date Received -->
+            <td class="label" i18n:translate="">Date received</td>
+            <td tal:content="python:view.to_localized_time(model.DateReceived)"/>
           </tr>
         </table>
       </div>
