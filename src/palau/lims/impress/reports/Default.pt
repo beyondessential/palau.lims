@@ -266,7 +266,7 @@
 
         <!-- Sample not yet verified or published -->
         <div class="alert alert-info" tal:condition="model/is_provisional">
-          <div i18n:translate="">Provisional report</div>
+          <div i18n:translate="">Preliminary report</div>
         </div>
       </div>
     </div>
