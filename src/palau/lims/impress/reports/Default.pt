@@ -389,8 +389,6 @@
                 <col style="width: 20%"/>
                 <!-- Result range -->
                 <col style="width: 10%"/>
-                <!-- Captured Date -->
-                <col style="width: 20%"/>
                 <!-- Out of Range -->
                 <col style="width: 5%"/>
               </colgroup>
@@ -404,9 +402,6 @@
                 </th>
                 <th class="result-range">
                   <span class="font-weight-bold" i18n:translate="">Range</span>
-                </th>
-                <th class="captured">
-                  <span class="font-weight-bold" i18n:translate="">Captured Date</span>
                 </th>
                 <th class="outofrange">
                   <span i18n:translate=""/>
@@ -470,11 +465,6 @@
                       <span tal:define="specs python:sample.get_formatted_specs(analysis);"
                             tal:condition="specs"
                             tal:content="specs"/>
-                  </td>
-                  <td>
-                      <span class="captured font-weight-normal"
-                            tal:condition="analysis/ResultCaptureDate"
-                            tal:content="python:view.to_localized_time(analysis.ResultCaptureDate)"/>
                   </td>
                   <td class="text-center align-middle">
                       <span tal:condition="python:sample.is_out_of_range(analysis)"
