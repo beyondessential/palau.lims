@@ -352,9 +352,9 @@
             <td class="label" i18n:translate="">Sample type</td>
             <td tal:content="model/SampleType/title|nothing"/>
 
-            <!-- Date Received -->
-            <td class="label" i18n:translate="">Date received</td>
-            <td tal:content="python:view.to_localized_time(model.DateReceived)"/>
+            <!-- Date Collected -->
+            <td class="label" i18n:translate="">Date collected</td>
+            <td tal:content="python:view.to_localized_time(model.DateSampled)"/>
           </tr>
         </table>
       </div>
