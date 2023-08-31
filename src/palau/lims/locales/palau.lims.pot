@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-08-25 13:52+0000\n"
+"POT-Creation-Date: 2023-08-31 11:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,7 +95,7 @@ msgstr ""
 msgid "Bottles"
 msgstr ""
 
-#: palau/lims/content/labcontact.py:49
+#: palau/lims/content/labcontact.py:50
 msgid "Can reject samples"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Date received"
 msgstr ""
 
-#: palau/lims/content/labcontact.py:31
+#: palau/lims/content/labcontact.py:32
 msgid "Default Hospital/Clinic"
 msgstr ""
 
@@ -213,7 +213,7 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: palau/lims/config.py:204
+#: palau/lims/config.py:213
 msgid "Inpatient"
 msgstr ""
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Not enough sample"
 msgstr ""
 
-#: palau/lims/config.py:206
+#: palau/lims/config.py:215
 msgid "Not specified"
 msgstr ""
 
@@ -267,7 +267,7 @@ msgstr ""
 msgid "Number of attachments rendered within one row per Analysis Request"
 msgstr ""
 
-#: palau/lims/config.py:205
+#: palau/lims/config.py:214
 msgid "Outpatient"
 msgstr ""
 
@@ -342,7 +342,7 @@ msgstr ""
 msgid "Revised report for sample"
 msgstr ""
 
-#: palau/lims/config.py:212
+#: palau/lims/config.py:221
 msgid "Routine AM"
 msgstr ""
 
@@ -387,7 +387,7 @@ msgstr ""
 msgid "Site additional information"
 msgstr ""
 
-#: palau/lims/config.py:210
+#: palau/lims/config.py:219
 msgid "Stat"
 msgstr ""
 
@@ -403,7 +403,7 @@ msgstr ""
 msgid "The abbreviation of the hospital"
 msgstr ""
 
-#: palau/lims/content/labcontact.py:32
+#: palau/lims/content/labcontact.py:33
 msgid "The hospital or clinic to be selected by default on sample creation"
 msgstr ""
 
@@ -432,7 +432,7 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: palau/lims/config.py:211
+#: palau/lims/config.py:220
 msgid "Today"
 msgstr ""
 
@@ -508,7 +508,7 @@ msgstr ""
 msgid "Whether containers from this type are available for selection when the default container for the selected sample type is a BACTEC bottle"
 msgstr ""
 
-#: palau/lims/content/labcontact.py:50
+#: palau/lims/content/labcontact.py:51
 msgid "Whether the user linked to this laboratory contact is authorised to reject samples. Note that user won't be able to reject a sample if she/he does not belong to an authorised group (LabManager or LabClerk), even if this option is selected"
 msgstr ""
 

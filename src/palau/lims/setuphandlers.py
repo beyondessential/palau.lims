@@ -17,6 +17,7 @@ from palau.lims.config import ACTIONS_TO_HIDE
 from palau.lims.config import ID_FORMATTING
 from palau.lims.config import IMPRESS_SETTINGS
 from palau.lims.config import LABORATORY_SETTINGS
+from palau.lims.config import LANG_SETTINGS
 from palau.lims.config import PATIENT_SETTINGS
 from palau.lims.config import REJECTION_REASONS
 from palau.lims.config import SAMPLE_ADD_FIELDS_TO_HIDE
@@ -200,9 +201,6 @@ def setup_handler(context):
     # Setup folders
     add_setup_folders(portal)
 
-    # Configure visible navigation items
-    setup_navigation_types(portal)
-
     # Add behaviors
     setup_behaviors(portal)
 
@@ -211,6 +209,12 @@ def setup_handler(context):
 
     # Import baseline data
     import_content_structure(portal)
+
+    # Configure visible navigation items
+    setup_navigation_types(portal)
+
+    # Setup languages
+    setup_languages(portal)
 
     # Setup laboratory information
     setup_laboratory(portal)
@@ -823,3 +827,12 @@ def setup_rejection_reasons(portal):
         reasons_dict[r_text_key] = r_text_value
     setup.setRejectionReasons(reasons_dict)
     logger.info("Enabling the rejection workflow [DONE]")
+
+
+def setup_languages(portal):
+    """Setup the default settings re languages
+    """
+    logger.info("Setup languages settings ...")
+    for key, val in LANG_SETTINGS:
+        ploneapi.portal.set_registry_record("plone.{}".format(key), val)
+    logger.info("Setup languages settings [DONE]")

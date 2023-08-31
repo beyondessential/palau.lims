@@ -11,6 +11,16 @@ UNKNOWN_DOCTOR_FULLNAME = "Unknown doctor"
 
 CULTURE_INTERPRETATION_KEYWORD = "CINTER"
 
+LANG_SETTINGS = [
+    # Site language
+    ("default_language", "en"),
+    # Available languages
+    ("available_languages", ["en", "ja"]),
+    # Show country-specific language variants
+    # IMPORTANT: If True, .pot files for language variants are required
+    ("use_combined_language_codes", False),
+]
+
 SETUP_SETTINGS = [
     ("title", "Setup"),
     # Security

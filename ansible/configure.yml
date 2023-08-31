@@ -21,6 +21,8 @@ plone_timezone: "Pacific/Palau"
 # SENAITE additional eggs
 plone_additional_eggs:
   - palau.lims
+  - i18ndude
+  - pdbpp
 
 plone_sources:
   - "palau.lims = git github_lims:beyondessential/palau.lims.git branch=master"
@@ -117,3 +119,4 @@ additional_system_packages:
   - rsync
   - jq
   - psmisc
+  - gettext
