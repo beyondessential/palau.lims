@@ -381,10 +381,18 @@
                           repeat="category python:view.sort_items(analyses_by_category.keys())">
 
             <!-- Analyses in Category -->
-            <table class="table table-sm table-condensed">
+            <table class="table table-sm table-condensed"
+                   tal:define="analyses python:analyses_by_category.get(category);
+                               vars_names python:view.get_result_variables_titles(analyses);">
               <colgroup>
                 <!-- Category -->
                 <col style="width: 40%;"/>
+                <!-- Result variables -->
+                <tal:var_cols tal:repeat="var_name vars_names">
+                  <col tal:define="col_width python: 20 / len(vars_names);
+                                   col_width python: '{} %'.format(str(col_width))"
+                       tal:attributes="width col_width"/>
+                </tal:var_cols>
                 <!-- Result -->
                 <col style="width: 20%"/>
                 <!-- Result range -->
@@ -393,24 +401,19 @@
                 <col style="width: 5%"/>
               </colgroup>
               <thead>
-              <tr class="small">
-                <th class="analysis">
-                  <span class="font-weight-bold" tal:content="category/Title">Category</span>
-                </th>
-                <th class="result">
-                  <span class="font-weight-bold" i18n:translate="">Result</span>
-                </th>
-                <th class="result-range">
-                  <span class="font-weight-bold" i18n:translate="">Range</span>
-                </th>
-                <th class="outofrange">
-                  <span i18n:translate=""/>
-                </th>
+              <tr class="small font-weight-bold">
+                <th tal:content="category/Title"/>
+                <th tal:repeat="var_name vars_names"
+                    tal:content="var_name"/>
+                <th i18n:translate="">Result</th>
+                <th i18n:translate="" colspan="2">Normal values</th>
               </tr>
               </thead>
               <tbody>
-              <tal:analyses tal:repeat="analysis python:analyses_by_category.get(category)">
-                <tr>
+              <tal:analyses tal:repeat="analysis analyses">
+                <tr tal:define="analysis_vars python:view.get_result_variables(analysis)">
+
+                  <!-- Analysis name -->
                   <td class="analysis">
                     <tal:result_not_verified condition="python:not analysis.getDateVerified()">
                       <strong style="color:red;">*</strong>&nbsp;
@@ -450,6 +453,15 @@
                     </tal:footnote>
 
                   </td>
+
+                  <!-- Variables -->
+                  <td class="result_variable" tal:repeat="var_name vars_names">
+                    <span tal:define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars)"
+                          tal:condition="interim"
+                          tal:content="python:interim[0].get('formatted_value')"/>
+                  </td>
+
+                  <!-- Result -->
                   <td>
                     <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)">23</span>
 

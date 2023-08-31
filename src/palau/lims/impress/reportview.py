@@ -313,20 +313,23 @@ class DefaultReportView(SingleReportView):
         # Delegate to 'standard' formatted result resolver
         return sample_model.get_formatted_result(analysis)
 
+    def get_analysis_conditions(self, analysis):
+        """Returns the analysis conditions of the given analysis
+        """
+        # analysis (pre)conditions
+        items = []
+        analysis = api.get_object(analysis)
+        conditions = analysis.getConditions()
+        return filter(None, map(self.format_condition, conditions))
+
     def get_analysis_footnotes(self, analysis):
         items = []
         analysis = api.get_object(analysis)
 
         # analysis (pre)conditions
-        conditions = analysis.getConditions()
-        conditions = filter(None, map(self.format_condition, conditions))
+        conditions = self.get_analysis_conditions(analysis)
         if conditions:
             items.append({"type": "conditions", "data": conditions})
-
-        # interim fields
-        interims = self.get_result_variables(analysis)
-        if interims:
-            items.append({"type": "interims", "data": interims})
 
         # analysis remarks
         remarks = analysis.getRemarks()
@@ -368,3 +371,17 @@ class DefaultReportView(SingleReportView):
         att_url = api.get_url(attachment)
         url = "{}/at_download/AttachmentFile".format(att_url)
         return get_link(url, filename, tabindex="-1")
+
+    def get_result_variables_titles(self, analyses, report_only=True):
+        """Returns the titles of the results variables for the given analyses
+        """
+        if not analyses:
+            return []
+        if not isinstance(analyses, (list, tuple)):
+            analyses = [analyses]
+
+        titles = set()
+        for analysis in analyses:
+            for interim in self.get_result_variables(analysis, report_only):
+                titles.add(interim.get("title"))
+        return sorted(list(titles))
