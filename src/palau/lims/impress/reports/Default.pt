@@ -68,6 +68,7 @@
      .report table { border-color: #999; margin-bottom: 0.4rem; line-height: 1.2; }
      .report table td, .report table th { border-top: 0px solid black; border-bottom: 0px solid black; }
      .report table th { border-bottom: 1px solid black; font-size: 8pt }
+     .report .section-results { page-break-inside:auto; }
      .report table.range-table td { padding: 0 0.2rem 0 0; border: none; }
      .report .section-header h1 { font-size: 175%; }
      .report .section-header img.logo { height: 100px; margin: 20px 0; }
