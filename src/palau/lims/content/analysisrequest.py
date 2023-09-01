@@ -134,7 +134,6 @@ NEW_FIELDS = [
     ExtUIDReferenceField(
         "Ward",
         allowed_types=("Ward", ),
-        required=True,
         multiValued=False,
         read_permission=View,
         write_permission=FieldEditWard,
@@ -339,7 +338,6 @@ NEW_FIELDS = [
 
     ExtStringField(
         "Location",
-        required=True,
         default="",
         vocabulary=LOCATIONS,
         mode='rw',
