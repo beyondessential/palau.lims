@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-08-31 11:09+0000\n"
+"POT-Creation-Date: 2023-09-01 14:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,11 +55,11 @@ msgstr ""
 msgid "Analysis Template"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:605
+#: palau/lims/impress/reports/Default.pt:610
 msgid "Attachment for"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:589
+#: palau/lims/impress/reports/Default.pt:594
 msgid "Attachments for ${DYNAMIC_CONTENT}"
 msgstr ""
 
@@ -67,7 +67,7 @@ msgstr ""
 msgid "Attachments per Row"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:628
+#: palau/lims/impress/reports/Default.pt:633
 msgid "Authorised <span>${DYNAMIC_CONTENT}</span> by"
 msgstr ""
 
@@ -96,10 +96,6 @@ msgstr ""
 msgid "Can reject samples"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:418
-msgid "Captured Date"
-msgstr ""
-
 #: palau/lims/browser/sample/templates/rejection_content.pt:70
 #: palau/lims/impress/reports/Default.pt:211
 msgid "Clinical Laboratory Services"
@@ -117,6 +113,10 @@ msgstr ""
 msgid "Customize"
 msgstr ""
 
+#: palau/lims/impress/reports/Default.pt:356
+msgid "Date collected"
+msgstr ""
+
 #: palau/lims/content/analysisrequest.py:261
 msgid "Date of Admission"
 msgstr ""
@@ -130,7 +130,6 @@ msgid "Date of Admission must be equal or before Sampled Date on {}"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:118
-#: palau/lims/impress/reports/Default.pt:335
 msgid "Date received"
 msgstr ""
 
@@ -170,11 +169,11 @@ msgstr ""
 msgid "Extension profile for SENAITE: PALAU LIMS"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:707
+#: palau/lims/impress/reports/Default.pt:713
 msgid "Fax"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:612
+#: palau/lims/impress/reports/Default.pt:617
 msgid "Filename:"
 msgstr ""
 
@@ -197,7 +196,7 @@ msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:127
 #: palau/lims/content/analysisrequest.py:64
-#: palau/lims/impress/reports/Default.pt:344
+#: palau/lims/impress/reports/Default.pt:339
 msgid "Hospital/Clinic"
 msgstr ""
 
@@ -248,6 +247,10 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: palau/lims/impress/reports/Default.pt:409
+msgid "Normal values"
+msgstr ""
+
 #: palau/lims/adapters/form.py:97
 msgid "Not a valid quantity or unit"
 msgstr ""
@@ -285,12 +288,11 @@ msgstr ""
 msgid "Patient name"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:703
+#: palau/lims/impress/reports/Default.pt:709
 msgid "Phone"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:114
-#: palau/lims/impress/reports/Default.pt:331
 msgid "Place of residence"
 msgstr ""
 
@@ -299,11 +301,7 @@ msgid "Positive"
 msgstr ""
 
 #: palau/lims/impress/reports/Default.pt:269
-msgid "Provisional report"
-msgstr ""
-
-#: palau/lims/impress/reports/Default.pt:415
-msgid "Range"
+msgid "Preliminary report"
 msgstr ""
 
 #: palau/lims/content/analysisrequest.py:246
@@ -319,19 +317,19 @@ msgstr ""
 msgid "Report Logo"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:719
+#: palau/lims/impress/reports/Default.pt:725
 msgid "Report v1"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:412
+#: palau/lims/impress/reports/Default.pt:408
 msgid "Result"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:378
+#: palau/lims/impress/reports/Default.pt:369
 msgid "Results"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:518
+#: palau/lims/impress/reports/Default.pt:523
 msgid "Results are provisional as isolate is undergoing further standardised analysis"
 msgstr ""
 
@@ -344,7 +342,7 @@ msgid "Routine AM"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:136
-#: palau/lims/impress/reports/Default.pt:353
+#: palau/lims/impress/reports/Default.pt:348
 msgid "Sample ID"
 msgstr ""
 
@@ -353,7 +351,7 @@ msgid "Sample rejected by"
 msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:140
-#: palau/lims/impress/reports/Default.pt:357
+#: palau/lims/impress/reports/Default.pt:352
 msgid "Sample type"
 msgstr ""
 
@@ -376,7 +374,6 @@ msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:144
 #: palau/lims/content/analysisrequest.py:121
-#: palau/lims/impress/reports/Default.pt:361
 msgid "Site"
 msgstr ""
 
@@ -472,7 +469,7 @@ msgstr ""
 
 #: palau/lims/browser/sample/templates/rejection_content.pt:131
 #: palau/lims/content/analysisrequest.py:142
-#: palau/lims/impress/reports/Default.pt:348
+#: palau/lims/impress/reports/Default.pt:343
 msgid "Ward"
 msgstr ""
 
