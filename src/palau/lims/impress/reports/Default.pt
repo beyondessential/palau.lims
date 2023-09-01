@@ -627,15 +627,15 @@
   </tal:render>
 
   <!--  SIGNATURES -->
-  <tal:render condition="python:True">
+  <tal:render condition="not:model/is_provisional">
     <div class="row section-signatures no-gutters">
       <div class="w-100">
         <h4 i18n:translate="">Authorised <span tal:content="python:view.to_localized_time(view.timestamp)"/> by</h4>
         <table class="table table-sm table-condensed">
-          <tr>
-            <tal:reporter define="reporter python:view.get_current_contact()"
-                          condition="reporter">
-              <td style="border:none">
+          <tr tal:define="current_user python:view.current_user;
+                          reporter python:view.get_current_contact();">
+            <td style="border:none">
+              <tal:reporter condition="reporter">
                 <div class="font-weight-bold">
                   <span tal:content="python: reporter.getSalutation()" />
                   <span tal:condition="python: reporter.getSalutation()">&nbsp;</span>
@@ -644,8 +644,13 @@
                 <div>
                   <span tal:content="python: reporter.getJobTitle()"/>
                 </div>
-              </td>
-            </tal:reporter>
+              </tal:reporter>
+              <tal:current_user condition="python: not reporter">
+                <div class="font-weight-bold">
+                  <span tal:content="current_user/username"/>
+                </div>
+              </tal:current_user>
+            </td>
             <tal:supervisor define="supervisor laboratory/Supervisor" condition="supervisor">
               <td style="border:none">
                 <div class="font-weight-bold">
