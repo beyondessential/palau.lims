@@ -389,14 +389,12 @@ class DefaultReportView(SingleReportView):
         # Basic user information
         user = api.get_user(user)
         properties = api.get_user_properties(user)
-        if not properties:
-            return {}
         properties.update({
             "userid": user.getId(),
             "username": user.getUserName(),
             "roles": user.getRoles(),
             "email": user.getProperty("email"),
-            "fullname": user.getProperty("fullname"),
+            "fullname": user.getProperty("fullname") or user.getUserName(),
             "salutation": "",
             "job_title": "",
         })

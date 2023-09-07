@@ -638,7 +638,7 @@
           <tr>
 
             <!-- Tested by -->
-            <td tal:condition="submitters" style="border:none">
+            <td tal:condition="submitters" class="border-0 align-top">
               <h4 i18n:translate="">Tested by</h4>
               <div tal:repeat="member submitters" class="pb-2">
                 <div class="font-weight-bold">
@@ -653,7 +653,7 @@
             </td>
 
             <!-- Reported by -->
-            <td tal:condition="reporters">
+            <td tal:condition="reporters" class="border-0 align-top">
               <h4 i18n:translate="">Reported by</h4>
               <div tal:repeat="member reporters" class="pb-2">
                 <div class="font-weight-bold">
