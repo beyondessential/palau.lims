@@ -317,7 +317,6 @@ class DefaultReportView(SingleReportView):
         """Returns the analysis conditions of the given analysis
         """
         # analysis (pre)conditions
-        items = []
         analysis = api.get_object(analysis)
         conditions = analysis.getConditions()
         return filter(None, map(self.format_condition, conditions))
@@ -386,10 +385,88 @@ class DefaultReportView(SingleReportView):
                 titles.add(interim.get("title"))
         return sorted(list(titles))
 
-    def get_current_contact(self):
-        """Returns the contact associated to current user, if any
+    def get_user_properties(self, user):
+        # Basic user information
+        user = api.get_user(user)
+        properties = api.get_user_properties(user)
+        properties.update({
+            "userid": user.getId(),
+            "username": user.getUserName(),
+            "roles": user.getRoles(),
+            "email": user.getProperty("email"),
+            "fullname": user.getProperty("fullname") or user.getUserName(),
+            "salutation": "",
+            "job_title": "",
+        })
+        # Overwrite with contact information
+        contact = api.get_user_contact(user, contact_types=["LabContact"])
+        if not contact:
+            return properties
+
+        fullname = contact.getFullname()
+        if fullname:
+            properties["fullname"] = fullname
+
+        email_address = contact.getEmailAddress()
+        if email_address:
+            properties["email"] = email_address
+
+        properties["salutation"] = contact.getSalutation()
+        properties["job_title"] = contact.getJobTitle()
+        return properties
+
+    def get_verified_analyses(self, model):
+        """Returns the valid analyses that were once verified
         """
-        user = api.get_user(self.current_user)
-        if not user:
-            return None
-        return api.get_user_contact(user)
+        statuses = ["published", "verified"]
+        return model.getAnalyses(full_objects=True, review_state=statuses)
+
+    def get_submitted_analyses(self, model):
+        """Returns the valid analyses that were once submitted
+        """
+        statuses = ["published", "verified", "to_be_verified"]
+        return model.getAnalyses(full_objects=True, review_state=statuses)
+
+    def get_verifiers(self, model):
+        """Returns the usernames of the users who at least verified one of the
+        an
+        """
+        verifiers = []
+        for analysis in self.get_verified_analyses(model):
+            analysis_verifiers = analysis.getVerificators()
+            verifiers.extend(analysis_verifiers)
+        return list(set(verifiers))
+
+    def get_submitters(self, model):
+        """Returns the usernames of the users who at least submitted results
+        for at least one of the valid analyses of the sample
+        """
+        submitters = []
+        for analysis in self.get_submitted_analyses(model):
+            username = analysis.getSubmittedBy()
+            submitters.append(username)
+        return list(set(submitters))
+
+    def get_reporters_info(self, model):
+        """Returns a list made of dicts representing the LabContacts (or users)
+        to be displayed under the 'Reported by' section
+        """
+        # Get info about current user
+        current_user = api.get_current_user()
+        current_user = self.get_user_properties(current_user)
+        current_userid = current_user.get("userid")
+
+        # Extend with verifiers
+        reporters = self.get_verifiers(model)
+        reporters = filter(lambda userid: userid != current_userid, reporters)
+        reporters = map(self.get_user_properties, reporters)
+        reporters.append(current_user)
+        return filter(None, reporters)
+
+    def get_submitters_info(self, model):
+        """Returns a list made of dicts representing the LabContacts (or users)
+        that submitted at least one analysis
+        """
+        submitters = self.get_submitters(model)
+        submitters = map(self.get_user_properties, submitters)
+        return filter(None, submitters)
