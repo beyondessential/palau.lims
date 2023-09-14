@@ -110,6 +110,14 @@ class DefaultReportView(SingleReportView):
         sex = dict(SEXES).get(sex, "")
         return sex.encode("utf-8")
 
+    def get_department(self, sample):
+        """Returns the Department title
+        """
+        sample = api.get_object(sample)
+        department = sample.getField("WardDepartment").get(sample)
+
+        return api.get_title(department)
+
     def sort_items(self, items, reverse=False):
         """Sort items so that Microbiology category be at the end of the report
         for Urine sample type
