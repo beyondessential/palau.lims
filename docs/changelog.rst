@@ -3,6 +3,8 @@ Changelog
 
 1.0.0 (Unreleased)
 ------------------
+
+- #26 Don't treat urine sample differently for results sorting in report
 - #18 Show department on final report instead of ward
 - #15 Display Tested by and Reported by in results report instead of Authorised
 - #12 Auto-page-break of results table in final report

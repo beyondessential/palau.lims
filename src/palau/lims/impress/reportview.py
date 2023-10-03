@@ -4,13 +4,11 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-import copy
 import json
 
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
-from Products.CMFPlone.utils import safe_unicode
 from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
 from senaite.ast.config import IDENTIFICATION_KEY
@@ -117,31 +115,6 @@ class DefaultReportView(SingleReportView):
         department = sample.getField("WardDepartment").get(sample)
 
         return api.get_title(department)
-
-    def sort_items(self, items, reverse=False):
-        """Sort items so that Microbiology category be at the end of the report
-        for Urine sample type
-        """
-        def sortable_title(obj):
-            sort_key = obj.get("SortKey") or 0.0
-            title = obj.title.lower()
-            return u"{:010.3f}{}".format(sort_key, safe_unicode(title))
-
-        def _cmp(obj1, obj2):
-            st1 = sortable_title(obj1)
-            st2 = sortable_title(obj2)
-            return cmp(st1, st2)
-
-        def _cmp_urine(obj1, obj2):
-            if api.get_title(obj1) == 'Microbiology':
-                return 1
-            if api.get_title(obj2) == 'Microbiology':
-                return -1
-            return _cmp(obj1, obj2)
-
-        if self.model.getSampleTypeTitle() == 'Urine':
-            return sorted(items, cmp=_cmp_urine, reverse=reverse)
-        return sorted(items, cmp=_cmp, reverse=reverse)
 
     def get_analyses(self, model_or_collection, parts=False):
         """Returns a flat list of all analyses for the given model or
