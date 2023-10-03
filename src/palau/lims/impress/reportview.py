@@ -108,6 +108,14 @@ class DefaultReportView(SingleReportView):
         sex = dict(SEXES).get(sex, "")
         return sex.encode("utf-8")
 
+    def get_department(self, sample):
+        """Returns the Department title
+        """
+        sample = api.get_object(sample)
+        department = sample.getField("WardDepartment").get(sample)
+
+        return api.get_title(department)
+
     def get_analyses(self, model_or_collection, parts=False):
         """Returns a flat list of all analyses for the given model or
         collection, but only those in a "reportable" status are returned.

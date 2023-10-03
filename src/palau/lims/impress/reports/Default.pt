@@ -340,9 +340,9 @@
             <td class="label" i18n:translate="">Hospital/Clinic</td>
             <td tal:content="client/Name"/>
 
-            <!-- Ward -->
-            <td class="label" i18n:translate="">Ward</td>
-            <td tal:content="model/Ward/title|nothing"/>
+            <!-- Department -->
+            <td class="label" i18n:translate="">Department</td>
+            <td tal:content="python:view.get_department(model)"/>
           </tr>
           <tr>
             <!-- Sample Id -->

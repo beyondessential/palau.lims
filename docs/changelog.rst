@@ -3,7 +3,7 @@ Changelog
 
 1.0.0 (Unreleased)
 ------------------
-
+- #18 Show department on final report instead of ward
 - #15 Display Tested by and Reported by in results report instead of Authorised
 - #12 Auto-page-break of results table in final report
 - #11 Do not display Authorised by in results report if preliminary
