@@ -294,6 +294,20 @@ class DefaultReportView(SingleReportView):
         # Delegate to 'standard' formatted result resolver
         return sample_model.get_formatted_result(analysis)
 
+    def get_normal_values(self, model, analysis):
+        """Returns the normal values that apply for the given analysis. Returns
+        the formatted specification if value entered into min/max. Otherwise,
+        returns the value entered into "Out of range comment" field
+        """
+        specs = analysis.getResultsRange()
+        range_min = api.to_float(specs.get("min"), default=0)
+        range_max = api.to_float(specs.get("max"), default=0)
+        if any([range_min, range_max]):
+            return model.get_formatted_specs(analysis)
+
+        specs = analysis.getResultsRange() or {}
+        return specs.get("rangecomment")
+
     def get_analysis_conditions(self, analysis):
         """Returns the analysis conditions of the given analysis
         """

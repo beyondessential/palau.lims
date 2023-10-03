@@ -475,31 +475,18 @@
                     </tal:result_uncertainty>
                   </td>
                   <td>
-                      <span tal:define="specs python:sample.get_formatted_specs(analysis);"
-                            tal:condition="specs"
-                            tal:content="specs"/>
+                      <!-- Range interval or range comment -->
+                      <span tal:define="normal_values python:view.get_normal_values(model, analysis);"
+                            tal:condition="normal_values"
+                            tal:content="normal_values"/>
                   </td>
-
-                  <!-- Out of range column -->
-                  <td class="text-center align-middle"
-                      tal:define="out_of_range  python: model.is_out_of_range(analysis);
-                                  results_range python: analysis.getResultsRange();
-                                  comment       python: results_range.get('rangecomment');">
-                    <tal:out_of_range condition="out_of_range">
-
+                  <td>
                       <!-- Out of range symbol -->
                       <span class="font-weight-light outofrange text-danger"
-                            style="font-family:Lucida Console, Courier, monospace;"
+                            tal:condition="python: model.is_out_of_range(analysis)"
                             tal:content="outofrange_symbol">
-                        </span>
-
-                      <!-- Out-of-range comment -->
-                      <span class="text-danger small"
-                            tal:condition="comment" tal:content="comment"/>
-
-                    </tal:out_of_range>
+                      </span>
                   </td>
-
                 </tr>
               </tal:analyses>
               </tbody>
