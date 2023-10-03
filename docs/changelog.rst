@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #28 Display the range comment as the normal value if no min/max set
 - #27 Added senaite.storage dependency
 - #26 Don't treat urine sample differently for results sorting in report
 - #18 Show department on final report instead of ward
