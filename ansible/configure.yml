@@ -37,6 +37,7 @@ plone_sources:
   - "senaite.abx = git https://github.com/senaite/senaite.abx.git branch=master"
   - "senaite.ast = git https://github.com/senaite/senaite.ast.git branch=master"
   - "senaite.microorganism = git https://github.com/senaite/senaite.microorganism.git branch=master"
+  - "senaite.storage = git https://github.com/senaite/senaite.storage.git branch=2.x"
 
 # Plone additional links for eggs download
 plone_extra_find_links:
