@@ -41,6 +41,7 @@ setup(
         "senaite.lims>=2.5.0",
         "senaite.ast",
         "senaite.patient",
+        "senaite.storage",
         # senaite.core does no longer provides schemaextender
         # https://github.com/senaite/senaite.core/pull/1931
         "archetypes.schemaextender",
