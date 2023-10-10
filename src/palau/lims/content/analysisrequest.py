@@ -254,13 +254,13 @@ NEW_FIELDS = [
     ExtDateTimeField(
         "DateOfAdmission",
         mode="rw",
+        max="current",
         read_permission=View,
         write_permission=FieldEditDateOfAdmission,
         widget=DateTimeWidget(
             label=_("Date of Admission"),
             size=20,
             show_time=True,
-            datepicker_nofuture=True,
             visible={
                 'add': 'edit',
                 'secondary': 'disabled',
