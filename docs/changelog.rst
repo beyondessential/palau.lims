@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #43 Fix Doctor name not appearing on final report
 - #42 Compatibility with senaite.core#2399
 - #28 Display the range comment as the normal value if no min/max set
 - #27 Added senaite.storage dependency
