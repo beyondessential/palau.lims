@@ -121,7 +121,7 @@
           <tr>
             <!-- Doctor name-->
             <td class="label" i18n:translate="">Doctor</td>
-            <td tal:content="sample/Contact/Fullname|nothing"/>
+            <td tal:content="sample/Contact/getFullname|nothing"/>
 
             <!-- Hospital clinic -->
             <td class="label" i18n:translate="">Hospital/Clinic</td>
