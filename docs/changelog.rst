@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #44 Added script for the removal of objects
 - #43 Fix Doctor name not appearing on final report
 - #42 Compatibility with senaite.core#2399
 - #28 Display the range comment as the normal value if no min/max set
