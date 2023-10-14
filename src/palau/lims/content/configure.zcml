@@ -40,6 +40,12 @@
       provides="archetypes.schemaextender.interfaces.ISchemaModifier"
       factory=".artemplate.ARTemplateSchemaModifier" />
 
+  <!-- Schema extender for Analysis Profile -->
+  <adapter
+      name="palau.lims.analysisprofile.schemaextender"
+      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+      factory=".analysisprofile.AnalysisProfileSchemaExtender" />
+
   <!-- Schema extender for LIMS Setup -->
   <adapter
       name="palau.lims.setup.schemaextender"
