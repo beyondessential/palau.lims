@@ -7,6 +7,7 @@
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _s
 from bika.lims.adapters.addsample import AddSampleObjectInfoAdapter
+from bika.lims.catalog import SETUP_CATALOG
 from bika.lims.interfaces import IAddSampleFieldsFlush
 from bika.lims.interfaces import IAddSampleRecordsValidator
 from bika.lims.interfaces import IGetDefaultFieldValueARAddHook
@@ -51,11 +52,35 @@ class RecordsValidator(object):
             if date_of_admission_err:
                 field_errors["Date of Admission-{}".format(num)] = date_of_admission_err
 
+            # Specification is mandatory depending on sample type
+            err = self.validate_specification(record)
+            if err:
+                field_errors["Specification-{}".format(num)] = err
+
         if any([message, field_errors]):
             return {
                 "message": message,
                 "fielderrors": field_errors
             }
+
+    def validate_specification(self, record):
+        """Returns an error message if no specification has been selected
+        although required or the specification is not valid
+        """
+        spec_uid = record.get("Specification")
+        if spec_uid:
+            return None
+
+        # specification required if a specification has been set up for the
+        # selected sample type
+        sample_type_uid = record.get("SampleType")
+        query = {
+            "portal_type": "AnalysisSpec",
+            "sampletype_uid": sample_type_uid
+        }
+        specs = api.search(query, SETUP_CATALOG)
+        if len(specs):
+            return _("Specification is required")
 
     def validate_date_of_admission(self, record):
         """Validates the Date of Admission: before or equal to the Date Sampled

@@ -121,9 +121,6 @@ UPDATED_FIELDS = [
             "label": _("Site"),
         }
     }),
-    ("Specification", {
-        "required": True
-    }),
     ("Priority", {
         "vocabulary": PRIORITIES,
     })
