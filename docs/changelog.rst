@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #45 Allow analysis profiles to be filtered by sample type in Add Sample form
 - #44 Added script for the removal of objects
 - #43 Fix Doctor name not appearing on final report
 - #42 Compatibility with senaite.core#2399
