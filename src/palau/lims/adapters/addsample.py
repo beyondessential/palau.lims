@@ -247,6 +247,9 @@ class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
         filters["Profiles"] = {
             "sampletype_uid": [api.get_uid(self.context), None]
         }
+        filters["Specification"] = {
+            "sampletype_uid": [api.get_uid(self.context), None]
+        }
         object_info["filter_queries"] = filters
         return object_info
 
@@ -264,5 +267,6 @@ class AddSampleFieldsFlush(object):
         return {
             "SampleType": [
                 "Profiles",
+                "Specification",
             ],
         }
