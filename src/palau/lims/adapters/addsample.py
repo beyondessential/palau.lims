@@ -6,6 +6,8 @@
 
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _s
+from bika.lims.adapters.addsample import AddSampleObjectInfoAdapter
+from bika.lims.interfaces import IAddSampleFieldsFlush
 from bika.lims.interfaces import IAddSampleRecordsValidator
 from bika.lims.interfaces import IGetDefaultFieldValueARAddHook
 from bika.lims.utils import get_client
@@ -208,3 +210,34 @@ class PrimaryAnalysisRequestDefaultValue(object):
         request["_primary"] = ",".join(primaries[:-1])
 
         return primary
+
+
+class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
+    """Returns the additional filter queries to apply when the value for the
+    SampleType for Sample Add form changes
+    """
+    def get_object_info(self):
+        object_info = self.get_base_info()
+        filters = object_info.get("filter_queries") or {}
+        filters["Profiles"] = {
+            "sampletype_uid": [api.get_uid(self.context), None]
+        }
+        object_info["filter_queries"] = filters
+        return object_info
+
+
+@adapter(IAddSampleFieldsFlush)
+class AddSampleFieldsFlush(object):
+    """Health-specific flush of fields for Sample Add form. When the value for
+    SampleType changes, flush the fields "AnalysisProfile"
+    """
+
+    def __init__(self, context):
+        self.context = context
+
+    def get_flush_settings(self):
+        return {
+            "SampleType": [
+                "Profiles",
+            ],
+        }
