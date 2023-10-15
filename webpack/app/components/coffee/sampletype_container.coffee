@@ -198,6 +198,7 @@ class SampleTypeContainerController
     if sample_index
       selector = "#Volume-#{ sample_index }"
     el = document.querySelector selector
+    return unless el
     if readonly
       el.setAttribute "readonly", "readonly"
     else

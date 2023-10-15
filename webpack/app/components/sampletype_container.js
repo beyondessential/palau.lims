@@ -261,6 +261,9 @@ SampleTypeContainerController = class SampleTypeContainerController {
       selector = `#Volume-${sample_index}`;
     }
     el = document.querySelector(selector);
+    if (!el) {
+      return;
+    }
     if (readonly) {
       return el.setAttribute("readonly", "readonly");
     } else {
