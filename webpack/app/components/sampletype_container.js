@@ -331,6 +331,9 @@ SampleTypeContainerController = class SampleTypeContainerController {
       volume_selector = `#Volume-${sample_index}`;
     }
     volume = document.querySelector(volume_selector);
+    if (!volume) {
+      return;
+    }
     return volume.value = total_volume;
   }
 

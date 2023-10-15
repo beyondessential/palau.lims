@@ -268,6 +268,7 @@ class SampleTypeContainerController
     if sample_index
       volume_selector = "#Volume-#{ sample_index }"
     volume = document.querySelector volume_selector
+    return unless volume
     volume.value = total_volume
 
 
