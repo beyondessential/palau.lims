@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #46 Make specification required only if sample type with spec is selected
 - #45 Allow analysis profiles to be filtered by sample type in Add Sample form
 - #44 Added script for the removal of objects
 - #43 Fix Doctor name not appearing on final report
