@@ -198,6 +198,7 @@ class SampleTypeContainerController
     if sample_index
       selector = "#Volume-#{ sample_index }"
     el = document.querySelector selector
+    return unless el
     if readonly
       el.setAttribute "readonly", "readonly"
     else
@@ -267,6 +268,7 @@ class SampleTypeContainerController
     if sample_index
       volume_selector = "#Volume-#{ sample_index }"
     volume = document.querySelector volume_selector
+    return unless volume
     volume.value = total_volume
 
 

@@ -261,6 +261,9 @@ SampleTypeContainerController = class SampleTypeContainerController {
       selector = `#Volume-${sample_index}`;
     }
     el = document.querySelector(selector);
+    if (!el) {
+      return;
+    }
     if (readonly) {
       return el.setAttribute("readonly", "readonly");
     } else {
@@ -328,6 +331,9 @@ SampleTypeContainerController = class SampleTypeContainerController {
       volume_selector = `#Volume-${sample_index}`;
     }
     volume = document.querySelector(volume_selector);
+    if (!volume) {
+      return;
+    }
     return volume.value = total_volume;
   }
 
