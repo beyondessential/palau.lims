@@ -241,16 +241,34 @@ class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
     """Returns the additional filter queries to apply when the value for the
     SampleType for Sample Add form changes
     """
+
     def get_object_info(self):
         object_info = self.get_base_info()
-        filters = object_info.get("filter_queries") or {}
-        filters["Profiles"] = {
-            "sampletype_uid": [api.get_uid(self.context), None]
+        uid = api.get_uid(self.context)
+        object_info["filter_queries"] = {
+            "Profiles": {
+                "sampletype_uid": [uid, None],
+            }
         }
-        filters["Specification"] = {
-            "sampletype_uid": [api.get_uid(self.context), None]
+
+        # If there is only one specification assigned to this sample type,
+        # auto-choose that specification
+        query = {
+            "portal_type": "AnalysisSpec",
+            "sampletype_uid": uid,
+            "is_active": True,
         }
-        object_info["filter_queries"] = filters
+        specs = api.search(query, SETUP_CATALOG)
+        if len(specs) == 1:
+            obj = api.get_object(specs[0])
+            object_info["field_values"]["Specification"] = {
+                "id": api.get_id(obj),
+                "uid": api.get_uid(obj),
+                "url": api.get_url(obj),
+                "title": api.get_title(obj),
+                "if_empty": True,
+            }
+
         return object_info
 
 
