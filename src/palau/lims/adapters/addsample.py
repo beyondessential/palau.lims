@@ -6,6 +6,9 @@
 
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _s
+from bika.lims.adapters.addsample import AddSampleObjectInfoAdapter
+from bika.lims.catalog import SETUP_CATALOG
+from bika.lims.interfaces import IAddSampleFieldsFlush
 from bika.lims.interfaces import IAddSampleRecordsValidator
 from bika.lims.interfaces import IGetDefaultFieldValueARAddHook
 from bika.lims.utils import get_client
@@ -49,11 +52,35 @@ class RecordsValidator(object):
             if date_of_admission_err:
                 field_errors["Date of Admission-{}".format(num)] = date_of_admission_err
 
+            # Specification is mandatory depending on sample type
+            err = self.validate_specification(record)
+            if err:
+                field_errors["Specification-{}".format(num)] = err
+
         if any([message, field_errors]):
             return {
                 "message": message,
                 "fielderrors": field_errors
             }
+
+    def validate_specification(self, record):
+        """Returns an error message if no specification has been selected
+        although required or the specification is not valid
+        """
+        spec_uid = record.get("Specification")
+        if spec_uid:
+            return None
+
+        # specification required if a specification has been set up for the
+        # selected sample type
+        sample_type_uid = record.get("SampleType")
+        query = {
+            "portal_type": "AnalysisSpec",
+            "sampletype_uid": sample_type_uid
+        }
+        specs = api.search(query, SETUP_CATALOG)
+        if len(specs):
+            return _("Specification is required")
 
     def validate_date_of_admission(self, record):
         """Validates the Date of Admission: before or equal to the Date Sampled
@@ -208,3 +235,56 @@ class PrimaryAnalysisRequestDefaultValue(object):
         request["_primary"] = ",".join(primaries[:-1])
 
         return primary
+
+
+class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
+    """Returns the additional filter queries to apply when the value for the
+    SampleType for Sample Add form changes
+    """
+
+    def get_object_info(self):
+        object_info = self.get_base_info()
+        uid = api.get_uid(self.context)
+        object_info["filter_queries"] = {
+            "Profiles": {
+                "sampletype_uid": [uid, None],
+            }
+        }
+
+        # If there is only one specification assigned to this sample type,
+        # auto-choose that specification
+        query = {
+            "portal_type": "AnalysisSpec",
+            "sampletype_uid": uid,
+            "is_active": True,
+        }
+        specs = api.search(query, SETUP_CATALOG)
+        if len(specs) == 1:
+            obj = api.get_object(specs[0])
+            object_info["field_values"]["Specification"] = {
+                "id": api.get_id(obj),
+                "uid": api.get_uid(obj),
+                "url": api.get_url(obj),
+                "title": api.get_title(obj),
+                "if_empty": True,
+            }
+
+        return object_info
+
+
+@adapter(IAddSampleFieldsFlush)
+class AddSampleFieldsFlush(object):
+    """Health-specific flush of fields for Sample Add form. When the value for
+    SampleType changes, flush the fields "AnalysisProfile"
+    """
+
+    def __init__(self, context):
+        self.context = context
+
+    def get_flush_settings(self):
+        return {
+            "SampleType": [
+                "Profiles",
+                "Specification",
+            ],
+        }

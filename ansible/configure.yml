@@ -4,7 +4,7 @@
 ssh_key_filename: "github_lims"
 
 # Plone version
-plone_version: "5.2.13"
+plone_version: "5.2.14"
 
 # Name of the folder where SENAITE will be installed
 plone_instance_name: "senaite"

@@ -88,4 +88,18 @@
       name="workflow_action_create_supplementary"
       permission="zope.Public" />
 
+  <!-- Additional filter queries for when Sample type is selected -->
+  <adapter
+      for="bika.lims.interfaces.ISampleType"
+      factory=".addsample.AddSampleTypeInfo"
+      provides="bika.lims.interfaces.IAddSampleObjectInfo"
+      name="palau.lims.addsample_sampletype_info" />
+
+  <!-- Flush additional fields for Add Sample form -->
+  <adapter
+      for="*"
+      factory=".addsample.AddSampleFieldsFlush"
+      provides="bika.lims.interfaces.IAddSampleFieldsFlush"
+      name="palau.lims.addsample_fields_flush" />
+
 </configure>

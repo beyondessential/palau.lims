@@ -5,6 +5,9 @@ Changelog
 ------------------
 
 - #50 Blood Donor specific sample labels
+- #47 Fix js UncaughtType error in Sample Add form on sample type selection
+- #46 Make specification required only if sample type with spec is selected
+- #45 Allow analysis profiles to be filtered by sample type in Add Sample form
 - #44 Added script for the removal of objects
 - #43 Fix Doctor name not appearing on final report
 - #42 Compatibility with senaite.core#2399
