@@ -132,6 +132,12 @@
          font-size: 0.9em;
      }
 
+     /* Ensures that Patient names appear in same line no matter the length */
+     .name-single-line {
+         overflow: hidden;
+         white-space: nowrap;
+     }
+
      <tal:block condition="python:content_width and content_height">
      <tal:block condition="python:all([content_width, content_height])"
                    define="cw python:float(content_width);
@@ -300,7 +306,7 @@
           <tr>
             <!-- Patient name -->
             <td width="15%" class="label" i18n:translate="">Patient name</td>
-            <td width="20%"
+            <td width="20%" class="name-single-line" 
                 tal:define="patient python:model.PatientFullName or {};
                             firstname python:patient.get('firstname','');
                             lastname python:patient.get('lastname', '');
