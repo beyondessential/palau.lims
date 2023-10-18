@@ -30,11 +30,4 @@
       original="get_report_filename"
       replacement=".publish.get_report_filename" />
 
-  <!-- Add default unit as unit in analysis specification table  -->
-  <monkey:patch
-      class="bika.lims.browser.widgets.analysisspecificationwidget.AnalysisSpecificationView"
-      original="folderitem"
-      replacement=".adapters.analysisspecification.folderitem" />
-
-
 </configure>
