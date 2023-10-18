@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #51 Allow units for specification
 - #47 Fix js UncaughtType error in Sample Add form on sample type selection
 - #46 Make specification required only if sample type with spec is selected
 - #45 Allow analysis profiles to be filtered by sample type in Add Sample form
