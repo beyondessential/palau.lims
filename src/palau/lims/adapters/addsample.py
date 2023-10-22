@@ -76,7 +76,8 @@ class RecordsValidator(object):
         sample_type_uid = record.get("SampleType")
         query = {
             "portal_type": "AnalysisSpec",
-            "sampletype_uid": sample_type_uid
+            "sampletype_uid": sample_type_uid,
+            "is_active": True,
         }
         specs = api.search(query, SETUP_CATALOG)
         if len(specs):
