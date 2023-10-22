@@ -6,7 +6,7 @@ coffee --no-header -w -o ../ -c sampleview_layout.coffee
 This controller makes possible to collapse and expand sections from sample view
 and keep the configuration stored in a cookie. This prevents the user to have to
 constantly scroll as they enter and verify results.
-https://github.com/beyondessential/png.lims/issues/163
+https://github.com/beyondessential/pnghealth.lims/issues/163
 ###
 class SampleViewLayoutController
 

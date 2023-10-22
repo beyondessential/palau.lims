@@ -1,5 +1,5 @@
 ### Please use this command to compile this file into the proper folder:
-coffee --no-header -w -o ../ -c sampleview_layout.coffee
+coffee --no-header -w -o ../ -c sampletype_container.coffee
 ###
 
 ###
@@ -10,7 +10,7 @@ define the control to display in Add sample form or sample view depending on the
 sample type selected.
 If the selected Sample Type has the widget "bottles" selected, the system hides
 the "Container" field from the form and displays "Bottles" field instead.
-https://github.com/beyondessential/palau.lims/issues/28
+https://github.com/beyondessential/pnghealth.lims/issues/28
 ###
 class SampleTypeContainerController
 
