@@ -7,11 +7,13 @@
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
+from bika.lims import senaiteMessageFactory as _sc
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.interfaces import IAnalysisRequest
 from palau.lims import messageFactory as _
-from palau.lims.browser.widgets import BottlesWidget
+from palau.lims.browser.widgets.bottles import BottlesWidget
+from palau.lims.browser.widgets.referenceother import ReferenceOtherWidget
 from palau.lims.config import LOCATIONS
 from palau.lims.config import PRIORITIES
 from palau.lims.config import SAMPLE_FIELDS_ORDER
@@ -22,6 +24,7 @@ from palau.lims.content.fields import ExtRecordsField
 from palau.lims.content.fields import ExtStringField
 from palau.lims.content.fields import ExtTextField
 from palau.lims.content.fields import ExtUIDReferenceField
+from palau.lims.content.fields import ExtUIDReferenceOtherField
 from palau.lims.interfaces import IPalauLimsLayer
 from palau.lims.permissions import FieldEditBottles
 from palau.lims.permissions import FieldEditClinicalInformation
@@ -37,6 +40,7 @@ from Products.Archetypes.Widget import TextAreaWidget
 from Products.CMFCore.permissions import View
 from senaite.core.browser.widgets import ReferenceWidget
 from senaite.core.catalog import SETUP_CATALOG
+from senaite.core.permissions import FieldEditSamplePoint
 from zope.component import adapts
 from zope.interface import implementer
 
@@ -65,28 +69,28 @@ UPDATED_FIELDS = [
             "description": "",
         }
     }),
-    ("Contact",  {
+    ("Contact", {
         "widget": {
             "label": _("Doctor"),
             "description": "",
         }
     }),
-    ("DateSampled",  {
+    ("DateSampled", {
         "widget": {
             "description": "",
         }
     }),
-    ("Template",  {
+    ("Template", {
         "widget": {
             "description": "",
         }
     }),
-    ("Profiles",  {
+    ("Profiles", {
         "widget": {
             "description": "",
         }
     }),
-    ("Remarks",  {
+    ("Remarks", {
         "widget": {
             "description": "",
         }
@@ -114,23 +118,48 @@ UPDATED_FIELDS = [
         "required": True
     }),
     ("Sex", {
-       "required": True
-    }),
-    ("SamplePoint", {
-        "widget": {
-            "label": _("Site"),
-        }
+        "required": True
     }),
     ("Priority", {
         "vocabulary": PRIORITIES,
     })
 ]
 
+# Fields that are replaced
+REPLACE_FIELDS = [
+    ExtUIDReferenceOtherField(
+        "SamplePoint",
+        allowed_types=("SamplePoint",),
+        mode="rw",
+        read_permission=View,
+        write_permission=FieldEditSamplePoint,
+        widget=ReferenceOtherWidget(
+            label=_sc(
+                "label_sample_samplepoint",
+                default="Sample Point"),
+            description=_sc(
+                "description_sample_samplepoint",
+                default="Location where the sample was taken"),
+            render_own_label=True,
+            visible={
+                "add": "edit",
+                "secondary": "disabled",
+            },
+            catalog_name=SETUP_CATALOG,
+            query={
+                "is_active": True,
+                "sort_on": "sortable_title",
+                "sort_order": "ascending"
+            },
+        )
+    ),
+]
+
 # Additional fields for Sample (aka AnalysisRequest)
 NEW_FIELDS = [
     ExtUIDReferenceField(
         "Ward",
-        allowed_types=("Ward", ),
+        allowed_types=("Ward",),
         multiValued=False,
         read_permission=View,
         write_permission=FieldEditWard,
@@ -269,7 +298,7 @@ NEW_FIELDS = [
 
     ExtUIDReferenceField(
         "CurrentAntibiotics",
-        allowed_types=("Antibiotic", ),
+        allowed_types=("Antibiotic",),
         multiValued=True,
         read_permission=View,
         write_permission=FieldEditCurrentAntibiotics,
@@ -311,7 +340,7 @@ NEW_FIELDS = [
 
     ExtUIDReferenceField(
         "WardDepartment",
-        allowed_types=("WardDepartment", ),
+        allowed_types=("WardDepartment",),
         required=True,
         multiValued=False,
         read_permission=View,
@@ -372,7 +401,7 @@ class AnalysisRequestSchemaExtender(object):
 
             idx = sch.index(field_id)
             if idx < prev_idx:
-                del(sch[idx])
+                del (sch[idx])
                 # Three-column layout in Sample's table view!
                 prev_idx += 3
                 sch.insert(prev_idx, field_id)
@@ -399,5 +428,10 @@ class AnalysisRequestSchemaModifier(object):
 
         # Update some fields (title, description, etc.)
         map(lambda f: update_field(schema, f[0], f[1]), UPDATED_FIELDS)
+
+        # Replace fields
+        for field in REPLACE_FIELDS:
+            name = field.getName()
+            schema.replaceField(name, field)
 
         return schema

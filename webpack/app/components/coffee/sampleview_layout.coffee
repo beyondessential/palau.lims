@@ -6,7 +6,7 @@ coffee --no-header -w -o ../ -c sampleview_layout.coffee
 This controller makes possible to collapse and expand sections from sample view
 and keep the configuration stored in a cookie. This prevents the user to have to
 constantly scroll as they enter and verify results.
-https://github.com/beyondessential/pnghealth.lims/issues/163
+https://github.com/beyondessential/palau.lims/issues/163
 ###
 class SampleViewLayoutController
 
@@ -21,23 +21,23 @@ class SampleViewLayoutController
 
       ["#content h1",
        "#senaite-sampleheader",
-       "png-lims-sample-header"],
+       "palau-lims-sample-header"],
 
       ["#content h1",
        "div[id=ar-attachments]",
-       "png-lims-sample-header"],
+       "palau-lims-sample-header"],
 
       ["div.remarks-widget h3",
        "div.remarks-widget div",
-       "png-lims-sample-remarks-section"],
+       "palau-lims-sample-remarks-section"],
 
       ["div.analysis-listing-table h3",
        "div.analysis-listing-table form",
-       "png-lims-sample-analyses-section"],
+       "palau-lims-sample-analyses-section"],
 
       ["div[id=results-interpretation] h3",
        "div[id=results-interpretation] form",
-       "png-lims-sample-results-interpretation-section"],
+       "palau-lims-sample-results-interpretation-section"],
     ]
 
     # Initializes toggle sections

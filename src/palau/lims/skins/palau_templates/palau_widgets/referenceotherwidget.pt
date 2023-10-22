@@ -1,0 +1,125 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="palau.lims">
+  <body>
+
+    <!-- VIEW MACRO -->
+    <metal:view_macro define-macro="view">
+      <div metal:define-slot="inside"
+           tal:define="value python:accessor();
+                       refs python:widget.get_value(context, field, value)">
+        <ul class="list-unstyled d-table-row">
+          <li tal:repeat="ref refs" class="d-inline-block">
+            <tal:ref tal:define="rendered python:widget.render_reference(context, field, ref)">
+              <div tal:condition="python:rendered"
+                  class="p-1 mb-1 mr-1 bg-light border rounded">
+                <span tal:replace="structure rendered"/>
+              </div>
+              <div tal:condition="python:not rendered" class="text-danger">
+                <span tal:attributes="title string:broken reference ${ref}"
+                      tal:content="ref"></span>
+              </div>
+            </tal:ref>
+          </li>
+          <li tal:define="other python:field.getOtherText(context);"
+              tal:condition="other">
+            <div class="p-1 mb-1 mr-1">
+              <span tal:replace="other"/>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </metal:view_macro>
+
+    <!-- EDIT MACRO -->
+    <metal:edit_macro define-macro="edit">
+
+      <tal:static define="portal context/@@plone_portal_state/portal;
+                          path string:${portal/absolute_url}/palau_widgets;">
+        <link rel="stylesheet" type="text/css" media="all" href=""
+              tal:attributes="href string:${path}/referenceotherwidget.css"/>
+      </tal:static>
+
+      <tal:values define="value python:field.getEditAccessor(here)() or [];
+                          session_value python:here.session_restore_value(fieldName, value);
+                          cached_value python:request.get(fieldName, session_value);
+                          value python:cached_value or value;
+                          required field/required|nothing;
+                          required python: required and 'required' or None;
+                          error_id python:errors.get(fieldName);
+                          i18n_domain field/widget/i18n_domain|context/i18n_domain|string:plone;">
+
+        <tal:ifLabel tal:condition="not: widget/render_own_label | nothing">
+          <label class="formQuestion"
+                 tal:attributes="for python:fieldName">
+            <span tal:replace="python:widget.Label(here)"
+                  i18n:translate="" />
+            <span class="required"
+                  tal:condition="field/required"
+                  title="Required"
+                  i18n:attributes="title title_required;">&nbsp;</span>
+            <span class="formHelp"
+                  tal:define="description python:widget.Description(here)"
+                  tal:content="structure description"
+                  tal:attributes="id string:${fieldName}_help"
+                  i18n:translate="">
+              Help
+            </span>
+          </label>
+        </tal:ifLabel>
+
+        <!-- Reference -->
+        <div tal:define="widget_attrs python:field.widget.get_input_widget_attributes(context, field, value);"
+             tal:attributes="id python:fieldName;
+                             class python: test(error_id, 'field error ' + 'Archetypes' + widget.getName(), 'field ' + 'Archetypes' + widget.getName()) + ' ' + widget.klass;
+                             data-required python:required and '1' or '0';
+                             python:widget_attrs;">
+          <!-- ReactJS controlled component -->
+        </div>
+
+        <!-- Other field -->
+        <tal:other_field>
+          <div class="reference-otherfield"
+               tal:define="other_text python:field.getOtherText(context);">
+
+            <input type="checkbox"
+                   checked="True"
+                   class="reference-otherfield-check"
+                   tal:condition="other_text"
+                   tal:attributes="name python:'{}_checkbox'.format(fieldName);
+                                     id python:'{}_checkbox'.format(fieldName);
+                                     data_target python:'{}_other'.format(fieldName);"/>
+
+            <input type="checkbox"
+                   class="reference-otherfield-check"
+                   tal:condition="not:other_text"
+                   tal:attributes="name python:'{}_checkbox'.format(fieldName);
+                                     id python:'{}_checkbox'.format(fieldName);
+                                     data_target python:'{}_other'.format(fieldName);"/>
+            <span i18n:translate="">Other</span>
+
+            <textarea cols="14" rows="4"
+                      class="form-control form-control-sm"
+                      tal:define="other_text python:field.getOtherText(context)"
+                      tal:attributes="name python:'{}_other'.format(fieldName);
+                                        id python:'{}_other'.format(fieldName);"
+                      tal:content="other_text"/>
+          </div>
+
+        </tal:other_field>
+
+        <div class="fieldErrorBox" tal:condition="required"></div>
+        <div class="fieldErrorBox" tal:content="error_id" i18n:translate=""></div>
+
+      </tal:values>
+    </metal:edit_macro>
+
+    <metal:search_macro define-macro="search">
+      <div metal:use-macro="context/widgets/string/macros/edit"></div>
+    </metal:search_macro>
+
+  </body>
+</html>
