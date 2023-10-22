@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize controllers
   window.sampletype_container = new SampleTypeContainerController();
-  //window.sampleview_layout = new SampleViewLayoutController();
+  window.sampleview_layout = new SampleViewLayoutController();
   window.reference_other = new ReferenceOtherController();
 
 });

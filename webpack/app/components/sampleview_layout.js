@@ -7,7 +7,7 @@ var SampleViewLayoutController;
 This controller makes possible to collapse and expand sections from sample view
 and keep the configuration stored in a cookie. This prevents the user to have to
 constantly scroll as they enter and verify results.
-https://github.com/beyondessential/palau.lims/issues/163
+https://github.com/beyondessential/png.lims/issues/163
 */
 SampleViewLayoutController = class SampleViewLayoutController {
   constructor() {
@@ -75,6 +75,9 @@ SampleViewLayoutController = class SampleViewLayoutController {
     sections = document.querySelectorAll(`[section=${section_id}]`);
     for (j = 0, len = sections.length; j < len; j++) {
       section = sections[j];
+      if (!section) {
+        continue;
+      }
       visible = this.is_visible(section);
       if (visible) {
         $(section).hide();
@@ -89,9 +92,15 @@ SampleViewLayoutController = class SampleViewLayoutController {
     var anchor, section;
     this.debug(`init_toggle:anchor_selector='${anchor_selector}',section_selector='${section_selector}',section_id='${section_id}'`);
     anchor = document.querySelector(anchor_selector);
+    if (!anchor) {
+      return;
+    }
     anchor.classList.add("toggle_selector");
     anchor.setAttribute("target-section", section_id);
     section = document.querySelector(section_selector);
+    if (!section) {
+      return;
+    }
     return section.setAttribute("section", section_id);
   }
 

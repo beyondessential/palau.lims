@@ -6,7 +6,7 @@ coffee --no-header -w -o ../ -c sampleview_layout.coffee
 This controller makes possible to collapse and expand sections from sample view
 and keep the configuration stored in a cookie. This prevents the user to have to
 constantly scroll as they enter and verify results.
-https://github.com/beyondessential/palau.lims/issues/163
+https://github.com/beyondessential/png.lims/issues/163
 ###
 class SampleViewLayoutController
 
@@ -74,6 +74,8 @@ class SampleViewLayoutController
     section_id = el.getAttribute "target-section"
     sections = document.querySelectorAll "[section=#{ section_id }]"
     for section in sections
+      if not section
+        continue
       visible = @is_visible(section)
       if visible
         $(section).hide()
@@ -88,9 +90,11 @@ class SampleViewLayoutController
   init_toggle: (anchor_selector, section_selector, section_id) =>
     @debug "init_toggle:anchor_selector='#{ anchor_selector }',section_selector='#{ section_selector }',section_id='#{ section_id }'"
     anchor = document.querySelector anchor_selector
+    return unless anchor
     anchor.classList.add "toggle_selector"
     anchor.setAttribute "target-section", section_id
     section = document.querySelector section_selector
+    return unless section
     section.setAttribute "section", section_id
 
   ###
