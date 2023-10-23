@@ -30,5 +30,4 @@
       original="get_report_filename"
       replacement=".publish.get_report_filename" />
 
-
 </configure>
