@@ -21,23 +21,23 @@ class SampleViewLayoutController
 
       ["#content h1",
        "#senaite-sampleheader",
-       "png-lims-sample-header"],
+       "palau-lims-sample-header"],
 
       ["#content h1",
        "div[id=ar-attachments]",
-       "png-lims-sample-header"],
+       "palau-lims-sample-header"],
 
       ["div.remarks-widget h3",
        "div.remarks-widget div",
-       "png-lims-sample-remarks-section"],
+       "palau-lims-sample-remarks-section"],
 
       ["div.analysis-listing-table h3",
        "div.analysis-listing-table form",
-       "png-lims-sample-analyses-section"],
+       "palau-lims-sample-analyses-section"],
 
       ["div[id=results-interpretation] h3",
        "div[id=results-interpretation] form",
-       "png-lims-sample-results-interpretation-section"],
+       "palau-lims-sample-results-interpretation-section"],
     ]
 
     # Initializes toggle sections
@@ -74,6 +74,8 @@ class SampleViewLayoutController
     section_id = el.getAttribute "target-section"
     sections = document.querySelectorAll "[section=#{ section_id }]"
     for section in sections
+      if not section
+        continue
       visible = @is_visible(section)
       if visible
         $(section).hide()
@@ -88,9 +90,11 @@ class SampleViewLayoutController
   init_toggle: (anchor_selector, section_selector, section_id) =>
     @debug "init_toggle:anchor_selector='#{ anchor_selector }',section_selector='#{ section_selector }',section_id='#{ section_id }'"
     anchor = document.querySelector anchor_selector
+    return unless anchor
     anchor.classList.add "toggle_selector"
     anchor.setAttribute "target-section", section_id
     section = document.querySelector section_selector
+    return unless section
     section.setAttribute "section", section_id
 
   ###
