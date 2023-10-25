@@ -465,3 +465,15 @@ class DefaultReportView(SingleReportView):
         submitters = self.get_submitters(model)
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
+
+    def has_range(self, analysis):
+        if analysis.getResultsRange():
+            return True
+        return False
+
+    def show_header(self, analyses):
+        for analysis in analyses:
+            if self.has_range(analysis):
+                return True
+
+        return False

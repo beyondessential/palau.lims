@@ -394,12 +394,15 @@
                                    col_width python: '{} %'.format(str(col_width))"
                        tal:attributes="width col_width"/>
                 </tal:var_cols>
+
                 <!-- Result -->
                 <col style="width: 20%"/>
                 <!-- Result range -->
                 <col style="width: 10%"/>
                 <!-- Out of Range -->
                 <col style="width: 5%"/>
+
+
               </colgroup>
               <thead>
               <tr class="small font-weight-bold">
@@ -407,7 +410,8 @@
                 <th tal:repeat="var_name vars_names"
                     tal:content="var_name"/>
                 <th i18n:translate="">Result</th>
-                <th i18n:translate="" colspan="2">Normal values</th>
+                <th i18n:translate="" colspan="2" tal:condition="python: view.show_header(analyses)">Normal values</th>
+                <th i18n:translate="" colspan="2" tal:condition="python: not view.show_header(analyses)"> </th>
               </tr>
               </thead>
               <tbody>
