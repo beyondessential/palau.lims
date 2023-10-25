@@ -300,7 +300,7 @@
           <tr>
             <!-- Patient name -->
             <td width="15%" class="label" i18n:translate="">Patient name</td>
-            <td width="20%"
+            <td width="20%" class="overflow-hidden text-nowrap"
                 tal:define="patient python:model.PatientFullName or {};
                             firstname python:patient.get('firstname','');
                             lastname python:patient.get('lastname', '');
@@ -479,9 +479,10 @@
                       <span tal:define="normal_values python:view.get_normal_values(model, analysis);"
                             tal:condition="normal_values"
                             tal:content="normal_values"/>
+
                       <tal:result_unit condition="analysis/Unit">
                         &nbsp;<span class="units font-italic" tal:content="structure python:sample.get_formatted_unit(analysis)"/>
-                      </tal:result_unit>
+                      </tal:result_unit>                    
                   </td>
                   <td>
                       <!-- Out of range symbol -->
