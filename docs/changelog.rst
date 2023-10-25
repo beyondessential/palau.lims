@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #58 Shows Normal Values Heading when needed
 - #57 Fix js error in sample view when result interpretation has no form
 - #47 Fix js UncaughtType error in Sample Add form on sample type selection
 - #46 Make specification required only if sample type with spec is selected
