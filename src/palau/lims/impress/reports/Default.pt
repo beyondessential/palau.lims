@@ -394,15 +394,12 @@
                                    col_width python: '{} %'.format(str(col_width))"
                        tal:attributes="width col_width"/>
                 </tal:var_cols>
-
                 <!-- Result -->
                 <col style="width: 20%"/>
                 <!-- Result range -->
                 <col style="width: 10%"/>
                 <!-- Out of Range -->
                 <col style="width: 5%"/>
-
-
               </colgroup>
               <thead>
               <tr class="small font-weight-bold">
