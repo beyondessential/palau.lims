@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #50 Blood Donor specific sample labels
 - #57 Fix js error in sample view when result interpretation has no form
 - #47 Fix js UncaughtType error in Sample Add form on sample type selection
 - #46 Make specification required only if sample type with spec is selected
