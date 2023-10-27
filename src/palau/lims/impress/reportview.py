@@ -465,3 +465,20 @@ class DefaultReportView(SingleReportView):
         submitters = self.get_submitters(model)
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
+
+    def get_analysts(self, model):
+        """Returns the usernames of the users who analysed at least one analysis
+        """
+        analysts = []
+        for analysis in self.get_verified_analyses(model):
+            username = analysis.getAnalyst()
+            analysts.append(username)
+        return list(set(analysts))
+
+    def get_analysts_info(self, model):
+        """Returns a list made of dicts representing the LabContacts (or users)
+        that analysed at least one analysis
+        """
+        analysts = self.get_analysts(model)
+        analysts = map(self.get_user_properties, analysts)
+        return filter(None, analysts)

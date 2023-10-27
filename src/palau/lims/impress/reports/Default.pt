@@ -619,7 +619,8 @@
   <tal:render condition="not:model/is_provisional">
     <div class="row section-signatures no-gutters"
          tal:define="submitters python:view.get_submitters_info(model);
-                     reporters  python:view.get_reporters_info(model);">
+                     reporters  python:view.get_reporters_info(model);
+                     analysts python:view.get_analysts_info(model);">
       <div class="w-100">
 
         <table class="table table-sm table-condensed">
@@ -654,6 +655,21 @@
                 </div>
               </div>
 
+            </td>
+
+            <!-- Analysed by -->
+            <td tal:condition="analysts" class="border-0 align-top">
+              <h4 i18n:translate="">Analysed by</h4>
+              <div tal:repeat="member analysts" class="pb-2">
+                <div class="font-weight-bold">
+                  <span tal:content="member/salutation" />
+                  <span tal:condition="member/salutation">&nbsp;</span>
+                  <span tal:content="member/fullname"/>
+                </div>
+                <div>
+                  <span tal:content="member/job_title"/>
+                </div>
+              </div>
             </td>
           </tr>
         </table>
