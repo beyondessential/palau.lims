@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #59 Final report comments
 - #51 Patient name to appear on same line in final report
 - #50 Blood Donor specific sample labels
 - #57 Fix js error in sample view when result interpretation has no form
