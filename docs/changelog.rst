@@ -4,6 +4,8 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #51 Patient name to appear on same line in final report
+- #50 Blood Donor specific sample labels
 - #57 Fix js error in sample view when result interpretation has no form
 - #47 Fix js UncaughtType error in Sample Add form on sample type selection
 - #46 Make specification required only if sample type with spec is selected
