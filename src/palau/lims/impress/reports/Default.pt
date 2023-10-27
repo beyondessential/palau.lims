@@ -569,7 +569,7 @@
 
         <tal:ri repeat="ri ris">
           <!-- <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2> -->
-          <div class="text-info" tal:content="structure ri/richtext|nothing"></div>
+          <div tal:content="structure ri/richtext|nothing"></div>
         </tal:ri>
       </div>
     </div>
