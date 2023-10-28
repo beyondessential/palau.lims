@@ -116,6 +116,10 @@
      .report .section-resultsinterpretation, .report .section-signatures {
        font-size: 90%;
      }
+     .report .section-signatures {
+       border-top:2px solid black;
+       padding-top:10px;
+     }
      .report .section-info table td,
      .report .section-info table th {
        border-top:none;
