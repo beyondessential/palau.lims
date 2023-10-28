@@ -56,6 +56,7 @@ DISABLED_FIELDS = [
     "Preservation",
     "PublicationSpecification",
     "SampleCondition",
+    "SamplePoint",
     "SamplingDeviation",
     "StorageLocation",
     "SubGroup",

@@ -199,6 +199,7 @@ SAMPLE_FIELDS_ORDER = [
     "Preservation",
     "Volume",
     "SamplePoint",
+    "Site",
     "EnvironmentalConditions",
     "Priority",
     "InternalUse",
