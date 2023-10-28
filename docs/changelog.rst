@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - #51 Allow units for specification
+- #61 Allow custom text for Site field
 - #51 Patient name to appear on same line in final report
 - #50 Blood Donor specific sample labels
 - #57 Fix js error in sample view when result interpretation has no form
