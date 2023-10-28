@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #58 Shows Normal Values Heading when needed
 - #59 Final report comments
 - #51 Allow units for specification
 - #61 Allow custom text for Site field

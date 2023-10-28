@@ -408,7 +408,13 @@
                 <th tal:repeat="var_name vars_names"
                     tal:content="var_name"/>
                 <th i18n:translate="">Result</th>
-                <th i18n:translate="" colspan="2">Normal values</th>
+                <th colspan="2">
+                  <tal:n i18n:translate=""
+                         define="normal_values python:[view.get_normal_values(model, analysis) for analysis in analyses]"
+                         condition="python: any(normal_values)">
+                    Normal values
+                  </tal:n>
+                </th>
               </tr>
               </thead>
               <tbody>
