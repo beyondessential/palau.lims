@@ -83,30 +83,41 @@
         <!-- Other field -->
         <tal:other_field>
           <div class="reference-otherfield"
-               tal:define="other_text python:field.getOtherText(context);">
+               tal:define="other_text python:field.getOtherText(context);"
+               tal:attributes="name python:'{}_other_field'.format(fieldName);
+                               id python:'{}_other_field'.format(fieldName);
+                               data_field python: fieldName;">
 
             <input type="checkbox"
                    checked="True"
                    class="reference-otherfield-check"
                    tal:condition="other_text"
                    tal:attributes="name python:'{}_checkbox'.format(fieldName);
-                                     id python:'{}_checkbox'.format(fieldName);
-                                     data_target python:'{}_other'.format(fieldName);"/>
+                                   id python:'{}_checkbox'.format(fieldName);
+                                   data_field python: fieldName;"/>
 
             <input type="checkbox"
                    class="reference-otherfield-check"
                    tal:condition="not:other_text"
                    tal:attributes="name python:'{}_checkbox'.format(fieldName);
-                                     id python:'{}_checkbox'.format(fieldName);
-                                     data_target python:'{}_other'.format(fieldName);"/>
+                                   id python:'{}_checkbox'.format(fieldName);
+                                   data_field fieldName;"/>
             <span i18n:translate="">Other</span>
 
             <textarea cols="14" rows="4"
                       class="form-control form-control-sm"
+                      tal:condition="other_text"
                       tal:define="other_text python:field.getOtherText(context)"
                       tal:attributes="name python:'{}_other'.format(fieldName);
-                                        id python:'{}_other'.format(fieldName);"
+                                      id python:'{}_other'.format(fieldName);"
                       tal:content="other_text"/>
+
+            <textarea cols="14" rows="4"
+                      class="form-control form-control-sm"
+                      tal:condition="not:other_text"
+                      tal:attributes="name python:'{}_other'.format(fieldName);
+                                      id python:'{}_other'.format(fieldName);
+                                      style python:'display:none'"/>
           </div>
 
         </tal:other_field>
