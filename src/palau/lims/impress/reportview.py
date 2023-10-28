@@ -465,18 +465,3 @@ class DefaultReportView(SingleReportView):
         submitters = self.get_submitters(model)
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
-
-    def has_range(self, analysis):
-        """Returns a Boolean value and checks whether the analysis has
-         min/max values or not"""
-        if analysis.getResultsRange():
-            return True
-        return False
-
-    def show_header(self, analyses):
-        """Returns a Boolean value indicating whether to display the Normal
-        Values header in the final report"""
-        for analysis in analyses:
-            if self.has_range(analysis):
-                return True
-        return False
