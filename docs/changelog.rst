@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #62 Add a bold and black line before signatures in results report
 - #58 Shows Normal Values Heading when needed
 - #59 Final report comments
 - #51 Allow units for specification
