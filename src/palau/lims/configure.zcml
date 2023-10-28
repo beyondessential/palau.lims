@@ -30,6 +30,7 @@
   <include package=".reflex" />
   <include package=".monkeys" />
   <include package=".subscribers" />
+  <include package=".upgrade" />
   <include package=".workflow" />
 
   <!-- Default profile -->
