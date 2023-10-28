@@ -1,0 +1,22 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="palau.lims">
+
+  <!-- Set patient name entry mode to firstname+lastname -->
+  <genericsetup:upgradeStep
+      title="Update the Site field value with SamplePoint"
+      description="
+        Walks through all AnalysisRequest (samples) objects, gets the value of
+        for the field SamplePoint and if empty, assigns the value to the field
+        Site. This is necessary because of the introduction of the new Site
+        field, that besides the selection of a SamplePoint object, it also
+        allows a custom text value. Thus, although SamplePoint field is no
+        longer, it's value must be proxied to Site so at least index searches
+        can work as expected"
+      source="1.0.0"
+      destination="1001"
+      handler=".v01_00_000.set_site_from_samplepoint"
+      profile="palau.lims:default"/>
+
+</configure>
