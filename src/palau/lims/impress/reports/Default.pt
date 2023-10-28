@@ -72,7 +72,7 @@
      .report table.range-table td { padding: 0 0.2rem 0 0; border: none; }
      .report .section-header h1 { font-size: 175%; }
      .report .section-header img.logo { height: 100px; margin: 20px 0; }
-     .report .section-results-provisional { padding-bottom: 20px; color:red; font-size:90%; }
+     .report .section-results-provisional { padding-bottom: 20px; color:black; font-size:90%; font-weight: bold; font-style: italic;}
      .report .barcode-hri { margin-top: -0.25em; font-size: 8pt; }
      .report .section-footer table td { border: none; }
      .report .section-footer {
@@ -129,7 +129,8 @@
         font-weight:bold;
      }
      .report .section-analyses-footnotes {
-         font-size: 0.9em;
+        color: black;
+        font-size: 0.9em;
      }
 
      <tal:block condition="python:content_width and content_height">
@@ -512,8 +513,8 @@
       <div class="w-100 section-results-provisional"
            tal:condition="python: view.is_results_in_progress(model)">
         <strong>*</strong>&nbsp;
-        <span i18n:translate="">
-          Results are provisional as isolate is undergoing further standardised analysis
+        <span i18n:translate="" >
+          Results are preliminary as tests are undergoing further testing/verification
         </span>
       </div>
       <div class="w-100 section-analyses-footnotes pt-2 mt-2 mb-4"
@@ -571,7 +572,7 @@
 
         <tal:ri repeat="ri ris">
           <!-- <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2> -->
-          <div class="text-info" tal:content="structure ri/richtext|nothing"></div>
+          <div tal:content="structure ri/richtext|nothing"></div>
         </tal:ri>
       </div>
     </div>

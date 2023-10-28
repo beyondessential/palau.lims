@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #59 Final report comments
 - #51 Allow units for specification
 - #61 Allow custom text for Site field
 - #51 Patient name to appear on same line in final report
