@@ -474,19 +474,15 @@
                       &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
                     </tal:result_uncertainty>
                   </td>
-                  <td>
+                  <td class=" text-nowrap">
                       <!-- Range interval or range comment -->
-                      <span tal:define="normal_values python:view.get_normal_values(model, analysis);"
-                            tal:condition="normal_values"
-                            tal:content="normal_values"/>
+                    <tal:normal_values define="normal_values python:view.get_normal_values(model, analysis);"
+                                       condition="normal_values">
 
-                      <tal:result_unit condition="analysis/Unit">
-                      &nbsp;<span class="units font-italic"
-                            tal:define="show_normal_unit python:view.show_normal_unit(model, analysis);"
-                            tal:condition="show_normal_unit"
+                      <span tal:content="normal_values"/>
+                      <span class="units font-italic"
                             tal:content="structure python:sample.get_formatted_unit(analysis)"/>
-                      </tal:result_unit>
-
+                    </tal:normal_values>
                   </td>
                   <td>
                       <!-- Out of range symbol -->

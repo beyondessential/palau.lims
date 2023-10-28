@@ -465,10 +465,3 @@ class DefaultReportView(SingleReportView):
         submitters = self.get_submitters(model)
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
-
-    def show_normal_unit(self, model, analysis):
-        """Returns True if a Normal Value Exists and determines whether
-        the Unit in the Normal Value should be displayed or not."""
-        if self.get_normal_values(model, analysis):
-            return True
-        return False
