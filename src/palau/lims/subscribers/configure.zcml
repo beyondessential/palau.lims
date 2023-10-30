@@ -7,4 +7,23 @@
     for="senaite.core.events.upgrade.IAfterUpgradeStepEvent"
     handler=".upgrade.afterUpgradeStepHandler" />
 
+  <!-- Before traverse handler that disables CSFR protection
+    TODO Remove once we get insights about the persistent "Confirming User
+         Action" view displayed by plone.protect at
+         https://github.com/plone/plone.protect/blob/d0b370114f27f8690efe0759b8ce5c63ec68d2af/plone/protect/auto.py#L305
+
+       I reproduced this problem in Sample header's form on "Save" submit once,
+       and thought that the history-aware functionality we added in
+       senaite.app.listing was the cause (cause the URL generated thanks to
+       https://github.com/senaite/senaite.app.listing/blob/9ca4cd3f7d02a579f660f55571e63146d4e1941a/webpack/app/listing.coffee#L1828
+       was not well-formatted imho.
+
+       However, seems this pop-ups randomly. Thus, I am disabling this CSFR
+       thing wide here
+  -->
+  <subscriber
+      for="zope.component.interfaces.ISite
+           zope.traversing.interfaces.IBeforeTraverseEvent"
+      handler=".csfr.disable_csfr" />
+
 </configure>
