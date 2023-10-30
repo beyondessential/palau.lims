@@ -13,4 +13,12 @@
       factory=".samplecontainer.ExtendedSampleContainer"
       for="senaite.core.interfaces.ISampleContainer" />
 
+  <plone:behavior
+      name="palau.lims.behavior.patient"
+      title="ExtendedPatientBehavior"
+      description="Extends Patient with additional fields"
+      provides=".patient.IExtendedPatientBehavior"
+      factory=".patient.ExtendedPatient"
+      for="senaite.patient.interfaces.IPatient" />
+
 </configure>

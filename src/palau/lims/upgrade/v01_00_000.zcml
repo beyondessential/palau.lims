@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="palau.lims">
 
+    <genericsetup:upgradeStep
+      title="Add Patient behavior"
+      description="Add Patient behavior"
+      source="1001"
+      destination="1002"
+      handler=".v01_00_000.add_patient_behavior"
+      profile="palau.lims:default"/>
+
   <!-- Set patient name entry mode to firstname+lastname -->
   <genericsetup:upgradeStep
       title="Update the Site field value with SamplePoint"
