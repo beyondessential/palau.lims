@@ -145,10 +145,10 @@ class DefaultReportView(SingleReportView):
             return api.get_review_status(analysis) in reportable
 
         def get_growth_number(a, b):
-            if not is_ast_analysis(a):
-                return -1
-            if not is_ast_analysis(b):
-                return 1
+            ast = [is_ast_analysis(a), is_ast_analysis(b)]
+            if not all(ast):
+                # do not apply sorting unless both analyses are from ast type
+                return 0
 
             # Sort by growth number
             ga = a.getGrowthNumber()
