@@ -620,7 +620,7 @@
     <div class="row section-signatures no-gutters"
          tal:define="submitters python:view.get_submitters_info(model);
                      reporters  python:view.get_reporters_info(model);
-                     analysts python:view.get_analysts_info(model);">
+                     interpreters python:view.get_interpreter_submitters(model);">
       <div class="w-100">
 
         <table class="table table-sm table-condensed">
@@ -657,10 +657,10 @@
 
             </td>
 
-            <!-- Analysed by -->
-            <td tal:condition="analysts" class="border-0 align-top">
-              <h4 i18n:translate="">Analysed by</h4>
-              <div tal:repeat="member analysts" class="pb-2">
+            <!-- Result Interpreted By -->
+            <td tal:condition="interpreters" class="border-0 align-top">
+              <h4 i18n:translate="">Interpreted By</h4>
+              <div tal:repeat="member interpreters" class="pb-2">
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation" />
                   <span tal:condition="member/salutation">&nbsp;</span>

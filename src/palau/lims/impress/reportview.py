@@ -6,6 +6,7 @@
 
 import json
 
+from bika.lims import logger
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
@@ -466,19 +467,11 @@ class DefaultReportView(SingleReportView):
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
 
-    def get_analysts(self, model):
-        """Returns the usernames of the users who analysed at least one analysis
+    def get_interpreter_submitters(self, model):
+        """Returns user that submitted the result interpretations
         """
-        analysts = []
-        for analysis in self.get_verified_analyses(model):
-            username = analysis.getAnalyst()
-            analysts.append(username)
-        return list(set(analysts))
-
-    def get_analysts_info(self, model):
-        """Returns a list made of dicts representing the LabContacts (or users)
-        that analysed at least one analysis
-        """
-        analysts = self.get_analysts(model)
-        analysts = map(self.get_user_properties, analysts)
-        return filter(None, analysts)
+        interpretations = model.get_resultsinterpretation()
+        users = map(lambda item: item.get("user"), interpretations)
+        users = list(set(users))
+        interpreters = map(self.get_user_properties, users)
+        return filter(None, interpreters)
