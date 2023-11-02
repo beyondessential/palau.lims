@@ -10,9 +10,11 @@ from bika.lims.interfaces import IClient
 from palau.lims import messageFactory as _
 from palau.lims.content.fields import ExtBlobImageField
 from palau.lims.content.fields import ExtStringField
+from palau.lims.content.fields import ExtBooleanField
 from palau.lims.interfaces import IPalauLimsLayer
 from Products.Archetypes.Widget import ImageWidget
 from Products.Archetypes.Widget import StringWidget
+from Products.Archetypes.Widget import BooleanWidget
 from zope.component import adapter
 from zope.interface import implementer
 
@@ -40,6 +42,19 @@ NEW_FIELDS = [
             label=_("Abbreviation"),
             description=_(
                 "The abbreviation of the hospital"
+            )
+        )
+    ),
+
+    ExtBooleanField(
+        "DepartmentMandatory",
+        default=False,
+        widget=BooleanWidget(
+            label=_("Department Mandatory"),
+            description=_(
+                "Department is only mandatory "
+                "for some certain clients: "
+                "Belau National Hospital and CHC"
             )
         )
     )
