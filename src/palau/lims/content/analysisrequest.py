@@ -312,7 +312,7 @@ NEW_FIELDS = [
     ExtUIDReferenceField(
         "WardDepartment",
         allowed_types=("WardDepartment",),
-        required=True,
+        required=False,
         multiValued=False,
         read_permission=View,
         write_permission=FieldEditWardDepartment,
