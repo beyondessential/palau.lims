@@ -392,7 +392,7 @@
                                vars_names python:view.get_result_variables_titles(analyses);">
               <colgroup>
                 <!-- Category -->
-                <col style="width: 40%;"/>
+                <col style="width: 30%;"/>
                 <!-- Result variables -->
                 <tal:var_cols tal:repeat="var_name vars_names">
                   <col tal:define="col_width python: 20 / len(vars_names);
@@ -467,14 +467,14 @@
                   </td>
 
                   <!-- Variables -->
-                  <td class="result_variable" tal:repeat="var_name vars_names">
+                  <td class="result_variable text-nowrap" tal:repeat="var_name vars_names">
                     <span tal:define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars)"
                           tal:condition="interim"
-                          tal:content="python:interim[0].get('formatted_value')"/>
+                          tal:replace="structure python:interim[0].get('formatted_value')"/>
                   </td>
 
                   <!-- Result -->
-                  <td>
+                  <td class="text-nowrap">
                     <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)">23</span>
 
                     <tal:result_unit condition="analysis/Unit">
@@ -485,7 +485,7 @@
                       &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
                     </tal:result_uncertainty>
                   </td>
-                  <td class=" text-nowrap">
+                  <td class="text-nowrap">
                       <!-- Range interval or range comment -->
                     <tal:normal_values define="normal_values python:view.get_normal_values(model, analysis);"
                                        condition="normal_values">

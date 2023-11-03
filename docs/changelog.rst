@@ -5,6 +5,8 @@ Changelog
 ------------------
 
 - #64 Fetch new patients and update patients from Test FHIR API
+- #67 List AST organisms by growth number
+- #65 Disable CSFR protection site-wide
 - #62 Add a bold and black line before signatures in results report
 - #58 Shows Normal Values Heading when needed
 - #59 Final report comments
