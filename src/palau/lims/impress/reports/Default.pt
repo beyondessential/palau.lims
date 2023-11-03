@@ -454,8 +454,19 @@
 
 
                       </span>
+
                     <span tal:condition="analysis/ScientificName">
-                        <span class="font-italic" tal:content="analysis/ScientificName"/>
+                        <span class="font-italic"
+                              tal:condition="analysis/ShortTitle"
+                              tal:content="analysis/ShortTitle"/>
+                        <tal:micro_cond define="is_isolate python:analysis.title == 'Microorganism identification'"
+                                        condition="not:analysis/ShortTitle">
+                          <span class="font-italic"
+                                tal:condition="not:is_isolate"
+                                tal:content="analysis/title"/>
+                          <span class="font-italic"
+                                tal:condition="is_isolate">Isolate</span>
+                        </tal:micro_cond>
                       </span>
 
                     <tal:footnote tal:define="notes python: view.get_analysis_footnotes(analysis)"
