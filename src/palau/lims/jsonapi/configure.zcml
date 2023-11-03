@@ -1,0 +1,13 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:plone="http://namespaces.plone.org/plone"
+  i18n_domain="png.lims">
+
+  <!-- Adapter to handle pushes -->
+  <adapter
+    name="senaite.palau.lims.jsonapi.push.update_patients"
+    factory=".adapters.PatientPushConsumer"
+    provides="senaite.jsonapi.interfaces.IPushConsumer"
+    for="*" />
+
+</configure>

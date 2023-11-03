@@ -7,6 +7,7 @@
 from bika.lims import api
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
+from palau.lims.setuphandlers import setup_behaviors
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
@@ -63,3 +64,12 @@ def set_site_from_samplepoint(tool):
             sample_point = None
         obj.setSite(sample_point)
         obj.reindexObject()
+
+
+def add_patient_behavior(tool):
+    """Add patient behavior
+    """
+    logger.info("Add Patient behavior ...")
+    portal = api.get_portal()
+    setup_behaviors(portal)
+    logger.info("Add Patient behavior [DONE]")
