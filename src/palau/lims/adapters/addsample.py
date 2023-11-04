@@ -53,15 +53,36 @@ class RecordsValidator(object):
                 field_errors["Date of Admission-{}".format(num)] = date_of_admission_err
 
             # Specification is mandatory depending on sample type
-            err = self.validate_specification(record)
-            if err:
-                field_errors["Specification-{}".format(num)] = err
+            specification_err = self.validate_specification(record)
+            if specification_err:
+                field_errors["Specification-{}".format(num)] = specification_err
+
+            # Department is mandatory depending on client
+            department_err = self.validate_department(record)
+            if department_err:
+                field_errors["Department-{}".format(num)] = department_err
 
         if any([message, field_errors]):
             return {
                 "message": message,
                 "fielderrors": field_errors
             }
+
+    def validate_department(self, record):
+        """Return an error message if no department has been selected
+        with a client that has DepartmentMandatory field is selected
+        """
+        error = None
+
+        client_uid = record.get("Client")
+        client = api.get_object(client_uid)
+        department_mandatory = get_field_value(client, "DepartmentMandatory")
+        department = record.get("WardDepartment")
+
+        if department_mandatory and not department:
+            error = _("Department is required for this Hospital/Clinic")
+
+        return error
 
     def validate_specification(self, record):
         """Returns an error message if no specification has been selected
