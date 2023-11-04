@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #64 Fetch new patients and update patients from Test FHIR API
 - #67 List AST organisms by growth number
 - #65 Disable CSFR protection site-wide
 - #62 Add a bold and black line before signatures in results report
