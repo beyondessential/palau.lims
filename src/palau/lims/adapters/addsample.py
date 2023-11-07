@@ -40,27 +40,28 @@ class RecordsValidator(object):
         for num, record in enumerate(records):
 
             # Check if volume is correct based on the selected sample type
-            minimum_volume_err = self.validate_minimum_volume(record)
-            if minimum_volume_err:
-                field_errors["Volume-{}".format(num)] = minimum_volume_err
+            err = self.validate_minimum_volume(record)
+            if err:
+                field_errors["Volume-{}".format(num)] = err
 
-            maximum_volume_err = self.validate_maximum_volume(record)
-            if maximum_volume_err:
-                field_errors["Volume-{}".format(num)] = maximum_volume_err
+            err = self.validate_maximum_volume(record)
+            if err:
+                field_errors["Volume-{}".format(num)] = err
 
-            date_of_admission_err = self.validate_date_of_admission(record)
-            if date_of_admission_err:
-                field_errors["Date of Admission-{}".format(num)] = date_of_admission_err
+            # Check Date of Admission is before or equal to the Date Sampled
+            err = self.validate_date_of_admission(record)
+            if err:
+                field_errors["DateOfAdmission-{}".format(num)] = err
 
             # Specification is mandatory depending on sample type
-            specification_err = self.validate_specification(record)
-            if specification_err:
-                field_errors["Specification-{}".format(num)] = specification_err
+            err = self.validate_specification(record)
+            if err:
+                field_errors["Specification-{}".format(num)] = err
 
             # Department is mandatory depending on client
-            department_err = self.validate_department(record)
-            if department_err:
-                field_errors["Department-{}".format(num)] = department_err
+            err = self.validate_department(record)
+            if err:
+                field_errors["WardDepartment-{}".format(num)] = err
 
         if any([message, field_errors]):
             return {
@@ -69,8 +70,8 @@ class RecordsValidator(object):
             }
 
     def validate_department(self, record):
-        """Return an error message if no department has been selected
-        with a client that has DepartmentMandatory field is selected
+        """Return an error message if no department has been selected with a
+        client that has DepartmentMandatory field is selected
         """
         error = None
 
@@ -108,8 +109,8 @@ class RecordsValidator(object):
         """Validates the Date of Admission: before or equal to the Date Sampled
         """
         error = None
-        # DateOfAdmission is an optional field in Add form, so we pass the validation process
-        # if the record doesn't contain a DateOfAdmission
+        # DateOfAdmission is an optional field in Add form, so we pass the
+        # validation process if the record doesn't contain a DateOfAdmission
         date_of_admission = record.get("DateOfAdmission")
 
         if not date_of_admission:
@@ -122,7 +123,8 @@ class RecordsValidator(object):
         # Compare
         if date_of_admission > date_sampled:
             date_sampled = to_localized_time(date_sampled)
-            error = _("Date of Admission must be equal or before Sampled Date on {}").format(date_sampled)
+            error = _("Date of Admission must be equal or before Sampled Date "
+                      "on {}").format(date_sampled)
 
         # Return the error (if any)
         return error
@@ -229,8 +231,8 @@ class ClientDefaultValue(object):
 
 @adapter(IGetDefaultFieldValueARAddHook)
 class PrimaryAnalysisRequestDefaultValue(object):
-    """Adapter that returns the default value for field 'PrimaryAnalysisRequest'
-    in Add sample form
+    """Adapter that returns the default value for field
+    'PrimaryAnalysisRequest' in Add sample form
     """
 
     def __init__(self, request):
