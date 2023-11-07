@@ -21,6 +21,8 @@ def handle_form_submit(self):
     # Save the results interpretation
     res = self.request.form.get("ResultsInterpretationDepts", [])
 
+    logger.info("Result interpretation field : {}".format(res))
+
     # Get the current user when submitted
     current_user = api.get_current_user()
     user = current_user.getProperty('id')

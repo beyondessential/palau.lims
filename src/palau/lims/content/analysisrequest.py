@@ -123,7 +123,15 @@ UPDATED_FIELDS = [
     }),
     ("Priority", {
         "vocabulary": PRIORITIES,
-    })
+    }),
+    ("ResultsInterpretationDepts", {
+        "subfields": ('uid', 'richtext', "user"),
+        "subfield_labels": {
+            'uid': _('Department'),
+            'richtext': _('Results Interpretation'),
+            'user': _('Analyst'),
+        },
+    }),
 ]
 
 # Additional fields for Sample (aka AnalysisRequest)

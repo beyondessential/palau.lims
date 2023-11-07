@@ -77,3 +77,26 @@ def setResultsInterpretationDepts(self, value):
 
         # set the field
         self.getField("ResultsInterpretationDepts").set(self, records)
+
+
+def getResultsInterpretationByDepartment(self, department=None):
+    """Returns the results interpretation for this Analysis Request
+       and department. If department not set, returns the results
+       interpretation tagged as 'General'.
+
+    :returns: a dict with the following keys:
+        {'uid': <department_uid> or 'general', 'richtext': <text/plain>}
+    """
+    uid = department.UID() if department else 'general'
+    rows = self.Schema()['ResultsInterpretationDepts'].get(self)
+    row = [row for row in rows if row.get('uid') == uid]
+    if len(row) > 0:
+        row = row[0]
+        logger.info("Does user subfield exists in this field : {}".format(row.get('user', False)))
+    elif uid == 'general' \
+            and hasattr(self, 'getResultsInterpretation') \
+            and self.getResultsInterpretation():
+        row = {'uid': uid, 'richtext': self.getResultsInterpretation()}
+    else:
+        row = {'uid': uid, 'richtext': ''}
+    return row
