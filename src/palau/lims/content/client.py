@@ -50,11 +50,10 @@ NEW_FIELDS = [
         "DepartmentMandatory",
         default=False,
         widget=BooleanWidget(
-            label=_("Department Mandatory"),
+            label=_("Department mandatory"),
             description=_(
-                "Department is only mandatory "
-                "for some certain clients: "
-                "Belau National Hospital and CHC"
+                "If enabled, the department in sample form will become a "
+                "required field."
             )
         )
     )
