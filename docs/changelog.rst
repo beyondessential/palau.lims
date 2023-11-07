@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #69 Make Department field not mandatory depending on Client in Add Sample form
 - #71 Display analysis title in italics when scientific names field is enabled
 - #64 Fetch new patients and update patients from Test FHIR API
 - #67 List AST organisms by growth number
