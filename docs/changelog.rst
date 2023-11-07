@@ -5,6 +5,16 @@ Changelog
 ------------------
 
 - #60 Add analysts name for report comments
+- #69 Make Department field not mandatory depending on Client in Add Sample form
+- #71 Display analysis title in italics when scientific names field is enabled
+- #64 Fetch new patients and update patients from Test FHIR API
+- #67 List AST organisms by growth number
+- #65 Disable CSFR protection site-wide
+- #62 Add a bold and black line before signatures in results report
+- #58 Shows Normal Values Heading when needed
+- #59 Final report comments
+- #51 Allow units for specification
+- #61 Allow custom text for Site field
 - #51 Patient name to appear on same line in final report
 - #50 Blood Donor specific sample labels
 - #57 Fix js error in sample view when result interpretation has no form

@@ -16,6 +16,7 @@ from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import is_ast_analysis
 from senaite.core.api import dtime
+from senaite.core.p3compat import cmp
 from senaite.impress.analysisrequest.reportview import SingleReportView
 from senaite.impress.decorators import returns_super_model
 from senaite.patient import api as patient_api
@@ -144,6 +145,19 @@ class DefaultReportView(SingleReportView):
             reportable = ["to_be_verified", "verified", "published"]
             return api.get_review_status(analysis) in reportable
 
+        def get_growth_number(a, b):
+            ast = [is_ast_analysis(a), is_ast_analysis(b)]
+            if not all(ast):
+                # do not apply sorting unless both analyses are from ast type
+                return 0
+
+            # Sort by growth number
+            ga = a.getGrowthNumber()
+            gb = b.getGrowthNumber()
+            return cmp(ga, gb)
+
+        # Sort AST analyses by growth number
+        analyses = sorted(analyses, cmp=get_growth_number)
         return filter(is_reportable, analyses)
 
     @returns_super_model

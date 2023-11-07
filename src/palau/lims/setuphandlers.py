@@ -88,6 +88,9 @@ SETUP_FOLDERS = [
 BEHAVIORS = [
     ("SampleContainer", [
         "palau.lims.behaviors.samplecontainer.IExtendedSampleContainerBehavior",
+    ]),
+    ("Patient", [
+        "palau.lims.behaviors.patient.IExtendedPatientBehavior"
     ])
 ]
 
