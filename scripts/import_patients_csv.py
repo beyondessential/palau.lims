@@ -147,6 +147,9 @@ def import_patients(infile):
         # create the patient
         patient = api.create(patient_folder, "Patient", **values)
 
+        # Keep track of the imported ones
+        mrns[mrn] = True
+
         # flush the object from memory
         patient._p_deactivate()
 
