@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - #60 Add analysts name for report comments
+- #74 Add script for patient import from CSV
 - #69 Make Department field not mandatory depending on Client in Add Sample form
 - #71 Display analysis title in italics when scientific names field is enabled
 - #64 Fetch new patients and update patients from Test FHIR API
