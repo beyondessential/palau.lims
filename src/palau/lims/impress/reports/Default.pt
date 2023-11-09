@@ -595,8 +595,9 @@
           <!-- <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2> -->
           <div tal:content="structure ri/richtext|nothing"></div>
           <div tal:define="interpreter ri/fullname"
-               tal:condition="interpreter" class="mt-1 mb-2">
-            &mdash; <em>by</em> <span tal:replace="ri/fullname"/>
+               tal:condition="interpreter" class="mt-1 mb-4">
+            &mdash; <em i18n:translate="">by</em>
+            <span tal:replace="ri/fullname"/>
           </div>
         </tal:ri>
       </div>
