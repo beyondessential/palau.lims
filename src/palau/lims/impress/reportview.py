@@ -115,6 +115,8 @@ class DefaultReportView(SingleReportView):
         """
         sample = api.get_object(sample)
         department = sample.getField("WardDepartment").get(sample)
+        if not department:
+            return ""
 
         return api.get_title(department)
 
