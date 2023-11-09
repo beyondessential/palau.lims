@@ -596,7 +596,7 @@
           <div tal:content="structure ri/richtext|nothing"></div>
           <div tal:define="interpreter ri/fullname"
                tal:condition="interpreter" class="mt-1 mb-2">
-            [<span tal:replace="ri/fullname"/>]
+            &mdash; <em>by</em> <span tal:replace="ri/fullname"/>
           </div>
         </tal:ri>
       </div>
