@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - #60 Add analysts name for report comments
+- #76 Return empty string for non-required department client in reports
 - #74 Add script for patient import from CSV
 - #69 Make Department field not mandatory depending on Client in Add Sample form
 - #71 Display analysis title in italics when scientific names field is enabled
