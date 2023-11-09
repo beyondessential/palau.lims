@@ -586,7 +586,7 @@
   <!--  RESULTS INTERPRETATION -->
   <tal:render condition="python:True">
     <div class="row section-resultsinterpretation no-gutters"
-         tal:define="ris python:model.get_resultsinterpretation();
+         tal:define="ris python:view.get_results_interpretations(model);
                      has_ri python:any(map(lambda r: r.get('richtext'), ris));">
       <div class="" tal:condition="has_ri">
         <!-- <h1 i18n:translate="">Results interpretation</h1> -->
@@ -594,6 +594,10 @@
         <tal:ri repeat="ri ris">
           <!-- <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2> -->
           <div tal:content="structure ri/richtext|nothing"></div>
+          <div tal:define="interpreter ri/fullname"
+               tal:condition="interpreter" class="mt-1 mb-2">
+            [<span tal:replace="ri/fullname"/>]
+          </div>
         </tal:ri>
       </div>
     </div>
@@ -644,8 +648,7 @@
   <tal:render condition="not:model/is_provisional">
     <div class="row section-signatures no-gutters"
          tal:define="submitters python:view.get_submitters_info(model);
-                     reporters  python:view.get_reporters_info(model);
-                     interpreters python:view.get_interpreter_submitters(model);">
+                     reporters  python:view.get_reporters_info(model);">
       <div class="w-100">
 
         <table class="table table-sm table-condensed">
@@ -680,21 +683,6 @@
                 </div>
               </div>
 
-            </td>
-
-            <!-- Result Interpreted By -->
-            <td tal:condition="interpreters" class="border-0 align-top">
-              <h4 i18n:translate="">Interpreted By</h4>
-              <div tal:repeat="member interpreters" class="pb-2">
-                <div class="font-weight-bold">
-                  <span tal:content="member/salutation" />
-                  <span tal:condition="member/salutation">&nbsp;</span>
-                  <span tal:content="member/fullname"/>
-                </div>
-                <div>
-                  <span tal:content="member/job_title"/>
-                </div>
-              </div>
             </td>
           </tr>
         </table>

@@ -6,12 +6,12 @@
 
 import json
 
-from bika.lims import logger
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
 from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
+from palau.lims.utils import get_fullname
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import is_ast_analysis
@@ -481,11 +481,19 @@ class DefaultReportView(SingleReportView):
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
 
-    def get_interpreter_submitters(self, model):
-        """Returns user that submitted the result interpretations
+    def get_results_interpretations(self, model):
+        """Mimics the function analysisrequest.model.get_resultsinterpretation
+        from senaite.impress, but injects the keys "user" and "fullname"
         """
-        interpretations = model.get_resultsinterpretation()
-        users = map(lambda item: item.get("user"), interpretations)
-        users = list(set(users))
-        interpreters = map(self.get_user_properties, users)
-        return filter(None, interpreters)
+        ri_by_depts = model.ResultsInterpretationDepts
+        out = []
+        for ri in ri_by_depts:
+            dept = ri.get("uid", "")
+            user = ri.get("user") or ""
+            out.append({
+                "title": getattr(dept, "title", ""),
+                "richtext": ri.get("richtext", ""),
+                "user": user,
+                "fullname": get_fullname(user),
+            })
+        return out

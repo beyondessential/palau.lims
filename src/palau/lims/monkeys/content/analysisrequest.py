@@ -3,7 +3,9 @@
 # This file is part of PALAU.LIMS
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
-from bika.lims import logger
+
+from bika.lims import api
+
 
 def getRawWard(self):
     """Returns the UID of the Ward assigned to the sample, if any
@@ -54,9 +56,15 @@ def setResultsInterpretationDepts(self, value):
 
     :param value: list of dictionary records
     """
-    value, user = value
     if not isinstance(value, list):
         raise TypeError("Expected list, got {}".format(type(value)))
+
+    # Inject the current user
+    current_user = api.get_current_user().id
+
+    # Get the original values and group by uid to make comparison easier
+    original = self.getField("ResultsInterpretationDepts").get(self)
+    original = dict(map(lambda item: (item.get("uid"), item), original))
 
     # Convert inline images -> attachment files
     records = []
@@ -67,9 +75,18 @@ def setResultsInterpretationDepts(self, value):
         # Handle inline images in the HTML
         html = record.get("richtext", "")
         # Process inline images to attachments
-        record["richtext"] = self.process_inline_images(html)
+        richtext = self.process_inline_images(html)
+        record["richtext"] = richtext
 
-        # Add the user associated with this record
+        # Compare with original value and if different, overwrite user
+        record_uid = record.get("uid")
+        original_record = original.get(record_uid) or {}
+        if richtext != original_record.get("richtext"):
+            user = current_user
+        else:
+            user = original_record.get("user") or current_user
+
+        # assign the user who submitted the interpretation
         record["user"] = user
 
         # append the processed record for storage
@@ -77,26 +94,3 @@ def setResultsInterpretationDepts(self, value):
 
         # set the field
         self.getField("ResultsInterpretationDepts").set(self, records)
-
-
-def getResultsInterpretationByDepartment(self, department=None):
-    """Returns the results interpretation for this Analysis Request
-       and department. If department not set, returns the results
-       interpretation tagged as 'General'.
-
-    :returns: a dict with the following keys:
-        {'uid': <department_uid> or 'general', 'richtext': <text/plain>}
-    """
-    uid = department.UID() if department else 'general'
-    rows = self.Schema()['ResultsInterpretationDepts'].get(self)
-    row = [row for row in rows if row.get('uid') == uid]
-    if len(row) > 0:
-        row = row[0]
-        logger.info("Does user subfield exists in this field : {}".format(row.get('user', False)))
-    elif uid == 'general' \
-            and hasattr(self, 'getResultsInterpretation') \
-            and self.getResultsInterpretation():
-        row = {'uid': uid, 'richtext': self.getResultsInterpretation()}
-    else:
-        row = {'uid': uid, 'richtext': ''}
-    return row

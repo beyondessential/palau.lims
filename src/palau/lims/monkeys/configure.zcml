@@ -30,18 +30,4 @@
       original="get_report_filename"
       replacement=".publish.get_report_filename" />
 
-  <!-- Add User in Result Interpretation -->
-  <monkey:patch
-      class="senaite.core.browser.viewlets.resultsinterpretation.ResultsInterpretationViewlet"
-      original="handle_form_submit"
-      replacement=".browser.viewlets.resultinterpretation.handle_form_submit" />
-  <monkey:patch
-      class="senaite.impress.analysisrequest.model.SuperModel"
-      original="get_resultsinterpretation"
-      replacement=".browser.viewlets.resultinterpretation.get_resultsinterpretation" />
-  <monkey:patch
-      class="bika.lims.content.analysisrequest.AnalysisRequest"
-      original="setResultsInterpretationDepts"
-      replacement=".content.analysisrequest.setResultsInterpretationDepts" />
-
 </configure>

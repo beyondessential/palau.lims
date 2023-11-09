@@ -47,9 +47,7 @@
 
   <monkey:patch
       class="bika.lims.content.analysisrequest.AnalysisRequest"
-      original="getResultsInterpretationByDepartment"
-      ignoreOriginal="True"
-      replacement=".analysisrequest.getResultsInterpretationByDepartment" />
-
+      original="setResultsInterpretationDepts"
+      replacement=".analysisrequest.setResultsInterpretationDepts"/>
 
 </configure>
