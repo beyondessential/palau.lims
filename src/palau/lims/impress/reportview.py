@@ -11,6 +11,7 @@ from bika.lims.api import mail
 from bika.lims.utils import get_link
 from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
+from palau.lims.utils import get_fullname
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import is_ast_analysis
@@ -481,3 +482,20 @@ class DefaultReportView(SingleReportView):
         submitters = self.get_submitters(model)
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
+
+    def get_results_interpretations(self, model):
+        """Mimics the function analysisrequest.model.get_resultsinterpretation
+        from senaite.impress, but injects the keys "user" and "fullname"
+        """
+        ri_by_depts = model.ResultsInterpretationDepts
+        out = []
+        for ri in ri_by_depts:
+            dept = ri.get("uid", "")
+            user = ri.get("user") or ""
+            out.append({
+                "title": getattr(dept, "title", ""),
+                "richtext": ri.get("richtext", ""),
+                "user": user,
+                "fullname": get_fullname(user),
+            })
+        return out

@@ -45,4 +45,9 @@
       ignoreOriginal="True"
       replacement=".analysisrequest.setSite" />
 
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="setResultsInterpretationDepts"
+      replacement=".analysisrequest.setResultsInterpretationDepts"/>
+
 </configure>

@@ -4,6 +4,9 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
+from bika.lims import api
+
+
 def getRawWard(self):
     """Returns the UID of the Ward assigned to the sample, if any
     """
@@ -44,3 +47,50 @@ def setClinicalInformation(self, value):
     """Assigns the clinical information to the sample
     """
     self.getField("ClinicalInformation").set(self, value)
+
+
+def setResultsInterpretationDepts(self, value):
+    """Custom setter which converts inline images to attachments
+
+    https://github.com/senaite/senaite.core/pull/1344
+
+    :param value: list of dictionary records
+    """
+    if not isinstance(value, list):
+        raise TypeError("Expected list, got {}".format(type(value)))
+
+    # Inject the current user
+    current_user = api.get_current_user().id
+
+    # Get the original values and group by uid to make comparison easier
+    original = self.getField("ResultsInterpretationDepts").get(self)
+    original = dict(map(lambda item: (item.get("uid"), item), original))
+
+    # Convert inline images -> attachment files
+    records = []
+    for record in value:
+        # N.B. we might here a ZPublisher record. Converting to dict
+        #      ensures we can set values as well.
+        record = dict(record)
+        # Handle inline images in the HTML
+        html = record.get("richtext", "")
+        # Process inline images to attachments
+        richtext = self.process_inline_images(html)
+        record["richtext"] = richtext
+
+        # Compare with original value and if different, overwrite user
+        record_uid = record.get("uid")
+        original_record = original.get(record_uid) or {}
+        if richtext != original_record.get("richtext"):
+            user = current_user
+        else:
+            user = original_record.get("user") or current_user
+
+        # assign the user who submitted the interpretation
+        record["user"] = user
+
+        # append the processed record for storage
+        records.append(record)
+
+        # set the field
+        self.getField("ResultsInterpretationDepts").set(self, records)
