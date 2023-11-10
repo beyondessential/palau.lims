@@ -69,7 +69,7 @@ def push_tamanu_patients(args, patients):
     headers = {"Authorization": "{}".format(token)}
 
     data = {
-        "consumer": "senaite.png.lims.jsonapi.push.update_patients",
+        "consumer": "senaite.palau.lims.jsonapi.push.update_patients",
         "patients": patients
     }
 
