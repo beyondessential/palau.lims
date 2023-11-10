@@ -1,0 +1,12 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="palau.lims">
+
+  <!-- Adapter to handle pushes -->
+  <adapter
+      name="tamanu.consumers.patient"
+      factory=".patient.PatientPushConsumer"
+      provides="senaite.jsonapi.interfaces.IPushConsumer"
+      for="*"/>
+
+</configure>

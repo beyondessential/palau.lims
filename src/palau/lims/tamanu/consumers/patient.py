@@ -16,6 +16,7 @@ TAMANU_SEXES = (
     ("", ""),
 )
 
+
 class PatientPushConsumer(object):
     """Adapter that handles push requests for Patients
     """
@@ -95,7 +96,7 @@ class PatientPushConsumer(object):
         address = next((
             patient_address for patient_address in patient_addresses
             if patient_address["type"] == "physical"
-            and patient_address["use"] == "home"
+               and patient_address["use"] == "home"
         ), None)
         return address
 
