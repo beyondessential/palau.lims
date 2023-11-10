@@ -8,6 +8,10 @@ import argparse
 import requests
 from base64 import b64encode
 
+# the id of the consumer for patients creation and update
+PATIENT_CONSUMER = "tamanu.consumers.patient"
+
+
 def get_tamanu_token(args):
     """
     Retrieve the tamanu token for other APIs
@@ -69,7 +73,7 @@ def push_tamanu_patients(args, patients):
     headers = {"Authorization": "{}".format(token)}
 
     data = {
-        "consumer": "senaite.png.lims.jsonapi.push.update_patients",
+        "consumer": PATIENT_CONSUMER,
         "patients": patients
     }
 

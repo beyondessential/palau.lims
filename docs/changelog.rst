@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #79 Update consumer when call pull tamanu patients
 - #60 Add analysts name for report comments
 - #76 Return empty string for non-required department client in reports
 - #74 Add script for patient import from CSV
