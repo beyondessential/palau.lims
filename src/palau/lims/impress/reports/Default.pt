@@ -586,7 +586,7 @@
   <!--  RESULTS INTERPRETATION -->
   <tal:render condition="python:True">
     <div class="row section-resultsinterpretation no-gutters"
-         tal:define="ris python:model.get_resultsinterpretation();
+         tal:define="ris python:view.get_results_interpretations(model);
                      has_ri python:any(map(lambda r: r.get('richtext'), ris));">
       <div class="" tal:condition="has_ri">
         <!-- <h1 i18n:translate="">Results interpretation</h1> -->
@@ -594,6 +594,11 @@
         <tal:ri repeat="ri ris">
           <!-- <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2> -->
           <div tal:content="structure ri/richtext|nothing"></div>
+          <div tal:define="interpreter ri/fullname"
+               tal:condition="interpreter" class="mt-1 mb-4">
+            &mdash; <em i18n:translate="">by</em>
+            <span tal:replace="ri/fullname"/>
+          </div>
         </tal:ri>
       </div>
     </div>
