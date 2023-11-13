@@ -100,6 +100,30 @@ class PatientPushConsumer(object):
         ), None)
         return address
 
+    def get_patient_nickname(self, patient_names):
+        """Get patient's cultural name from resource payload
+        """
+        nickname = next((
+            name for name in patient_names
+            if name["use"] == "nickname"
+        ), None)
+        return nickname
+
+    def get_patient_identifiers(self, patient_identifier):
+        identifiers = []
+        secondary_identifier = next((
+            identifier for identifier in patient_identifier
+            if identifier["use"] == "secondary"
+        ), None)
+        if secondary_identifier:
+            assigner = secondary_identifier.get("assigner")
+            value = secondary_identifier.get("value")
+            if assigner["display"] == "RTA":
+                identifiers.append({"key": "driver_id", "value": value})
+            elif assigner["display"] == "Fiji Passport Office":
+                identifiers.append({"key": "passport_id", "value": value})
+        return identifiers
+
     def get_patient_info(self, patient_resource):
         """Convert to patient dict from patient object data
         """
@@ -121,7 +145,12 @@ class PatientPushConsumer(object):
             if givenname != "" and len(givenname) == 2 else ""
         )
         lastname = fullname.get("family", "")
+        nickname = self.get_patient_nickname(patient_resource["name"])
+        cultural_name = nickname.get("text") if nickname else ""
         birthdate = patient_resource.get("birthDate", None)
+        identifiers = self.get_patient_identifiers(
+            patient_resource['identifier']
+        )
         address = self.get_patient_address(patient_resource["address"])
 
         if address:
@@ -143,6 +172,8 @@ class PatientPushConsumer(object):
             "firstname": api.safe_unicode(firstname),
             "middlename": api.safe_unicode(middlename),
             "lastname": api.safe_unicode(lastname),
+            "cultural_name": api.safe_unicode(cultural_name),
+            "identifiers": identifiers
         }
 
     def create_patient(self, patient_data, is_replaced):
