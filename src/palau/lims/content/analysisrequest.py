@@ -443,7 +443,7 @@ class AnalysisRequestSchemaModifier(object):
         """Check if Department is required for the current sample
         and return updating element for UPDATED_FIELDS"""
         sample = self.context
-        client = get_field_value(sample, "Client")
+        client = sample.getClient()
         dept_required = get_field_value(client, "DepartmentMandatory")
 
         return dept_required
@@ -451,15 +451,12 @@ class AnalysisRequestSchemaModifier(object):
     def fiddle(self, schema):
         # Disable some of the fields
         map(lambda f: disable_field(schema, f), DISABLED_FIELDS)
-        import pdb; pdb.set_trace()
-
-        # TODO: Check if the Department field is required with current client
-        if not api.is_temporary(self):
-            UPDATED_FIELDS.append(("WardDepartment", {
-                "required": self.is_department_field_required()
-            }))
 
         # Update some fields (title, description, etc.)
         map(lambda f: update_field(schema, f[0], f[1]), UPDATED_FIELDS)
+
+        # TODO: Make Department field required if necessary
+        if not api.is_temporary(self.context):
+            schema["WardDepartment"].required = self.is_department_field_required()
 
         return schema
