@@ -4,7 +4,9 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
+from six import string_types
 from AccessControl import ClassSecurityInfo
+from bika.lims import api
 from palau.lims import messageFactory as _
 from palau.lims.behaviors import get_behavior_schema
 from plone.autoform import directives
@@ -15,6 +17,7 @@ from senaite.core.schema import UIDReferenceField
 from senaite.core.z3cform.widgets.uidreference import UIDReferenceWidget
 from senaite.patient.config import PATIENT_CATALOG
 from senaite.patient.interfaces import IPatient
+from zope import schema
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import provider
@@ -48,6 +51,11 @@ class IExtendedPatientBehavior(model.Schema):
             }
         ],
         catalog=PATIENT_CATALOG
+    )
+
+    cultural_name = schema.TextLine(
+        title=_(u"Cultural Name"),
+        required=False,
     )
 
 
@@ -104,3 +112,22 @@ class ExtendedPatient(object):
         return accessor(self)
 
     replaced_by = property(getReplacedBy, setReplacedBy)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setCulturalName(self, value):     # noqa CamelCase
+        """Getter for the cultural_name field
+        """
+        if not isinstance(value, string_types):
+            value = u""
+        mutator = self.mutator("cultural_name")
+        mutator(self.context, api.safe_unicode(value.strip()))
+
+    @security.protected(permissions.View)
+    def getCulturalName(self):     # noqa CamelCase
+        """Setter for the cultural_name field
+        """
+        accessor = self.accessor("cultural_name")
+        value = accessor(self.context) or ""
+        return value.encode("utf-8")
+
+    cultural_name = property(getCulturalName, setCulturalName)
