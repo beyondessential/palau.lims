@@ -480,6 +480,12 @@
                     <span tal:define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars)"
                           tal:condition="interim"
                           tal:replace="structure python:interim[0].get('formatted_value')"/>
+
+                    <tal:result_variable_unit
+                            define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars)"
+                            condition="interim">
+                      &nbsp;<span class="units font-italic" tal:content="structure python:interim[0].get('formatted_unit')"/>
+                    </tal:result_variable_unit>
                   </td>
 
                   <!-- Result -->
