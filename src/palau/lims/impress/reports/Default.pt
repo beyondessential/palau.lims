@@ -372,8 +372,6 @@
     <div class="row section-results no-gutters"
          tal:define="global analyses_footnotes python:[]">
       <div class="w-100">
-        <h2 i18n:translate="">Results</h2>
-
         <!-- Group by lineage (primary, secondary) -->
         <tal:ancestry define="samples python: view.get_ancestry(model);"
                       repeat="sample samples">
