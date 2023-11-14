@@ -100,6 +100,29 @@ class PatientPushConsumer(object):
         ), None)
         return address
 
+    def get_patient_primary_phone_number(self, patient_telecoms):
+        """Get patient's primary phone number from resource payload
+        """
+        phone = next((
+            contact["value"] for contact in patient_telecoms
+            if contact["rank"] == 1
+        ), None)
+        return phone
+
+    def get_patient_secondary_phone_numbers(self, patient_telecoms):
+        """Get patient's secondary phone number from resource payload
+        """
+        numbers = []
+        phone = next((
+            contact["value"] for contact in patient_telecoms
+            if contact["rank"] == 2
+        ), None)
+
+        if phone:
+            numbers.append({"name": "Mobile", "phone": phone})
+
+        return numbers
+
     def get_patient_info(self, patient_resource):
         """Convert to patient dict from patient object data
         """
@@ -122,6 +145,12 @@ class PatientPushConsumer(object):
         )
         lastname = fullname.get("family", "")
         birthdate = patient_resource.get("birthDate", None)
+        phone = self.get_patient_primary_phone_number(
+            patient_resource["telecom"]
+        )
+        additional_phone_numbers = self.get_patient_secondary_phone_numbers(
+            patient_resource["telecom"]
+        )
         address = self.get_patient_address(patient_resource["address"])
 
         if address:
@@ -143,6 +172,8 @@ class PatientPushConsumer(object):
             "firstname": api.safe_unicode(firstname),
             "middlename": api.safe_unicode(middlename),
             "lastname": api.safe_unicode(lastname),
+            "phone": api.safe_unicode(phone),
+            "additional_phone_numbers": additional_phone_numbers,
         }
 
     def create_patient(self, patient_data, is_replaced):
