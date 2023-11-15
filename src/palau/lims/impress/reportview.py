@@ -6,7 +6,6 @@
 
 import json
 
-from bika.lims import logger
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
