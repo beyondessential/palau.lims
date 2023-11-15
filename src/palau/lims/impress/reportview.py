@@ -6,6 +6,7 @@
 
 import json
 
+from bika.lims import logger
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
@@ -488,14 +489,19 @@ class DefaultReportView(SingleReportView):
         from senaite.impress, but injects the keys "user" and "fullname"
         """
         ri_by_depts = model.ResultsInterpretationDepts
-        out = []
+        new_out = {}
         for ri in ri_by_depts:
-            dept = ri.get("uid", "")
             user = ri.get("user") or ""
-            out.append({
-                "title": getattr(dept, "title", ""),
-                "richtext": ri.get("richtext", ""),
-                "user": user,
-                "fullname": get_fullname(user),
-            })
-        return out
+
+            if user in new_out:
+                new_out[user]["richtext"].append(ri.get("richtext", ""))
+
+            else:
+                new_out[user] = {
+                    "fullname": get_fullname(user),
+                    "richtext": [ri.get("richtext", "")],
+                }
+
+        for user, ri in new_out.items():
+            ri["richtext"] = ''.join(ri["richtext"])
+        return new_out
