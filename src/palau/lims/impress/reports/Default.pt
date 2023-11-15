@@ -529,13 +529,14 @@
 
         </tal:ancestry>
       </div>
-      <div class="w-100 section-results-provisional"
+      <!-- Preliminary Comment : Removed -->
+      <!-- <div class="w-100 section-results-provisional"
            tal:condition="python: view.is_results_in_progress(model)">
         <strong>*</strong>&nbsp;
         <span i18n:translate="" >
           Results are preliminary as tests are undergoing further testing/verification
         </span>
-      </div>
+      </div> -->
       <div class="w-100 section-analyses-footnotes pt-2 mt-2 mb-4"
            tal:condition="analyses_footnotes">
         <ul class="list-unstyled">
