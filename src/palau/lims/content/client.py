@@ -47,7 +47,7 @@ NEW_FIELDS = [
     ),
 
     ExtBooleanField(
-        "DepartmentMandatory",
+        "WardDepartmentRequired",
         default=False,
         widget=BooleanWidget(
             label=_("Department mandatory"),
