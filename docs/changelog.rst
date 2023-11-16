@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #85 Add Result Variable's unit in final report
 - #75 Make Department field required based on Client in Sample View
 - #82 Remove "Results" heading from final report
 - #79 Update consumer when call pull tamanu patients
