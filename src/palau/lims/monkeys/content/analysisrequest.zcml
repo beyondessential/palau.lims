@@ -35,6 +35,24 @@
 
   <monkey:patch
       class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getRawWardDepartment"
+      ignoreOriginal="True"
+      replacement=".analysisrequest.getRawWardDepartment" />
+
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getWardDepartment"
+      ignoreOriginal="True"
+      replacement=".analysisrequest.getWardDepartment" />
+
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="setWardDepartment"
+      ignoreOriginal="True"
+      replacement=".analysisrequest.setWardDepartment" />
+
+  <monkey:patch
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
       original="getSite"
       ignoreOriginal="True"
       replacement=".analysisrequest.getSite" />

@@ -114,10 +114,9 @@ class DefaultReportView(SingleReportView):
         """Returns the Department title
         """
         sample = api.get_object(sample)
-        department = sample.getField("WardDepartment").get(sample)
+        department = sample.getWardDepartment()
         if not department:
             return ""
-
         return api.get_title(department)
 
     def get_analyses(self, model_or_collection, parts=False):
