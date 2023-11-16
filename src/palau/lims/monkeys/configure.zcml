@@ -30,4 +30,15 @@
       original="get_report_filename"
       replacement=".publish.get_report_filename" />
 
+  <!-- Update report Listing to show patient name column -->
+  <monkey:patch
+      class="bika.lims.browser.publish.reports_listing.ReportsListingView"
+      original="__init__"
+      replacement=".publish.__init__" />
+
+  <monkey:patch
+      class="bika.lims.browser.publish.reports_listing.ReportsListingView"
+      original="folderitem"
+      replacement=".publish.folderitem" />
+
 </configure>
