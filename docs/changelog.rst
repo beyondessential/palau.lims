@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #75 Make Department field required based on Client in Sample View
 - #82 Remove "Results" heading from final report
 - #79 Update consumer when call pull tamanu patients
 - #60 Add analysts name for report comments
