@@ -668,9 +668,9 @@
               </div>
             </td>
 
-            <!-- Reported by -->
+            <!-- Verified by -->
             <td tal:condition="reporters" class="border-0 align-top">
-              <h4 i18n:translate="">Reported by</h4>
+              <h4 i18n:translate="">Verified by</h4>
               <div tal:repeat="member reporters" class="pb-2">
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation" />
