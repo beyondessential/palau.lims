@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #87 Remove preliminary comment
 - #85 Add Result Variable's unit in final report
 - #75 Make Department field required based on Client in Sample View
 - #82 Remove "Results" heading from final report
