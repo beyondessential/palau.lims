@@ -35,7 +35,6 @@ from palau.lims.permissions import FieldEditVolume
 from palau.lims.permissions import FieldEditWard
 from palau.lims.permissions import FieldEditWardDepartment
 from palau.lims.validators import SampleVolumeValidator
-from palau.lims.utils import get_field_value
 from Products.Archetypes.Widget import StringWidget
 from Products.Archetypes.Widget import TextAreaWidget
 from Products.CMFCore.permissions import View
@@ -439,14 +438,16 @@ class AnalysisRequestSchemaModifier(object):
     def __init__(self, context):
         self.context = context
 
-    def is_department_field_required(self):
-        """Check if Department is required for the current sample
-        and return updating element for UPDATED_FIELDS"""
-        sample = self.context
-        client = sample.getClient()
-        dept_required = get_field_value(client, "DepartmentMandatory")
-
-        return dept_required
+    def is_ward_department_required(self):
+        """Returns whether the field WardDepartment is required depending on
+        the current context
+        """
+        if api.is_temporary(self.context):
+            return False
+        client = self.context.getClient()
+        if not client:
+            return False
+        return client.getWardDepartmentRequired()
 
     def fiddle(self, schema):
         # Disable some of the fields
@@ -455,8 +456,7 @@ class AnalysisRequestSchemaModifier(object):
         # Update some fields (title, description, etc.)
         map(lambda f: update_field(schema, f[0], f[1]), UPDATED_FIELDS)
 
-        # TODO: Make Department field required if necessary
-        if not api.is_temporary(self.context):
-            schema["WardDepartment"].required = self.is_department_field_required()
+        # Make Department field required if necessary
+        schema["WardDepartment"].required = self.is_ward_department_required()
 
         return schema
