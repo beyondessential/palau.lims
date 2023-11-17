@@ -5,6 +5,10 @@ Changelog
 ------------------
 
 - #84 Store Primary and Secondary Contact Number from Tamanu's API
+- #87 Remove preliminary comment
+- #85 Add Result Variable's unit in final report
+- #75 Make Department field required based on Client in Sample View
+- #82 Remove "Results" heading from final report
 - #79 Update consumer when call pull tamanu patients
 - #60 Add analysts name for report comments
 - #76 Return empty string for non-required department client in reports
