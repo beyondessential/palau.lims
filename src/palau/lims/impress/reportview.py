@@ -5,6 +5,7 @@
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
 import json
+from collections import OrderedDict
 
 from bika.lims import api
 from bika.lims.api import mail
@@ -370,11 +371,11 @@ class DefaultReportView(SingleReportView):
         if not isinstance(analyses, (list, tuple)):
             analyses = [analyses]
 
-        titles = set()
+        titles = []
         for analysis in analyses:
             for interim in self.get_result_variables(analysis, report_only):
-                titles.add(interim.get("title"))
-        return sorted(list(titles))
+                titles.append(interim.get("title"))
+        return list(OrderedDict.fromkeys(titles))
 
     def get_user_properties(self, user):
         # Basic user information
