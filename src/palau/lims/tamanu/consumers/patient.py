@@ -111,13 +111,11 @@ class PatientPushConsumer(object):
 
     def get_patient_identifiers(self, patient_identifier):
         identifiers = []
-        secondary_identifier = next((
-            identifier for identifier in patient_identifier
-            if identifier["use"] == "secondary"
-        ), None)
-        if secondary_identifier:
-            assigner = secondary_identifier.get("assigner")
-            value = secondary_identifier.get("value")
+        for identifier in patient_identifier:
+            if identifier["use"] != "secondary":
+                continue
+            assigner = identifier.get("assigner")
+            value = identifier.get("value")
             if assigner["display"] == "RTA":
                 identifiers.append({"key": "driver_id", "value": value})
             elif assigner["display"] == "Fiji Passport Office":
