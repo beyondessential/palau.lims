@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #92 List result variables on final report as order in sample view
 - #87 Remove preliminary comment
 - #85 Add Result Variable's unit in final report
 - #75 Make Department field required based on Client in Sample View
