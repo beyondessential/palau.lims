@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #92 List result variables on final report as order in sample view
 - #89 Show patient name in analysis reports dashboard
 - #88 Result interpretation comment showing twice
 - #87 Remove preliminary comment

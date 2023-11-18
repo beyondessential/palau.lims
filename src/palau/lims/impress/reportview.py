@@ -11,6 +11,7 @@ import json
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
+from collections import OrderedDict
 from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
 from palau.lims.utils import get_fullname
@@ -371,11 +372,11 @@ class DefaultReportView(SingleReportView):
         if not isinstance(analyses, (list, tuple)):
             analyses = [analyses]
 
-        titles = set()
+        titles = []
         for analysis in analyses:
             for interim in self.get_result_variables(analysis, report_only):
-                titles.add(interim.get("title"))
-        return sorted(list(titles))
+                titles.append(interim.get("title"))
+        return list(OrderedDict.fromkeys(titles))
 
     def get_user_properties(self, user):
         # Basic user information
