@@ -5,6 +5,10 @@ Changelog
 ------------------
 
 - #89 Show patient name in analysis reports dashboard
+- #88 Result interpretation comment showing twice
+- #87 Remove preliminary comment
+- #85 Add Result Variable's unit in final report
+- #75 Make Department field required based on Client in Sample View
 - #82 Remove "Results" heading from final report
 - #79 Update consumer when call pull tamanu patients
 - #60 Add analysts name for report comments
