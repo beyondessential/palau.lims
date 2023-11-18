@@ -5,6 +5,9 @@ Changelog
 ------------------
 
 - #94 Modify Signatures with datetime for Tested by and Verified by in final report
+- #92 List result variables on final report as order in sample view
+- #89 Show patient name in analysis reports dashboard
+- #88 Result interpretation comment showing twice
 - #87 Remove preliminary comment
 - #85 Add Result Variable's unit in final report
 - #75 Make Department field required based on Client in Sample View
