@@ -655,7 +655,7 @@
 
             <!-- Tested by -->
             <td tal:condition="submitters" class="border-0 align-top">
-              <h4 i18n:translate="">Tested by</h4>
+              <h4 i18n:translate="">Tested <span tal:content="python:view.to_localized_time(view.timestamp)"/> by</h4>
               <div tal:repeat="member submitters" class="pb-2">
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation" />
@@ -670,7 +670,7 @@
 
             <!-- Verified by -->
             <td tal:condition="reporters" class="border-0 align-top">
-              <h4 i18n:translate="">Verified by</h4>
+              <h4 i18n:translate="">Verified <span tal:content="python:view.to_localized_time(view.timestamp)"/> by</h4>
               <div tal:repeat="member reporters" class="pb-2">
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation" />
