@@ -521,11 +521,36 @@ class DefaultReportView(SingleReportView):
         submitters, submit_datetimes = [], []
         for value in sorted_submissions.values():
             # Only count 1 submission for all samples in a test if submitted together
-            if (value[0], value[1]) not in zip(submitters, submit_datetimes):
+            if (value[0], value[1]) not in zip(submitters, submit_datetimes) and value[0] is not None:
                 submitters.append(value[0])
                 submit_datetimes.append(value[1])
 
         submitters = map(self.get_user_properties, submitters)
-        submitters = filter(None, submitters)
-
         return (submitters, submit_datetimes)
+
+    def get_verified_info(self, model):
+        """Return a list of submitters with a corresponding list of submitted datetimes
+        representing the last submitted datetime and submitter of each analysis
+        """
+        verifications = {}
+        for analysis in self.get_verified_analyses(model):
+            analysis_uid = analysis.UID()
+            verifier = analysis.getVerificators()
+            verify_datetime = analysis.getDateVerified()
+
+            # If the analysis_id does not exist or the new date is more recent, update the value
+            if verifications.get(analysis_uid, [None, None])[1] < verify_datetime:
+                verifications[analysis_uid] = [verifier, verify_datetime]
+
+        # Sort the dictionary by verify_datetime
+        sorted_verifications = dict(sorted(verifications.items(), key=lambda item: item[1][1]))
+
+        # Get the lists of verifiers and verify_datetime
+        verifiers, verify_datetimes = [], []
+        for value in sorted_verifications.values():
+            if (value[0], value[1]) not in zip(verifiers, verify_datetimes) and value[0] is not None:
+                verifiers.extend(value[0])
+                verify_datetimes.append(value[1])
+
+        verifiers = map(self.get_user_properties, verifiers)
+        return (verifiers, verify_datetimes)

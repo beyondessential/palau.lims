@@ -647,7 +647,7 @@
   <tal:render condition="not:model/is_provisional">
     <div class="row section-signatures no-gutters"
          tal:define="submitted_info python:view.get_submitted_info(model);
-                     reporters python:view.get_reporters_info(model);">
+                     verified_info python:view.get_verified_info(model);">
       <div class="w-100">
 
         <table class="table table-sm table-condensed">
@@ -675,21 +675,26 @@
             </td>
 
             <!-- Verified by -->
-            <td tal:condition="reporters" class="border-0 align-top">
+            <td tal:condition="verified_info" class="border-0 align-top"
+                tal:define="verifiers python:verified_info[0];
+                            verified_datetimes python:verified_info[1];
+                            range python:range(len(verifiers));">
               <h4 i18n:translate="">Verified </h4>
-              <div tal:repeat="member reporters" class="pb-2">
-                <h4 i18n:translate=""><span tal:content="python:view.to_localized_time(view.timestamp)"/> by</h4>
-                <div class="font-weight-bold">
-                  <span tal:content="member/salutation" />
-                  <span tal:condition="member/salutation">&nbsp;</span>
-                  <span tal:content="member/fullname"/>
-                </div>
-                <div>
-                  <span tal:content="member/job_title"/>
+              <div class="pb-2" tal:repeat="index range">
+                <div tal:define="verifier python:verifiers[index];">
+                  <h4 i18n:translate=""><span tal:content="python:view.to_localized_time(verified_datetimes[index])"/> by</h4>
+                  <div class="font-weight-bold" tal:condition="verifier">
+                    <span tal:content="verifier/salutation" />
+                    <span tal:condition="verifier/salutation">&nbsp;</span>
+                    <span tal:content="verifier/fullname"/>
+                  </div>
+                  <div>
+                    <span tal:content="verifier/job_title"/>
+                  </div>
                 </div>
               </div>
-
             </td>
+
           </tr>
         </table>
 
