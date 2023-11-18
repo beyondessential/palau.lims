@@ -4,8 +4,10 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-import json
+import copy
 
+import collections
+import json
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
@@ -22,7 +24,6 @@ from senaite.impress.decorators import returns_super_model
 from senaite.patient import api as patient_api
 from senaite.patient.config import SEXES
 from weasyprint.compat import base64_encode
-
 
 BOOL_TEXTS = {True: _("Yes"), False: _("No")}
 
@@ -463,18 +464,30 @@ class DefaultReportView(SingleReportView):
         return filter(None, submitters)
 
     def get_results_interpretations(self, model):
-        """Mimics the function analysisrequest.model.get_resultsinterpretation
-        from senaite.impress, but injects the keys "user" and "fullname"
+        """Returns the result interpretations
         """
-        ri_by_depts = model.ResultsInterpretationDepts
+        # do a hard copy to prevent persistent changes
+        interpretations = copy.deepcopy(model.getResultsInterpretationDepts())
+
+        # group by user
+        groups = collections.OrderedDict()
+        for interpretation in interpretations:
+            user = interpretation.get("user", "")
+            groups.setdefault(user, []).append(interpretation)
+
         out = []
-        for ri in ri_by_depts:
-            dept = ri.get("uid", "")
-            user = ri.get("user") or ""
+        for user, items in groups.items():
+            # get the comments from this user
+            comments = [item.get("richtext", "").strip() for item in items]
+            # bail out those with no value or empty
+            comments = filter(None, comments)
+            if not comments:
+                continue
+
             out.append({
-                "title": getattr(dept, "title", ""),
-                "richtext": ri.get("richtext", ""),
                 "user": user,
                 "fullname": get_fullname(user),
+                "richtext": "".join(comments),
             })
+
         return out

@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #88 Result interpretation comment showing twice
 - #87 Remove preliminary comment
 - #85 Add Result Variable's unit in final report
 - #75 Make Department field required based on Client in Sample View
