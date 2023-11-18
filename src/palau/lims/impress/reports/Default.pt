@@ -646,32 +646,39 @@
   <!--  SIGNATURES -->
   <tal:render condition="not:model/is_provisional">
     <div class="row section-signatures no-gutters"
-         tal:define="submitters python:view.get_submitters_info(model);
-                     reporters  python:view.get_reporters_info(model);">
+         tal:define="submitted_info python:view.get_submitted_info(model);
+                     reporters python:view.get_reporters_info(model);">
       <div class="w-100">
 
         <table class="table table-sm table-condensed">
           <tr>
 
             <!-- Tested by -->
-            <td tal:condition="submitters" class="border-0 align-top">
-              <h4 i18n:translate="">Tested <span tal:content="python:view.to_localized_time(view.timestamp)"/> by</h4>
-              <div tal:repeat="member submitters" class="pb-2">
-                <div class="font-weight-bold">
-                  <span tal:content="member/salutation" />
-                  <span tal:condition="member/salutation">&nbsp;</span>
-                  <span tal:content="member/fullname"/>
-                </div>
-                <div>
-                  <span tal:content="member/job_title"/>
+            <td tal:condition="submitted_info" class="border-0 align-top"
+                tal:define="submitters python:submitted_info[0];
+                            submit_datetimes python:submitted_info[1];
+                            range python:range(len(submitters));">
+              <h4 i18n:translate="">Tested </h4>
+              <div class="pb-2" tal:repeat="index range">
+                <div tal:define="submitter python:submitters[index];">
+                  <h4 i18n:translate=""><span tal:content="python:view.to_localized_time(submit_datetimes[index])"/> by</h4>
+                  <div class="font-weight-bold" tal:condition="submitter">
+                    <span tal:content="submitter/salutation" />
+                    <span tal:condition="submitter/salutation">&nbsp;</span>
+                    <span tal:content="submitter/fullname"/>
+                  </div>
+                  <div>
+                    <span tal:content="submitter/job_title"/>
+                  </div>
                 </div>
               </div>
             </td>
 
             <!-- Verified by -->
             <td tal:condition="reporters" class="border-0 align-top">
-              <h4 i18n:translate="">Verified <span tal:content="python:view.to_localized_time(view.timestamp)"/> by</h4>
+              <h4 i18n:translate="">Verified </h4>
               <div tal:repeat="member reporters" class="pb-2">
+                <h4 i18n:translate=""><span tal:content="python:view.to_localized_time(view.timestamp)"/> by</h4>
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation" />
                   <span tal:condition="member/salutation">&nbsp;</span>
