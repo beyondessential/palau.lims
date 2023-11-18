@@ -638,19 +638,24 @@
   <!--  SIGNATURES -->
   <tal:render condition="not:model/is_provisional">
     <div class="row section-signatures no-gutters"
-         tal:define="submitters python:view.get_submitters_info(model);
-                     reporters  python:view.get_reporters_info(model);">
+         tal:define="submitted  python:view.get_action_date(model, 'submit');
+                     verified   python:view.get_action_date(model, 'verify');
+                     submitters python:view.get_submitters_info(model);
+                     verifiers  python:view.get_verifiers_info(model);">
       <div class="w-100">
 
         <table class="table table-sm table-condensed">
           <tr>
-
             <!-- Tested by -->
-            <td tal:condition="submitters" class="border-0 align-top">
-              <h4 i18n:translate="">Tested by</h4>
+            <td tal:condition="submitted" class="border-0 align-top">
+              <h4 i18n:translate="">Tested
+                <span i18n:name="submitted_datetime"
+                      tal:replace="python:view.long_date(submitted)"/>
+                by
+              </h4>
               <div tal:repeat="member submitters" class="pb-2">
                 <div class="font-weight-bold">
-                  <span tal:content="member/salutation" />
+                  <span tal:content="member/salutation"/>
                   <span tal:condition="member/salutation">&nbsp;</span>
                   <span tal:content="member/fullname"/>
                 </div>
@@ -660,10 +665,14 @@
               </div>
             </td>
 
-            <!-- Reported by -->
-            <td tal:condition="reporters" class="border-0 align-top">
-              <h4 i18n:translate="">Reported by</h4>
-              <div tal:repeat="member reporters" class="pb-2">
+            <!-- Verified by -->
+            <td tal:condition="verified" class="border-0 align-top">
+              <h4 i18n:translate="">Verified
+                <span i18n:name="verified_datetime"
+                      tal:replace="python:view.long_date(verified)"/>
+                by
+              </h4>
+              <div tal:repeat="member verifiers" class="pb-2">
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation" />
                   <span tal:condition="member/salutation">&nbsp;</span>
