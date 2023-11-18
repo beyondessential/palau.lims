@@ -581,17 +581,16 @@
   <tal:render condition="python:True">
     <div class="row section-resultsinterpretation no-gutters"
          tal:define="ris python:view.get_results_interpretations(model);">
-        <!-- <h1 i18n:translate="">Results interpretation</h1> -->
-
-        <tal:ri repeat="(key, value) python: ris.items()">
-          <!-- <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2> -->
-          <div tal:content="structure value/richtext|nothing"></div>
-          <div tal:define="interpreter value/fullname"
+      <div class="" tal:condition="ris">
+        <tal:ri repeat="ri ris">
+          <div tal:content="structure ri/richtext|nothing"></div>
+          <div tal:define="interpreter ri/fullname"
                tal:condition="interpreter" class="mt-1 mb-4">
             &mdash; <em i18n:translate="">by</em>
-            <span tal:replace="value/fullname"/>
+            <span tal:replace="ri/fullname"/>
           </div>
         </tal:ri>
+      </div>
     </div>
   </tal:render>
 
