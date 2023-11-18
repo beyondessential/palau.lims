@@ -11,6 +11,8 @@ import json
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
+from bika.lims.workflow import getTransitionActor
+from bika.lims.workflow import getTransitionDate
 from collections import OrderedDict
 from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
@@ -422,9 +424,9 @@ class DefaultReportView(SingleReportView):
 
     def get_verifiers(self, model):
         """Returns the usernames of the users who at least verified one of the
-        an
+        analysis and the user who verified the sample, if any
         """
-        verifiers = []
+        verifiers = filter(None, [self.get_action_user(model, "verify")])
         for analysis in self.get_verified_analyses(model):
             analysis_verifiers = analysis.getVerificators()
             verifiers.extend(analysis_verifiers)
@@ -432,29 +434,14 @@ class DefaultReportView(SingleReportView):
 
     def get_submitters(self, model):
         """Returns the usernames of the users who at least submitted results
-        for at least one of the valid analyses of the sample
+        for at least one of the valid analyses of the sample and the user who
+        submitted the sample, if any
         """
-        submitters = []
+        submitters = filter(None, [self.get_action_user(model, "submit")])
         for analysis in self.get_submitted_analyses(model):
             username = analysis.getSubmittedBy()
             submitters.append(username)
         return list(set(submitters))
-
-    def get_reporters_info(self, model):
-        """Returns a list made of dicts representing the LabContacts (or users)
-        to be displayed under the 'Reported by' section
-        """
-        # Get info about current user
-        current_user = api.get_current_user()
-        current_user = self.get_user_properties(current_user)
-        current_userid = current_user.get("userid")
-
-        # Extend with verifiers
-        reporters = self.get_verifiers(model)
-        reporters = filter(lambda userid: userid != current_userid, reporters)
-        reporters = map(self.get_user_properties, reporters)
-        reporters.append(current_user)
-        return filter(None, reporters)
 
     def get_submitters_info(self, model):
         """Returns a list made of dicts representing the LabContacts (or users)
@@ -463,6 +450,14 @@ class DefaultReportView(SingleReportView):
         submitters = self.get_submitters(model)
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
+
+    def get_verifiers_info(self, model):
+        """Returns a list made of dicts representing the LabContacts (or users)
+        that verified at least one analysis
+        """
+        verifiers = self.get_verifiers(model)
+        verifiers = map(self.get_user_properties, verifiers)
+        return filter(None, verifiers)
 
     def get_results_interpretations(self, model):
         """Returns the result interpretations
@@ -493,57 +488,14 @@ class DefaultReportView(SingleReportView):
 
         return out
 
-    def get_submitted_info(self, model):
-        """Return a list of submitters with a corresponding list of submitted datetimes
-        representing the last submitted datetime and submitter of each analysis
+    def get_action_user(self, model, action_id):
+        """Returns the user who last performed the given action for the model
         """
-        submissions = {}
-        for analysis in self.get_submitted_analyses(model):
-            analysis_uid = analysis.UID()
-            submitter = analysis.getSubmittedBy()
-            submit_datetime = analysis.getDateSubmitted()
+        obj = api.get_object(model)
+        return getTransitionActor(obj, action_id)
 
-            # If the analysis_id does not exist or the new date is more recent, update the value
-            if submissions.get(analysis_uid, [None, None])[1] < submit_datetime:
-                submissions[analysis_uid] = [submitter, submit_datetime]
-
-        # Sort the dictionary by submit_datetime
-        sorted_submissions = dict(sorted(submissions.items(), key=lambda item: item[1][1]))
-
-        # Get the lists of submitter and submit_datetime
-        submitters, submit_datetimes = [], []
-        for value in sorted_submissions.values():
-            # Only count 1 submission for all samples in a test if submitted together
-            if (value[0], value[1]) not in zip(submitters, submit_datetimes) and value[0] is not None:
-                submitters.append(value[0])
-                submit_datetimes.append(value[1])
-
-        submitters = map(self.get_user_properties, submitters)
-        return (submitters, submit_datetimes)
-
-    def get_verified_info(self, model):
-        """Return a list of submitters with a corresponding list of submitted datetimes
-        representing the last submitted datetime and submitter of each analysis
+    def get_action_date(self, model, action_id):
+        """Returns the last time the given action for model took place
         """
-        verifications = {}
-        for analysis in self.get_verified_analyses(model):
-            analysis_uid = analysis.UID()
-            verifier = analysis.getVerificators()
-            verify_datetime = analysis.getDateVerified()
-
-            # If the analysis_id does not exist or the new date is more recent, update the value
-            if verifications.get(analysis_uid, [None, None])[1] < verify_datetime:
-                verifications[analysis_uid] = [verifier, verify_datetime]
-
-        # Sort the dictionary by verify_datetime
-        sorted_verifications = dict(sorted(verifications.items(), key=lambda item: item[1][1]))
-
-        # Get the lists of verifiers and verify_datetime
-        verifiers, verify_datetimes = [], []
-        for value in sorted_verifications.values():
-            if (value[0], value[1]) not in zip(verifiers, verify_datetimes) and value[0] is not None:
-                verifiers.extend(value[0])
-                verify_datetimes.append(value[1])
-
-        verifiers = map(self.get_user_properties, verifiers)
-        return (verifiers, verify_datetimes)
+        obj = api.get_object(model)
+        return getTransitionDate(obj, action_id, return_as_datetime=True)
