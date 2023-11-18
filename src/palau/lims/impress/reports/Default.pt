@@ -477,9 +477,12 @@
 
                   <!-- Variables -->
                   <td class="result_variable text-nowrap" tal:repeat="var_name vars_names">
-                    <span tal:define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars)"
-                          tal:condition="interim"
-                          tal:replace="structure python:interim[0].get('formatted_value')"/>
+                    <tal:interim define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars);
+                                         interim python: interim[0] if interim else None"
+                                 condition="interim">
+                      <span tal:replace="structure interim/formatted_value|nothing"/>
+                      <span class="units font-italic" tal:content="structure interim/formatted_unit|nothing"/>
+                    </tal:interim>
                   </td>
 
                   <!-- Result -->
@@ -528,13 +531,6 @@
           </tal:categories>
 
         </tal:ancestry>
-      </div>
-      <div class="w-100 section-results-provisional"
-           tal:condition="python: view.is_results_in_progress(model)">
-        <strong>*</strong>&nbsp;
-        <span i18n:translate="" >
-          Results are preliminary as tests are undergoing further testing/verification
-        </span>
       </div>
       <div class="w-100 section-analyses-footnotes pt-2 mt-2 mb-4"
            tal:condition="analyses_footnotes">

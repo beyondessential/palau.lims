@@ -7,6 +7,7 @@
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
+from bika.lims import api
 from bika.lims import senaiteMessageFactory as _sc
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.browser.widgets import SelectionWidget
@@ -437,11 +438,25 @@ class AnalysisRequestSchemaModifier(object):
     def __init__(self, context):
         self.context = context
 
+    def is_ward_department_required(self):
+        """Returns whether the field WardDepartment is required depending on
+        the current context
+        """
+        if api.is_temporary(self.context):
+            return False
+        client = self.context.getClient()
+        if not client:
+            return False
+        return client.getWardDepartmentRequired()
+
     def fiddle(self, schema):
         # Disable some of the fields
         map(lambda f: disable_field(schema, f), DISABLED_FIELDS)
 
         # Update some fields (title, description, etc.)
         map(lambda f: update_field(schema, f[0], f[1]), UPDATED_FIELDS)
+
+        # Make Department field required if necessary
+        schema["WardDepartment"].required = self.is_ward_department_required()
 
         return schema

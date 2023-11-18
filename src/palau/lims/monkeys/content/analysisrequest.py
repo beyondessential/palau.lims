@@ -25,6 +25,24 @@ def setWard(self, value):
     self.getField("Ward").set(self, value)
 
 
+def getRawWardDepartment(self):
+    """Returns the UID of the WardDepartment object assigned to the sample
+    """
+    return self.getField("WardDepartment").getRaw(self)
+
+
+def getWardDepartment(self):
+    """Returns the WardDepartment object assigned to the sample, if any
+    """
+    return self.getField("WardDepartment").get(self)
+
+
+def setWardDepartment(self, value):
+    """Returns the WardDepartment object assigned to the sample, if any
+    """
+    self.getField("WardDepartment").set(self, value)
+
+
 def getSite(self):
     """Returns the Site assigned to the sample, if any
     """

@@ -114,10 +114,9 @@ class DefaultReportView(SingleReportView):
         """Returns the Department title
         """
         sample = api.get_object(sample)
-        department = sample.getField("WardDepartment").get(sample)
+        department = sample.getWardDepartment()
         if not department:
             return ""
-
         return api.get_title(department)
 
     def get_analyses(self, model_or_collection, parts=False):
@@ -197,26 +196,6 @@ class DefaultReportView(SingleReportView):
         """
         analyses = self.get_analyses(model_or_collection, parts=parts)
         return self.group_items_by("Category", analyses)
-
-    def is_valid_status(self, analysis):
-        """Returns whether the analysis object or brain is in a valid status
-        """
-        invalid = ["retracted", "rejected", "cancelled"]
-        return api.get_review_status(analysis) not in invalid
-
-    def is_results_in_progress(self, sample):
-        """Returns true if there are analyses not yet verified
-        """
-        def in_progress(analysis):
-            return not analysis.getDateVerified()
-
-        # Exclude invalid analyses
-        analyses = self.get_analyses(sample)
-        analyses = filter(self.is_valid_status, analyses)
-
-        # Ensure all valid analyses are in progress
-        analyses = map(in_progress, analyses)
-        return any(analyses)
 
     def get_formatted_result(self, sample_model, analysis):
         """Returns the result of the analysis properly formatted
