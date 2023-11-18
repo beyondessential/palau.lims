@@ -499,3 +499,31 @@ class DefaultReportView(SingleReportView):
                 "fullname": get_fullname(user),
             })
         return out
+
+    def get_submitted_info(self, model):
+        """Return a list of submitters with a corresponding list of submitted datetimes
+        representing the last submitted datetime and submitter of each analysis
+        """
+        submissions = {}
+        for analysis in self.get_submitted_analyses(model):
+            analysis_uid = analysis.UID()
+            submitter = analysis.getSubmittedBy()
+            submit_datetime = analysis.getDateSubmitted()
+
+            # If the analysis_id does not exist or the new date is more recent, update the value
+            if submissions.get(analysis_uid, [None, None])[1] < submit_datetime:
+                submissions[analysis_uid] = [submitter, submit_datetime]
+
+        # Sort the dictionary by submit_datetime
+        sorted_submissions = dict(sorted(submissions.items(), key=lambda item: item[1][1]))
+
+        # Get the lists of submitter and submit_datetime
+        submitters, submit_datetimes = [], []
+        for value in sorted_submissions.values():
+            submitters.append(value[0])
+            submit_datetimes.append(value[1])
+
+        submitters = map(self.get_user_properties, submitters)
+        submitters = filter(None, submitters)
+
+        return (submitters, submit_datetimes)
