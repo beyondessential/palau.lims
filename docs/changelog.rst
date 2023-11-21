@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #96 Show out of range flag next to Results
 - #94 Modify Signatures with datetime for Tested by and Verified by in final report
 - #92 List result variables on final report as order in sample view
 - #89 Show patient name in analysis reports dashboard
