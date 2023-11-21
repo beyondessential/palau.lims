@@ -496,6 +496,12 @@
                     <tal:result_uncertainty condition="analysis/Uncertainty">
                       &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
                     </tal:result_uncertainty>
+
+                    <!-- Out of range symbol -->
+                    <span class="font-weight-light outofrange text-danger"
+                          tal:condition="python: model.is_out_of_range(analysis)"
+                          tal:content="outofrange_symbol">
+                    </span>
                   </td>
                   <td class="text-nowrap">
                       <!-- Range interval or range comment -->
@@ -506,13 +512,6 @@
                       <span class="units font-italic"
                             tal:content="structure python:sample.get_formatted_unit(analysis)"/>
                     </tal:normal_values>
-                  </td>
-                  <td>
-                      <!-- Out of range symbol -->
-                      <span class="font-weight-light outofrange text-danger"
-                            tal:condition="python: model.is_out_of_range(analysis)"
-                            tal:content="outofrange_symbol">
-                      </span>
                   </td>
                 </tr>
               </tal:analyses>
