@@ -390,7 +390,7 @@
                                vars_names python:view.get_result_variables_titles(analyses);">
               <colgroup>
                 <!-- Category -->
-                <col style="width: 30%;"/>
+                <col style="width: 35%;"/>
                 <!-- Result variables -->
                 <tal:var_cols tal:repeat="var_name vars_names">
                   <col tal:define="col_width python: 20 / len(vars_names);
@@ -401,8 +401,6 @@
                 <col style="width: 20%"/>
                 <!-- Result range -->
                 <col style="width: 10%"/>
-                <!-- Out of Range -->
-                <col style="width: 5%"/>
               </colgroup>
               <thead>
               <tr class="small font-weight-bold">
@@ -410,7 +408,7 @@
                 <th tal:repeat="var_name vars_names"
                     tal:content="var_name"/>
                 <th i18n:translate="">Result</th>
-                <th colspan="2">
+                <th>
                   <tal:n i18n:translate=""
                          define="normal_values python:[view.get_normal_values(model, analysis) for analysis in analyses]"
                          condition="python: any(normal_values)">
@@ -496,6 +494,12 @@
                     <tal:result_uncertainty condition="analysis/Uncertainty">
                       &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
                     </tal:result_uncertainty>
+
+                    <!-- Out of range symbol -->
+                    <span class="font-weight-light outofrange text-danger"
+                          tal:condition="python: model.is_out_of_range(analysis)"
+                          tal:content="outofrange_symbol">
+                    </span>
                   </td>
                   <td class="text-nowrap">
                       <!-- Range interval or range comment -->
@@ -506,13 +510,6 @@
                       <span class="units font-italic"
                             tal:content="structure python:sample.get_formatted_unit(analysis)"/>
                     </tal:normal_values>
-                  </td>
-                  <td>
-                      <!-- Out of range symbol -->
-                      <span class="font-weight-light outofrange text-danger"
-                            tal:condition="python: model.is_out_of_range(analysis)"
-                            tal:content="outofrange_symbol">
-                      </span>
                   </td>
                 </tr>
               </tal:analyses>
