@@ -16,7 +16,7 @@ from bika.lims.workflow import getTransitionDate
 from collections import OrderedDict
 from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
-from palau.lims.utils import get_fullname
+from palau.lims.utils import get_initials
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import is_ast_analysis
@@ -482,7 +482,7 @@ class DefaultReportView(SingleReportView):
 
             out.append({
                 "user": user,
-                "fullname": get_fullname(user),
+                "initials": get_initials(user),
                 "richtext": "".join(comments),
             })
 
