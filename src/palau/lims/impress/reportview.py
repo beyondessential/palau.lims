@@ -26,6 +26,7 @@ from senaite.impress.analysisrequest.reportview import SingleReportView
 from senaite.impress.decorators import returns_super_model
 from senaite.patient import api as patient_api
 from senaite.patient.config import SEXES
+from senaite.patient.i18n import translate as patient_translate
 from weasyprint.compat import base64_encode
 
 BOOL_TEXTS = {True: _("Yes"), False: _("No")}
@@ -112,7 +113,7 @@ class DefaultReportView(SingleReportView):
         sample = api.get_object(sample)
         sex = sample.getSex()
         sex = dict(SEXES).get(sex, "")
-        return sex.encode("utf-8")
+        return patient_translate(sex)
 
     def get_department(self, sample):
         """Returns the Department title

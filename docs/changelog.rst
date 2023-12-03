@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #101 Fix Sex is not properly translated in final report
 - #98 Show only interpreter initials not fullname after comments in final report
 - #96 Show out of range flag next to Results
 - #94 Modify Signatures with datetime for Tested by and Verified by in final report
