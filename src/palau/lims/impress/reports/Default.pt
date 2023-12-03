@@ -581,10 +581,10 @@
       <div class="" tal:condition="ris">
         <tal:ri repeat="ri ris">
           <div tal:content="structure ri/richtext|nothing"></div>
-          <div tal:define="interpreter ri/fullname"
+          <div tal:define="interpreter ri/initials"
                tal:condition="interpreter" class="mt-1 mb-4">
             &mdash; <em i18n:translate="">by</em>
-            <span tal:replace="ri/fullname"/>
+            <span tal:replace="interpreter"/>
           </div>
         </tal:ri>
       </div>
