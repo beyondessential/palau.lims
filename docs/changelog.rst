@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #101 Fix Sex is not properly translated in final report
 - #82 Remove "Results" heading from final report
 - #79 Update consumer when call pull tamanu patients
 - #60 Add analysts name for report comments
