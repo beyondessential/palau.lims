@@ -4,14 +4,19 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-import json
+import copy
 
+import collections
+import json
 from bika.lims import api
 from bika.lims.api import mail
 from bika.lims.utils import get_link
+from bika.lims.workflow import getTransitionActor
+from bika.lims.workflow import getTransitionDate
+from collections import OrderedDict
 from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
-from palau.lims.utils import get_fullname
+from palau.lims.utils import get_initials
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import is_ast_analysis
@@ -23,7 +28,6 @@ from senaite.patient import api as patient_api
 from senaite.patient.config import SEXES
 from senaite.patient.i18n import translate as patient_translate
 from weasyprint.compat import base64_encode
-
 
 BOOL_TEXTS = {True: _("Yes"), False: _("No")}
 
@@ -115,10 +119,9 @@ class DefaultReportView(SingleReportView):
         """Returns the Department title
         """
         sample = api.get_object(sample)
-        department = sample.getField("WardDepartment").get(sample)
+        department = sample.getWardDepartment()
         if not department:
             return ""
-
         return api.get_title(department)
 
     def get_analyses(self, model_or_collection, parts=False):
@@ -198,26 +201,6 @@ class DefaultReportView(SingleReportView):
         """
         analyses = self.get_analyses(model_or_collection, parts=parts)
         return self.group_items_by("Category", analyses)
-
-    def is_valid_status(self, analysis):
-        """Returns whether the analysis object or brain is in a valid status
-        """
-        invalid = ["retracted", "rejected", "cancelled"]
-        return api.get_review_status(analysis) not in invalid
-
-    def is_results_in_progress(self, sample):
-        """Returns true if there are analyses not yet verified
-        """
-        def in_progress(analysis):
-            return not analysis.getDateVerified()
-
-        # Exclude invalid analyses
-        analyses = self.get_analyses(sample)
-        analyses = filter(self.is_valid_status, analyses)
-
-        # Ensure all valid analyses are in progress
-        analyses = map(in_progress, analyses)
-        return any(analyses)
 
     def get_formatted_result(self, sample_model, analysis):
         """Returns the result of the analysis properly formatted
@@ -392,11 +375,11 @@ class DefaultReportView(SingleReportView):
         if not isinstance(analyses, (list, tuple)):
             analyses = [analyses]
 
-        titles = set()
+        titles = []
         for analysis in analyses:
             for interim in self.get_result_variables(analysis, report_only):
-                titles.add(interim.get("title"))
-        return sorted(list(titles))
+                titles.append(interim.get("title"))
+        return list(OrderedDict.fromkeys(titles))
 
     def get_user_properties(self, user):
         # Basic user information
@@ -442,9 +425,9 @@ class DefaultReportView(SingleReportView):
 
     def get_verifiers(self, model):
         """Returns the usernames of the users who at least verified one of the
-        an
+        analysis and the user who verified the sample, if any
         """
-        verifiers = []
+        verifiers = filter(None, [self.get_action_user(model, "verify")])
         for analysis in self.get_verified_analyses(model):
             analysis_verifiers = analysis.getVerificators()
             verifiers.extend(analysis_verifiers)
@@ -452,29 +435,14 @@ class DefaultReportView(SingleReportView):
 
     def get_submitters(self, model):
         """Returns the usernames of the users who at least submitted results
-        for at least one of the valid analyses of the sample
+        for at least one of the valid analyses of the sample and the user who
+        submitted the sample, if any
         """
-        submitters = []
+        submitters = filter(None, [self.get_action_user(model, "submit")])
         for analysis in self.get_submitted_analyses(model):
             username = analysis.getSubmittedBy()
             submitters.append(username)
         return list(set(submitters))
-
-    def get_reporters_info(self, model):
-        """Returns a list made of dicts representing the LabContacts (or users)
-        to be displayed under the 'Reported by' section
-        """
-        # Get info about current user
-        current_user = api.get_current_user()
-        current_user = self.get_user_properties(current_user)
-        current_userid = current_user.get("userid")
-
-        # Extend with verifiers
-        reporters = self.get_verifiers(model)
-        reporters = filter(lambda userid: userid != current_userid, reporters)
-        reporters = map(self.get_user_properties, reporters)
-        reporters.append(current_user)
-        return filter(None, reporters)
 
     def get_submitters_info(self, model):
         """Returns a list made of dicts representing the LabContacts (or users)
@@ -484,19 +452,51 @@ class DefaultReportView(SingleReportView):
         submitters = map(self.get_user_properties, submitters)
         return filter(None, submitters)
 
-    def get_results_interpretations(self, model):
-        """Mimics the function analysisrequest.model.get_resultsinterpretation
-        from senaite.impress, but injects the keys "user" and "fullname"
+    def get_verifiers_info(self, model):
+        """Returns a list made of dicts representing the LabContacts (or users)
+        that verified at least one analysis
         """
-        ri_by_depts = model.ResultsInterpretationDepts
+        verifiers = self.get_verifiers(model)
+        verifiers = map(self.get_user_properties, verifiers)
+        return filter(None, verifiers)
+
+    def get_results_interpretations(self, model):
+        """Returns the result interpretations
+        """
+        # do a hard copy to prevent persistent changes
+        interpretations = copy.deepcopy(model.getResultsInterpretationDepts())
+
+        # group by user
+        groups = collections.OrderedDict()
+        for interpretation in interpretations:
+            user = interpretation.get("user", "")
+            groups.setdefault(user, []).append(interpretation)
+
         out = []
-        for ri in ri_by_depts:
-            dept = ri.get("uid", "")
-            user = ri.get("user") or ""
+        for user, items in groups.items():
+            # get the comments from this user
+            comments = [item.get("richtext", "").strip() for item in items]
+            # bail out those with no value or empty
+            comments = filter(None, comments)
+            if not comments:
+                continue
+
             out.append({
-                "title": getattr(dept, "title", ""),
-                "richtext": ri.get("richtext", ""),
                 "user": user,
-                "fullname": get_fullname(user),
+                "initials": get_initials(user),
+                "richtext": "".join(comments),
             })
+
         return out
+
+    def get_action_user(self, model, action_id):
+        """Returns the user who last performed the given action for the model
+        """
+        obj = api.get_object(model)
+        return getTransitionActor(obj, action_id)
+
+    def get_action_date(self, model, action_id):
+        """Returns the last time the given action for model took place
+        """
+        obj = api.get_object(model)
+        return getTransitionDate(obj, action_id, return_as_datetime=True)

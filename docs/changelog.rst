@@ -5,6 +5,15 @@ Changelog
 ------------------
 
 - #101 Fix Sex is not properly translated in final report
+- #98 Show only interpreter initials not fullname after comments in final report
+- #96 Show out of range flag next to Results
+- #94 Modify Signatures with datetime for Tested by and Verified by in final report
+- #92 List result variables on final report as order in sample view
+- #89 Show patient name in analysis reports dashboard
+- #88 Result interpretation comment showing twice
+- #87 Remove preliminary comment
+- #85 Add Result Variable's unit in final report
+- #75 Make Department field required based on Client in Sample View
 - #82 Remove "Results" heading from final report
 - #79 Update consumer when call pull tamanu patients
 - #60 Add analysts name for report comments

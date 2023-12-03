@@ -390,7 +390,7 @@
                                vars_names python:view.get_result_variables_titles(analyses);">
               <colgroup>
                 <!-- Category -->
-                <col style="width: 30%;"/>
+                <col style="width: 35%;"/>
                 <!-- Result variables -->
                 <tal:var_cols tal:repeat="var_name vars_names">
                   <col tal:define="col_width python: 20 / len(vars_names);
@@ -401,8 +401,6 @@
                 <col style="width: 20%"/>
                 <!-- Result range -->
                 <col style="width: 10%"/>
-                <!-- Out of Range -->
-                <col style="width: 5%"/>
               </colgroup>
               <thead>
               <tr class="small font-weight-bold">
@@ -410,7 +408,7 @@
                 <th tal:repeat="var_name vars_names"
                     tal:content="var_name"/>
                 <th i18n:translate="">Result</th>
-                <th colspan="2">
+                <th>
                   <tal:n i18n:translate=""
                          define="normal_values python:[view.get_normal_values(model, analysis) for analysis in analyses]"
                          condition="python: any(normal_values)">
@@ -477,9 +475,12 @@
 
                   <!-- Variables -->
                   <td class="result_variable text-nowrap" tal:repeat="var_name vars_names">
-                    <span tal:define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars)"
-                          tal:condition="interim"
-                          tal:replace="structure python:interim[0].get('formatted_value')"/>
+                    <tal:interim define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars);
+                                         interim python: interim[0] if interim else None"
+                                 condition="interim">
+                      <span tal:replace="structure interim/formatted_value|nothing"/>
+                      <span class="units font-italic" tal:content="structure interim/formatted_unit|nothing"/>
+                    </tal:interim>
                   </td>
 
                   <!-- Result -->
@@ -493,6 +494,12 @@
                     <tal:result_uncertainty condition="analysis/Uncertainty">
                       &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
                     </tal:result_uncertainty>
+
+                    <!-- Out of range symbol -->
+                    <span class="font-weight-light outofrange text-danger"
+                          tal:condition="python: model.is_out_of_range(analysis)"
+                          tal:content="outofrange_symbol">
+                    </span>
                   </td>
                   <td class="text-nowrap">
                       <!-- Range interval or range comment -->
@@ -503,13 +510,6 @@
                       <span class="units font-italic"
                             tal:content="structure python:sample.get_formatted_unit(analysis)"/>
                     </tal:normal_values>
-                  </td>
-                  <td>
-                      <!-- Out of range symbol -->
-                      <span class="font-weight-light outofrange text-danger"
-                            tal:condition="python: model.is_out_of_range(analysis)"
-                            tal:content="outofrange_symbol">
-                      </span>
                   </td>
                 </tr>
               </tal:analyses>
@@ -528,13 +528,6 @@
           </tal:categories>
 
         </tal:ancestry>
-      </div>
-      <div class="w-100 section-results-provisional"
-           tal:condition="python: view.is_results_in_progress(model)">
-        <strong>*</strong>&nbsp;
-        <span i18n:translate="" >
-          Results are preliminary as tests are undergoing further testing/verification
-        </span>
       </div>
       <div class="w-100 section-analyses-footnotes pt-2 mt-2 mb-4"
            tal:condition="analyses_footnotes">
@@ -584,18 +577,14 @@
   <!--  RESULTS INTERPRETATION -->
   <tal:render condition="python:True">
     <div class="row section-resultsinterpretation no-gutters"
-         tal:define="ris python:view.get_results_interpretations(model);
-                     has_ri python:any(map(lambda r: r.get('richtext'), ris));">
-      <div class="" tal:condition="has_ri">
-        <!-- <h1 i18n:translate="">Results interpretation</h1> -->
-
+         tal:define="ris python:view.get_results_interpretations(model);">
+      <div class="" tal:condition="ris">
         <tal:ri repeat="ri ris">
-          <!-- <h2 tal:condition="ri/richtext|nothing" tal:content="ri/title|nothing">Department</h2> -->
           <div tal:content="structure ri/richtext|nothing"></div>
-          <div tal:define="interpreter ri/fullname"
+          <div tal:define="interpreter ri/initials"
                tal:condition="interpreter" class="mt-1 mb-4">
             &mdash; <em i18n:translate="">by</em>
-            <span tal:replace="ri/fullname"/>
+            <span tal:replace="interpreter"/>
           </div>
         </tal:ri>
       </div>
@@ -646,19 +635,24 @@
   <!--  SIGNATURES -->
   <tal:render condition="not:model/is_provisional">
     <div class="row section-signatures no-gutters"
-         tal:define="submitters python:view.get_submitters_info(model);
-                     reporters  python:view.get_reporters_info(model);">
+         tal:define="submitted  python:view.get_action_date(model, 'submit');
+                     verified   python:view.get_action_date(model, 'verify');
+                     submitters python:view.get_submitters_info(model);
+                     verifiers  python:view.get_verifiers_info(model);">
       <div class="w-100">
 
         <table class="table table-sm table-condensed">
           <tr>
-
             <!-- Tested by -->
-            <td tal:condition="submitters" class="border-0 align-top">
-              <h4 i18n:translate="">Tested by</h4>
+            <td tal:condition="submitted" class="border-0 align-top">
+              <h4 i18n:translate="">Tested
+                <span i18n:name="submitted_datetime"
+                      tal:replace="python:view.long_date(submitted)"/>
+                by
+              </h4>
               <div tal:repeat="member submitters" class="pb-2">
                 <div class="font-weight-bold">
-                  <span tal:content="member/salutation" />
+                  <span tal:content="member/salutation"/>
                   <span tal:condition="member/salutation">&nbsp;</span>
                   <span tal:content="member/fullname"/>
                 </div>
@@ -668,10 +662,14 @@
               </div>
             </td>
 
-            <!-- Reported by -->
-            <td tal:condition="reporters" class="border-0 align-top">
-              <h4 i18n:translate="">Reported by</h4>
-              <div tal:repeat="member reporters" class="pb-2">
+            <!-- Verified by -->
+            <td tal:condition="verified" class="border-0 align-top">
+              <h4 i18n:translate="">Verified
+                <span i18n:name="verified_datetime"
+                      tal:replace="python:view.long_date(verified)"/>
+                by
+              </h4>
+              <div tal:repeat="member verifiers" class="pb-2">
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation" />
                   <span tal:condition="member/salutation">&nbsp;</span>

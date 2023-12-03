@@ -265,6 +265,16 @@ def get_fullname(userid):
     return fullname
 
 
+def get_initials(userid):
+    """Return the initials of name of the user passed-in
+    """
+    fullname = get_fullname(userid)
+    parts = filter(None, fullname.split())
+    parts = [part[0] for part in parts]
+    initials = "".join(parts) if len(parts) > 1 else fullname
+    return initials
+
+
 def set_ast_panel_to_sample(value, sample):
     """Set the panel to current sample
     """
