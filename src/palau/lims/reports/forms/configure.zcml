@@ -9,7 +9,7 @@
       name="samples_received_by_month"
       class=".samples_received_by_month.SamplesReceivedByMonth"
       permission="zope.Public"
-      layer="palau.lims.interfaces.IPngLimsLayer"/>
+      layer="palau.lims.interfaces.IPalauLimsLayer"/>
     
   <!-- Samples received by department -->
   <browser:page
@@ -17,7 +17,7 @@
       name="samples_received_by_department"
       class=".samples_received_by_department.SamplesReceivedByDepartment"
       permission="zope.Public"
-      layer="palau.lims.interfaces.IPngLimsLayer"/>
+      layer="palau.lims.interfaces.IPalauLimsLayer"/>
     
   <!-- Samples rejection rate by month -->
   <browser:page
@@ -25,7 +25,7 @@
       name="samples_rejection_rate_by_month"
       class=".samples_rejection_rate_by_month.SamplesRejectionRateByMonth"
       permission="zope.Public"
-      layer="palau.lims.interfaces.IPngLimsLayer"/>
+      layer="palau.lims.interfaces.IPalauLimsLayer"/>
     
   <!-- Samples rejection rate by specimen type -->
   <browser:page
@@ -33,7 +33,7 @@
       name="samples_rejection_rate_by_specimen_type"
       class=".samples_rejection_rate_by_specimen_type.SamplesRejectionRateBySpecimenType"
       permission="zope.Public"
-      layer="palau.lims.interfaces.IPngLimsLayer"/>
+      layer="palau.lims.interfaces.IPalauLimsLayer"/>
 
   <!-- Sample rejection summary  -->
   <browser:page
@@ -41,6 +41,6 @@
       name="samples_rejected_summary"
       class=".samples_rejected_summary.SamplesRejectedSummary"
       permission="zope.Public"
-      layer="palau.lims.interfaces.IPngLimsLayer"/>
+      layer="palau.lims.interfaces.IPalauLimsLayer"/>
 
 </configure>
