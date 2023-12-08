@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="palau.lims">
+
+  <body>
+
+    <metal:content-title fill-slot="content-title">
+      <h1 i18n:translate="">Statistic Reports</h1>
+    </metal:content-title>
+
+    <metal:content-description fill-slot="content-description">
+    </metal:content-description>
+
+    <metal:content-core fill-slot="content-core">
+      <input tal:replace="structure context/@@authenticator/authenticator"/>
+      <div class="reports-view statistic-reports-view">
+        <fieldset>
+
+          <h2 i18n:translate="">Microbiology samples</h2>
+          <ul>
+
+            <!-- Number of microbiology samples received by month -->
+            <li>
+              <a class="report-link" i18n:translate="">
+                Testing: 1st report
+              </a>
+
+              <div class="report-form">
+                <form method="post">
+
+                  <input type="hidden" name="report_id"
+                         value="test_report"/>
+
+                  <input tabindex=""
+                         class="searchButton allowMultiSubmit"
+                         type="submit"
+                         name="submit"
+                         value="Generate report"
+                         i18n:attributes="value"/>
+                </form>
+              </div>
+            </li>
+
+          </ul>
+
+        </fieldset>
+      </div>
+    </metal:content-core>
+
+  </body>
+</html>
