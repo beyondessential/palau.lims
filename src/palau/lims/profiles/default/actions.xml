@@ -7,8 +7,22 @@
   <!-- Portal Tabs (Located in the upper right button) -->
   <object name="portal_tabs" meta_type="CMF Action Category" purge="False">
 
+    <!-- Statistic reports -->
+    <object name="statistic_reports" meta_type="CMF Action" i18n:domain="palau.lims">
+      <property name="title" i18n:translate="">Statistic reports</property>
+      <property name="description" i18n:translate="Statistic reports"/>
+      <property name="url_expr">string:$portal_url/statistic_reports</property>
+      <property name="link_target"/>
+      <property name="icon_expr"/>
+      <property name="available_expr"/>
+      <property name="permissions">
+        <element value="View"/>
+      </property>
+      <property name="visible">True</property>
+    </object>
+
     <!-- WHONET export view -->
-    <object name="export_whonet" meta_type="CMF Action" i18n:domain="senaite.core">
+    <object name="export_whonet" meta_type="CMF Action" i18n:domain="palau.lims">
       <property name="title" i18n:translate="">Export to WHONET</property>
       <property name="description" i18n:translate=""/>
       <property name="url_expr">string:$portal_url/export_whonet</property>

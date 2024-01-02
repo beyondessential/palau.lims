@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #104 Add statistic reports
 - #101 Fix Sex is not properly translated in final report
 - #98 Show only interpreter initials not fullname after comments in final report
 - #96 Show out of range flag next to Results

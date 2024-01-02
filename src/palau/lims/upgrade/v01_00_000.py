@@ -73,3 +73,13 @@ def add_patient_behavior(tool):
     portal = api.get_portal()
     setup_behaviors(portal)
     logger.info("Add Patient behavior [DONE]")
+
+
+def setup_statistic_reports(tool):
+    """Adds the statistic reports portal action
+    """
+    logger.info("Setup statistic reports ...")
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "actions")
+    logger.info("Setup statistic reports [DONE]")

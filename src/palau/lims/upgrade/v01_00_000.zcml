@@ -4,6 +4,14 @@
     i18n_domain="palau.lims">
 
     <genericsetup:upgradeStep
+        title="Setup statistic reports"
+        description="Setup statistic reports"
+        source="1002"
+        destination="1003"
+        handler=".v01_00_000.setup_statistic_reports"
+        profile="palau.lims:default"/>
+
+    <genericsetup:upgradeStep
       title="Add Patient behavior"
       description="Add Patient behavior"
       source="1001"

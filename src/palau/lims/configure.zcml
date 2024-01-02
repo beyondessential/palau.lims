@@ -30,6 +30,7 @@
   <include package=".tamanu" />
   <include package=".reflex" />
   <include package=".monkeys" />
+  <include package=".reports" />
   <include package=".subscribers" />
   <include package=".upgrade" />
   <include package=".workflow" />
