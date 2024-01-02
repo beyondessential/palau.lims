@@ -75,10 +75,10 @@ def count_by(objs, func):
     return counts
 
 
-def calculate_rate(total_samples, matched_samples):
-    """Calculate the rate of matched samples in total samples
+def get_percentage(num, total, ndigits=2):
+    """Returns the percentage rate of num from the total
     """
-    if total_samples > 0:
-        rate = round(100 * float(matched_samples) / total_samples, 2)
-        return rate
-    return 0
+    rate = 0.0
+    if all([num, total]):
+        rate = float(num) / total
+    return round(100 * rate, ndigits)

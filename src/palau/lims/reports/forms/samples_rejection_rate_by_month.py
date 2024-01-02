@@ -7,6 +7,7 @@
 from palau.lims import messageFactory as _
 from palau.lims.config import MONTHS
 from palau.lims.reports import count_by
+from palau.lims.reports import get_percentage
 from palau.lims.reports import get_received_samples_by_year
 from palau.lims.reports.forms import CSVReport
 
@@ -14,13 +15,6 @@ from palau.lims.reports.forms import CSVReport
 class SamplesRejectionRateByMonth(CSVReport):
     """Samples rejected by month
     """
-
-    def get_rate(self, num, total, ndigits=2):
-        """Returns the ratio
-        """
-        if not all([num, total]):
-            return 0
-        return round(100 * float(num) / total, ndigits)
 
     def process_form(self):
         # get the received and rejected samples within the given year
@@ -39,7 +33,7 @@ class SamplesRejectionRateByMonth(CSVReport):
         for month in range(1, 13):
             num_received = count_received.get(month, 0)
             num_rejected = count_rejected.get(month, 0)
-            rate = self.get_rate(num_rejected, num_received)
+            rate = get_percentage(num_rejected, num_received)
 
             row_received.append(num_received)
             row_rejected.append(num_rejected)

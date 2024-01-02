@@ -25,7 +25,7 @@ class SamplesReceivedByDepartment(CSVReport):
 
         # Get the titles of the sample types
         sample_types = map(lambda brain: brain.getSampleTypeTitle, brains)
-        sample_types = list(OrderedDict.fromkeys(sorted(sample_types)))
+        sample_types = sorted(list(set(sample_types)))
 
         # add the first row (header)
         rows = [[_("Department")] + sample_types]
