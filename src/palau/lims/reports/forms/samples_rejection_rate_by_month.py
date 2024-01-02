@@ -4,10 +4,8 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
-
 from palau.lims import messageFactory as _
 from palau.lims.config import MONTHS
-from palau.lims.reports import calculate_rate
 from palau.lims.reports import count_by
 from palau.lims.reports import get_received_samples_by_year
 from palau.lims.reports.forms import CSVReport
@@ -17,13 +15,20 @@ class SamplesRejectionRateByMonth(CSVReport):
     """Samples rejected by month
     """
 
-    def process_form(self):
-        year = int(self.request.form.get("year"))
+    def get_rate(self, num, total, ndigits=2):
+        """Returns the ratio
+        """
+        if not all([num, total]):
+            return 0
+        return round(100 * float(num) / total, ndigits)
 
-        # get received and rejected samples
+    def process_form(self):
+        # get the received and rejected samples within the given year
+        year = int(self.request.form.get("year"))
         received = get_received_samples_by_year(year)
         rejected = get_received_samples_by_year(year, review_state="rejected")
 
+        # group and count samples by reception date
         count_received = count_by(received, "getDateReceived")
         count_rejected = count_by(rejected, "getDateReceived")
 
@@ -34,11 +39,11 @@ class SamplesRejectionRateByMonth(CSVReport):
         for month in range(1, 13):
             num_received = count_received.get(month, 0)
             num_rejected = count_rejected.get(month, 0)
-            rejection_rate = calculate_rate(num_received, num_rejected)
+            rate = self.get_rate(num_rejected, num_received)
 
             row_received.append(num_received)
             row_rejected.append(num_rejected)
-            row_rate.append(rejection_rate)
+            row_rate.append(rate)
 
         rows.extend([row_received, row_rejected, row_rate])
 
