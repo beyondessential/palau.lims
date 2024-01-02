@@ -22,7 +22,7 @@
     </object>
 
     <!-- WHONET export view -->
-    <object name="export_whonet" meta_type="CMF Action" i18n:domain="palau.core">
+    <object name="export_whonet" meta_type="CMF Action" i18n:domain="palau.lims">
       <property name="title" i18n:translate="">Export to WHONET</property>
       <property name="description" i18n:translate=""/>
       <property name="url_expr">string:$portal_url/export_whonet</property>
