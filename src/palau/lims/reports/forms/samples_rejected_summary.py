@@ -4,7 +4,6 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
-
 from bika.lims import api
 from bika.lims.browser import ulocalized_time
 from bika.lims.workflow import getTransitionDate
@@ -18,33 +17,16 @@ class SamplesRejectedSummary(CSVReport):
     """
 
     def process_form(self):
-        from_date = self.request.form.get("date_from")
-        to_date = self.request.form.get("date_to")
-        query = {
-            "review_state": "rejected",
-        }
-        rejected_brains = get_received_samples(from_date, to_date, **query)
-        rejected_samples = map(api.get_object, rejected_brains)
+        # get the rejected samples within the period
+        dt_from = self.request.form.get("date_from")
+        dt_to = self.request.form.get("date_to")
+        brains = get_received_samples(dt_from, dt_to, review_state="rejected")
 
-        # Build the rows
-        rows = []
-        for sample in rejected_samples:
-            rows.append([
-                sample.getId(),
-                sample.getClientTitle(),
-                sample.getContactFullName(),
-                sample.getSampleTypeTitle(),
-                ulocalized_time(
-                    sample.getDateReceived(),
-                    long_format=True,
-                    time_only=False, context=sample
-                ),
-                getTransitionDate(sample, 'reject'),
-                ", ".join(sample.getSelectedRejectionReasons()),
-            ])
+        # generate the rows
+        rows = map(self.to_row, brains)
 
-        # Prepare the header
-        headers = [
+        # insert the first row (header)
+        header = [
             _("Sample ID"),
             _("Client Name"),
             _("Referring Doctor"),
@@ -53,5 +35,23 @@ class SamplesRejectedSummary(CSVReport):
             _("Sample Rejection Date"),
             _("Reason For Rejection"),
         ]
-        rows.insert(0, headers)
+        rows.insert(0, header)
         return rows
+
+    def to_row(self, sample):
+        """Returns a row representing the sample passed-in
+        """
+        sample = api.get_object(sample)
+        return [
+            sample.getId(),
+            sample.getClientTitle(),
+            sample.getContactFullName(),
+            sample.getSampleTypeTitle(),
+            ulocalized_time(
+                sample.getDateReceived(),
+                long_format=True,
+                time_only=False, context=sample
+            ),
+            getTransitionDate(sample, 'reject'),
+            ", ".join(sample.getSelectedRejectionReasons())
+        ]
