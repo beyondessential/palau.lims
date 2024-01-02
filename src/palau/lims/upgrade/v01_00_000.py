@@ -7,7 +7,6 @@
 from bika.lims import api
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
-from palau.lims import PROFILE_ID
 from palau.lims.setuphandlers import setup_behaviors
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
@@ -79,6 +78,8 @@ def add_patient_behavior(tool):
 def setup_statistic_reports(tool):
     """Adds the statistic reports portal action
     """
+    logger.info("Setup statistic reports ...")
     portal = tool.aq_inner.aq_parent
     setup = portal.portal_setup
-    setup.runImportStepFromProfile(PROFILE_ID, "actions")
+    setup.runImportStepFromProfile(profile, "actions")
+    logger.info("Setup statistic reports [DONE]")

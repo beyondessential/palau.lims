@@ -4,16 +4,10 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
-
-from collections import OrderedDict
-from datetime import datetime
-from palau.lims.reports import get_received_samples_by_year
-
-from senaite.core.api import dtime
 from palau.lims import messageFactory as _
-from palau.lims.reports import get_received_samples
 from palau.lims.reports import count_by
 from palau.lims.reports import calculate_rate
+from palau.lims.reports import get_received_samples_by_year
 from palau.lims.reports.forms import CSVReport
 
 
