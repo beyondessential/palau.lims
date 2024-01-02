@@ -4,7 +4,6 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
-
 from palau.lims import messageFactory as _
 from palau.lims.config import MONTHS
 from palau.lims.reports import count_by
@@ -18,21 +17,30 @@ class SamplesReceivedByMonth(CSVReport):
     """
 
     def process_form(self):
+        # get the received samples within the given year
         year = int(self.request.form.get("year"))
         brains = get_received_samples_by_year(year)
-        samples_by_sample_type = group_by(brains, "getSampleTypeTitle")
 
-        rows = []
-        for sample_type, samples_in_sample_type in samples_by_sample_type.items():
-            counted_samples_by_month = count_by(samples_in_sample_type, "getDateReceived")
-            row = [sample_type]
-            for month in range(1, 13):
-                value = counted_samples_by_month[month] if month in counted_samples_by_month else 0
-                row.append(value)
-            rows.append(row)
+        # add the first row (header)
+        months = [MONTHS[num] for num in range(1, 13)]
+        rows = [[_("Sample type")] + months]
 
-        header_months = [MONTHS[num] for num in range(1, 13)]
-        header = [_("Sample type")] + header_months
-        rows.insert(0, header)
+        # group the samples by type
+        samples_by_type = group_by(brains, "getSampleTypeTitle")
+
+        # sort sample types alphabetically ascending
+        sample_types = sorted(samples_by_type.keys())
+
+        for sample_type in sample_types:
+
+            # group and count the samples by reception date
+            samples = samples_by_type[sample_type]
+            counts = count_by(samples, "getDateReceived")
+
+            # get the samples count for each registered month
+            sample_counts = map(lambda mth: counts.get(mth, 0), range(1, 13))
+
+            # build the row
+            rows.append([sample_type] + sample_counts)
 
         return rows
