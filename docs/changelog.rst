@@ -3,7 +3,9 @@ Changelog
 
 1.0.0 (Unreleased)
 ------------------
+
 - #107 Statistics report for analyses by department and month
+- #109 Change Statistic report names
 - #104 Add statistic reports
 - #101 Fix Sex is not properly translated in final report
 - #98 Show only interpreter initials not fullname after comments in final report

@@ -2,7 +2,7 @@
   define="report_id string:samples_received_by_department">
 
   <h2 i18n:translate="">
-    1.2 Number of microbiology samples received and stratified by department
+    1.2 Number of samples received and stratified by department
   </h2>
 
   <form method="post">
