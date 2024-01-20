@@ -9,8 +9,6 @@ from palau.lims import messageFactory as _
 from palau.lims.config import MONTHS
 from palau.lims.reports import count_by
 from palau.lims.reports import get_analyses_by_year
-from palau.lims.reports import get_received_samples_by_year
-from palau.lims.reports import get_reportable_analyses
 from palau.lims.reports import group_by
 from palau.lims.reports.forms import CSVReport
 
