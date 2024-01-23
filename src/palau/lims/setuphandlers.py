@@ -39,6 +39,7 @@ from senaite.core.permissions import FieldEditRemarks
 from senaite.core.setuphandlers import setup_core_catalogs
 from senaite.core.setuphandlers import setup_other_catalogs
 from senaite.core.upgrade.utils import delete_object
+from senaite.core.workflow import ANALYSIS_WORKFLOW
 from senaite.core.workflow import SAMPLE_WORKFLOW
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
@@ -182,7 +183,29 @@ WORKFLOWS_TO_UPDATE = {
                 }
             }
         }
-    }
+    },
+    ANALYSIS_WORKFLOW: {
+        "states": {
+            "assigned": {
+                "preserve_transitions": True,
+                "transitions": ("set_out_of_stock",),
+            },
+            "unassigned": {
+                "preserve_transitions": True,
+                "transitions": ("set_out_of_stock",),
+            },
+            "out_of_stock": {
+                "title": "Out of Stock",
+            },
+        },
+        "transitions": {
+            "set_out_of_stock": {
+                "title": "Set Out of Stock",
+                "new_state": "out_of_stock",
+                "action": "Set Out of Stock",
+            }
+        }
+    },
 }
 
 
