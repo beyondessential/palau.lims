@@ -8,6 +8,8 @@ from bika.lims import api
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
 from palau.lims.setuphandlers import setup_behaviors
+from palau.lims.setuphandlers import setup_workflows
+from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
@@ -83,3 +85,26 @@ def setup_statistic_reports(tool):
     setup = portal.portal_setup
     setup.runImportStepFromProfile(profile, "actions")
     logger.info("Setup statistic reports [DONE]")
+
+def setup_analysis_workflow(tool):
+    """Adds the analysis workflow portal action
+    and updates the analyses states and transitions
+    """
+    logger.info("Setup analysis workflow ...")
+
+    #  Update Analyses workflow
+    setup_workflows(api.get_portal())
+
+    # Update Analyses rolemap
+    brains = api.search({"portal_type": "Analysis"}, ANALYSIS_CATALOG)
+    for brain in brains:
+        wf_tool = api.get_tool("portal_workflow")
+        wf_ids = wf_tool.getChainFor(brain)
+        for wf_id in wf_ids:
+            wf = wf_tool.getWorkflowById(wf_id)
+            if wf is not None:
+                wf.updateRoleMappingsFor(brain)
+                message = "Updated rolemappings for {}".format(repr(brain))
+                logger.info(message)
+
+    logger.info("Setup analysis workflow [DONE]")

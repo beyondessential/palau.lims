@@ -6,6 +6,14 @@
     <genericsetup:upgradeStep
         title="Setup statistic reports"
         description="Setup statistic reports"
+        source="1003"
+        destination="1004"
+        handler=".v01_00_000.setup_analysis_workflow"
+        profile="palau.lims:default"/>
+
+    <genericsetup:upgradeStep
+        title="Setup statistic reports"
+        description="Setup statistic reports"
         source="1002"
         destination="1003"
         handler=".v01_00_000.setup_statistic_reports"
