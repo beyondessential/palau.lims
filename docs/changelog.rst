@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #112 Add Reagent Out of Stock Analysis transition
 - #109 Change Statistic report names
 - #104 Add statistic reports
 - #101 Fix Sex is not properly translated in final report
