@@ -9,9 +9,25 @@ import collections
 from bika.lims import api
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
+from senaite.app.listing.utils import add_review_state
 from zope.component import adapter
 from zope.interface import implementer
 from palau.lims import messageFactory as _
+
+
+# Statuses to add. List of dicts
+ADD_STATUSES = [
+    {
+        "id": "out_of_stock",
+        "title": _("Out of stock"),
+        "contentFilter": {
+            "review_state": "out_of_stock",
+            "sort_on": "sortable_title",
+            "sort_order": "ascending",
+        },
+        "after": "invalid",
+    },
+]
 
 
 @adapter(IListingView)
@@ -52,6 +68,14 @@ class SampleAnalysesListingAdapter(object):
         # Move "Analyst" and "Status" columns to the end, before "Due date"
         self.move_column("Analyst", before="DueDate")
         self.move_column("state_title", after="Analyst")
+
+        # Add review_states
+        for status in ADD_STATUSES:
+            after = status.get("after", None)
+            before = status.get("before", None)
+            if not status.get("columns"):
+                status.update({"columns": self.listing.columns.keys()})
+            add_review_state(self.listing, status, after=after, before=before)
 
         # Rename the column "Specification" to "Normal values"
         for key, value in self.listing.columns.items():
