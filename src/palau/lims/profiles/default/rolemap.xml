@@ -105,6 +105,13 @@
       <role name="Client"/>
     </permission>
 
+    <!-- Transition permissions -->
+    <permission name="palau.lims: Transition: Set Out Of Stock" acquire="True">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+    </permission>
+
   </permissions>
 
 </rolemap>

@@ -9,11 +9,13 @@ from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
+from palau.lims.setuphandlers import setup_workflows
+from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
-from senaite.core.catalog import ANALYSIS_CATALOG
+from senaite.core.workflow import ANALYSIS_WORKFLOW
 
 version = "1.0.0"  # Remember version number in metadata.xml and setup.py
 profile = "profile-{0}:default".format(product)
@@ -119,3 +121,33 @@ def setup_analysis_by_department_report(tool):
         obj._p_deactivate()
 
     logger.info("Updating metadata of analysis objects ...")
+
+
+def setup_analysis_workflow(tool):
+    """Adds the analysis workflow portal action
+    and updates the analyses states and transitions
+    """
+    logger.info("Setup analysis workflow ...")
+
+    #  Update Analyses workflow
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "rolemap")
+    setup_workflows(api.get_portal())
+
+    # Update Analyses rolemap
+    statuses = ["assigned", "unassigned"]
+    query = {"portal_type": "Analysis", "review_state": statuses}
+    brains = api.search(query, ANALYSIS_CATALOG)
+
+    wf_tool = api.get_tool("portal_workflow")
+    wf = wf_tool.getWorkflowById(ANALYSIS_WORKFLOW)
+
+    for brain in brains:
+        obj = api.get_object(brain)
+        wf.updateRoleMappingsFor(obj)
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Setup analysis workflow [DONE]")

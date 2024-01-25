@@ -4,6 +4,19 @@
     i18n_domain="palau.lims">
 
   <genericsetup:upgradeStep
+      title="Add Reagent Out of Stock Analysis transition"
+      description="
+        Re-runs the workflow import step to add the transition set_out_of_stock
+        and the status out_of_stock. It also walks through all assigned and
+        unassigned analyses and update their role mappings for the analysis
+        workflow.
+      "
+      source="1004"
+      destination="1005"
+      handler=".v01_00_000.setup_analysis_workflow"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Setup analysis by department report"
       description="
         Setup the catalog indexes/metadata required for the analysis by
@@ -15,15 +28,15 @@
       handler=".v01_00_000.setup_analysis_by_department_report"
       profile="palau.lims:default"/>
 
-    <genericsetup:upgradeStep
-        title="Setup statistic reports"
-        description="Setup statistic reports"
-        source="1002"
-        destination="1003"
-        handler=".v01_00_000.setup_statistic_reports"
-        profile="palau.lims:default"/>
+  <genericsetup:upgradeStep
+      title="Setup statistic reports"
+      description="Setup statistic reports"
+      source="1002"
+      destination="1003"
+      handler=".v01_00_000.setup_statistic_reports"
+      profile="palau.lims:default"/>
 
-    <genericsetup:upgradeStep
+  <genericsetup:upgradeStep
       title="Add Patient behavior"
       description="Add Patient behavior"
       source="1001"
