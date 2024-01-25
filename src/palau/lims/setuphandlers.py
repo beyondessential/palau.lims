@@ -70,6 +70,7 @@ INDEXES = [
 # Tuples of (catalog, column_name)
 COLUMNS = [
     (SAMPLE_CATALOG, "isMedicalRecordTemporary"),
+    (ANALYSIS_CATALOG, "getDepartmentTitle"),
 ]
 
 # Skin layers that have priority over others, sorted from more to less priority
