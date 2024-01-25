@@ -46,8 +46,3 @@ class SampleGuardAdapter(object):
             return False
 
         return True
-
-    def guard_set_out_of_stock(self):
-        """Returns true if the patient state is unassigned or assigned
-        """
-        return self.context.review_states in ["unassigned", "assigned"]
