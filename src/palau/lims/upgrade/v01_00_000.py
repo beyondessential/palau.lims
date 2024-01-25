@@ -14,6 +14,7 @@ from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
+from senaite.core.workflow import ANALYSIS_WORKFLOW
 
 version = "1.0.0"  # Remember version number in metadata.xml and setup.py
 profile = "profile-{0}:default".format(product)
@@ -93,18 +94,18 @@ def setup_analysis_workflow(tool):
     logger.info("Setup analysis workflow ...")
 
     #  Update Analyses workflow
+    setup.runImportStepFromProfile(profile, "rolemap")
     setup_workflows(api.get_portal())
 
     # Update Analyses rolemap
-    brains = api.search({"portal_type": "Analysis"}, ANALYSIS_CATALOG)
+    query = {"portal_type": "Analysis", "review_state": ["assigned", "unassigned"]}
+    brains = api.search(query, ANALYSIS_CATALOG)
+
+    wf_tool = api.get_tool("portal_workflow")
+    wf = wf_tool.getWorkflowById(ANALYSIS_WORKFLOW)
+
     for brain in brains:
-        wf_tool = api.get_tool("portal_workflow")
-        wf_ids = wf_tool.getChainFor(brain)
-        for wf_id in wf_ids:
-            wf = wf_tool.getWorkflowById(wf_id)
-            if wf is not None:
-                wf.updateRoleMappingsFor(brain)
-                message = "Updated rolemappings for {}".format(repr(brain))
-                logger.info(message)
+        obj = api.get_object(brain)
+        wf.updateRoleMappingsFor(obj)
 
     logger.info("Setup analysis workflow [DONE]")
