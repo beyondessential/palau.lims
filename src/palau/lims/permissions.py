@@ -22,4 +22,4 @@ FieldEditDateOfAdmission = "palau.lims: Field: Edit Date Of Admission"
 TransitionCreateSupplementary = "palau.lims: Transition: Create Supplementary"
 
 # Transition permissions
-TransitionSetOutofStock = "png.lims: Transition: Set Out of Stock"
+TransitionSetOutOfStock = "palau.lims: Transition: Set Out Of Stock"

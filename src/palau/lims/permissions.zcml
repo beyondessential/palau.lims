@@ -18,8 +18,6 @@
 
   <!-- Transition Permissions -->
   <permission id="palau.lims.permissions.TransitionCreateSupplementary" title="palau.lims: Transition: Create Supplementary"/>
-
-  <!-- Transition Permissions -->
-  <permission id="png.lims.permissions.TransitionSetOutofStock" title="png.lims: Transition: Set Out of Stock"/>
+  <permission id="palau.lims.permissions.TransitionSetOutOfStock" title="palau.lims: Transition: Set Out Of Stock"/>
 
 </configure>

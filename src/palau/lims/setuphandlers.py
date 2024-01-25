@@ -205,7 +205,7 @@ WORKFLOWS_TO_UPDATE = {
                 "new_state": "out_of_stock",
                 "action": "Set Out of Stock",
                 "guard": {
-                    "guard_permissions": permissions.TransitionSetOutofStock,
+                    "guard_permissions": permissions.TransitionSetOutOfStock,
                     "guard_roles": "",
                     "guard_expr": "python:here.guard_handler('set_out_of_stock')",
                 }

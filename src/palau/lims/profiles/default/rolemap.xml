@@ -106,7 +106,7 @@
     </permission>
 
     <!-- Transition permissions -->
-    <permission name="png.lims: Transition: Set Out of Stock" acquire="True">
+    <permission name="palau.lims: Transition: Set Out Of Stock" acquire="True">
       <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>
