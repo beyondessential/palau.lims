@@ -197,6 +197,7 @@ WORKFLOWS_TO_UPDATE = {
             },
             "out_of_stock": {
                 "title": "Out of Stock",
+                "permissions_copy_from": "rejected",
             },
         },
         "transitions": {
