@@ -22,28 +22,13 @@ class AnalysesLabDepartmentsByMonth(CSVReport):
         year = int(self.request.form.get("year"))
         brains = get_analyses_by_year(year)
 
-        # Group the analyses brains by sample type
-        analyses_by_sample_types = group_by(brains, "getSampleTypeUID")
-
         # add the first row (header)
         months = [MONTHS[num] for num in range(1, 13)]
         rows = [[_("Lab Department")] + months + [_("Total For Year")]]
 
-        # Group the analyses by departments
-        analyses_by_lab_department = {}
-        for sample_type, analyses in analyses_by_sample_types.items():
-            for obj in analyses:
-                analysis = api.get_object(obj)
-                service_uids = analysis.getServiceUID()
-                services = api.get_object(service_uids)
-                department = services.getDepartment()
-                if services.getDepartment():
-                    department = api.get_title(department)
-                else:
-                    department = "Unknown"
-                analyses_by_lab_department.setdefault(
-                    department, []
-                ).append(analysis)
+        # group the analyses brains by department
+        analyses = map(api.get_object, brains)
+        analyses_by_lab_department = group_by(analyses, "getDepartment")
 
         # sort departments alphabetically ascending
         lab_departments = sorted(analyses_by_lab_department.keys())
