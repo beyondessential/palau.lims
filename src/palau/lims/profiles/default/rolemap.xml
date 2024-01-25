@@ -105,6 +105,13 @@
       <role name="Client"/>
     </permission>
 
+    <!-- Transition permissions -->
+    <permission name="png.lims: Transition: Set Out of Stock" acquire="True">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+    </permission>
+
   </permissions>
 
 </rolemap>

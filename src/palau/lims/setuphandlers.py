@@ -203,6 +203,11 @@ WORKFLOWS_TO_UPDATE = {
                 "title": "Set Out of Stock",
                 "new_state": "out_of_stock",
                 "action": "Set Out of Stock",
+                "guard": {
+                    "guard_permissions": permissions.TransitionSetOutofStock,
+                    "guard_roles": "",
+                    "guard_expr": "python:here.guard_handler('set_out_of_stock')",
+                }
             }
         }
     },
