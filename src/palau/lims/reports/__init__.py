@@ -4,10 +4,12 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
+from datetime import datetime
+
 from bika.lims import api
 from senaite.core.api import dtime
+from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
-from datetime import datetime
 
 
 def get_received_samples(from_date, to_date, **kwargs):
@@ -57,6 +59,10 @@ def group_by(objs, func):
             # group by month
             value = int(value.month())
 
+        elif not value and value != 0:
+            # handle Missing.Value properly
+            value = None
+
         if isinstance(value, list):
             # in case value is a list of rejection reasons
             map(lambda val: groups.setdefault(val, []).append(obj), value)
@@ -82,3 +88,27 @@ def get_percentage(num, total, ndigits=2):
     if all([num, total]):
         rate = float(num) / total
     return round(100 * rate, ndigits)
+
+
+def get_analyses(from_date, to_date, **kwargs):
+    """Returns the analyses that were received within the passed-in date range
+    """
+    query = {
+        "portal_type": "Analysis",
+        "getDateReceived": {
+            "query": [from_date, to_date],
+            "range": "min:max"
+        },
+        "sort_on": "getDateReceived",
+        "sort_order": "ascending",
+    }
+    query.update(**kwargs)
+    return api.search(query, ANALYSIS_CATALOG)
+
+
+def get_analyses_by_year(year, **kwargs):
+    """Returns the analyses received within the passed-in year
+    """
+    from_date = dtime.date_to_string(datetime(year, 1, 1))
+    to_date = dtime.date_to_string(datetime(year, 12, 31))
+    return get_analyses(from_date, to_date, **kwargs)

@@ -43,4 +43,12 @@
       permission="zope.Public"
       layer="palau.lims.interfaces.IPalauLimsLayer"/>
 
+  <!-- Analyses Lab Departments by month  -->
+  <browser:page
+      for="*"
+      name="analyses_lab_departments_by_month"
+      class=".analyses_lab_departments_by_month.AnalysesLabDepartmentsByMonth"
+      permission="zope.Public"
+      layer="palau.lims.interfaces.IPalauLimsLayer"/>
+
 </configure>

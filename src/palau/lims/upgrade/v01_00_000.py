@@ -8,10 +8,12 @@ from bika.lims import api
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
 from palau.lims.setuphandlers import setup_behaviors
+from palau.lims.setuphandlers import setup_catalogs
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
+from senaite.core.catalog import ANALYSIS_CATALOG
 
 version = "1.0.0"  # Remember version number in metadata.xml and setup.py
 profile = "profile-{0}:default".format(product)
@@ -83,3 +85,37 @@ def setup_statistic_reports(tool):
     setup = portal.portal_setup
     setup.runImportStepFromProfile(profile, "actions")
     logger.info("Setup statistic reports [DONE]")
+
+
+def setup_analysis_by_department_report(tool):
+    """Setup the catalog indexes/metadata required for the analysis by
+    department to work properly and reindex all analyses for the changes
+    to take effect to existing objects.
+    """
+    portal = tool.aq_inner.aq_parent
+    setup_catalogs(portal)
+
+    # re-catalog metadata analysis objects
+    logger.info("Updating metadata of analysis objects ...")
+    cat = api.get_tool(ANALYSIS_CATALOG)
+    uc = api.get_tool("uid_catalog")
+    brains = uc(portal_type="Analysis")
+    total = len(brains)
+    for num, brain in enumerate(brains):
+        if num and num % 100 == 0:
+            logger.info("Processed objects: {0}/{1}".format(num, total))
+
+        obj = api.get_object(brain, default=None)
+        if not obj:
+            uncatalog_brain(brain)
+            continue
+
+        # Update metadata for the given catalog and object
+        obj = api.get_object(obj)
+        obj_url = api.get_path(obj)
+        cat.catalog_object(obj, obj_url, idxs=(), update_metadata=1)
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Updating metadata of analysis objects ...")
