@@ -207,7 +207,8 @@ WORKFLOWS_TO_UPDATE = {
                 "guard": {
                     "guard_permissions": permissions.TransitionSetOutOfStock,
                     "guard_roles": "",
-                    "guard_expr": "python:here.guard_handler('set_out_of_stock')",
+                    "guard_expr":
+                        "python:here.guard_handler('set_out_of_stock')",
                 }
             }
         }
