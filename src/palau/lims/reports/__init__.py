@@ -4,12 +4,12 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
-import itertools
+from datetime import datetime
+
 from bika.lims import api
 from senaite.core.api import dtime
-from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.catalog import ANALYSIS_CATALOG
-from datetime import datetime
+from senaite.core.catalog import SAMPLE_CATALOG
 
 
 def get_received_samples(from_date, to_date, **kwargs):
