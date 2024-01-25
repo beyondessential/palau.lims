@@ -3,6 +3,18 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="palau.lims">
 
+  <genericsetup:upgradeStep
+      title="Setup analysis by department report"
+      description="
+        Setup the catalog indexes/metadata required for the analysis by
+        department to work properly and reindex all analyses for the changes
+        to take effect to existing objects.
+      "
+      source="1003"
+      destination="1004"
+      handler=".v01_00_000.setup_analysis_by_department_report"
+      profile="palau.lims:default"/>
+
     <genericsetup:upgradeStep
         title="Setup statistic reports"
         description="Setup statistic reports"

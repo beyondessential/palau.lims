@@ -59,6 +59,10 @@ def group_by(objs, func):
             # group by month
             value = int(value.month())
 
+        elif not value and value != 0:
+            # handle Missing.Value properly
+            value = None
+
         if isinstance(value, list):
             # in case value is a list of rejection reasons
             map(lambda val: groups.setdefault(val, []).append(obj), value)

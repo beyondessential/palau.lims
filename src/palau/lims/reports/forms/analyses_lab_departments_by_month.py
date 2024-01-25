@@ -27,8 +27,7 @@ class AnalysesLabDepartmentsByMonth(CSVReport):
         rows = [[_("Lab Department")] + months + [_("Total For Year")]]
 
         # group the analyses brains by department
-        analyses = map(api.get_object, brains)
-        analyses_by_lab_department = group_by(analyses, "getDepartment")
+        analyses_by_lab_department = group_by(brains, "getDepartmentTitle")
 
         # sort departments alphabetically ascending
         lab_departments = sorted(analyses_by_lab_department.keys())
