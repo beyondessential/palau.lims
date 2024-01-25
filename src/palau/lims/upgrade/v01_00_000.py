@@ -130,11 +130,14 @@ def setup_analysis_workflow(tool):
     logger.info("Setup analysis workflow ...")
 
     #  Update Analyses workflow
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
     setup.runImportStepFromProfile(profile, "rolemap")
     setup_workflows(api.get_portal())
 
     # Update Analyses rolemap
-    query = {"portal_type": "Analysis", "review_state": ["assigned", "unassigned"]}
+    statuses = ["assigned", "unassigned"]
+    query = {"portal_type": "Analysis", "review_state": statuses}
     brains = api.search(query, ANALYSIS_CATALOG)
 
     wf_tool = api.get_tool("portal_workflow")
@@ -143,5 +146,8 @@ def setup_analysis_workflow(tool):
     for brain in brains:
         obj = api.get_object(brain)
         wf.updateRoleMappingsFor(obj)
+
+        # Flush the object from memory
+        obj._p_deactivate()
 
     logger.info("Setup analysis workflow [DONE]")
