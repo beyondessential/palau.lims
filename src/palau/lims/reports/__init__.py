@@ -90,9 +90,8 @@ def get_percentage(num, total, ndigits=2):
     return round(100 * rate, ndigits)
 
 
-def get_analyses(from_date, to_date):
-    """Returns the analyses were received within the passed-in date range and
-    parameters
+def get_analyses(from_date, to_date, **kwargs):
+    """Returns the analyses that were received within the passed-in date range
     """
     query = {
         "portal_type": "Analysis",
@@ -102,15 +101,14 @@ def get_analyses(from_date, to_date):
         },
         "sort_on": "getDateReceived",
         "sort_order": "ascending",
-        "review_state": ["verified", "published"],
     }
+    query.update(**kwargs)
     return api.search(query, ANALYSIS_CATALOG)
 
 
-def get_analyses_by_year(year):
-    """Returns the primary samples received within the passed-in year and
-    parameters
+def get_analyses_by_year(year, **kwargs):
+    """Returns the analyses received within the passed-in year
     """
     from_date = dtime.date_to_string(datetime(year, 1, 1))
     to_date = dtime.date_to_string(datetime(year, 12, 31))
-    return get_analyses(from_date, to_date)
+    return get_analyses(from_date, to_date, **kwargs)

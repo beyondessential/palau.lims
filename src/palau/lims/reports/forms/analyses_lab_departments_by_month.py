@@ -19,9 +19,10 @@ class AnalysesLabDepartmentsByMonth(CSVReport):
     """
 
     def process_form(self):
-        # get the received samples within the given year
+        # verified and published samples that were received within a given year
+        statuses = ["verified", "published"]
         year = int(self.request.form.get("year"))
-        brains = get_analyses_by_year(year)
+        brains = get_analyses_by_year(year, review_state=statuses)
 
         # add the first row (header)
         months = [MONTHS[num] for num in range(1, 13)]
