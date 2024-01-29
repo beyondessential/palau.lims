@@ -9,4 +9,10 @@
       provides="senaite.jsonapi.interfaces.IPushConsumer"
       for="*"/>
 
+  <adapter
+      name="tamanu.consumers.analysisrequest"
+      factory=".analysisrequest.AnalysisRequestPushConsumer"
+      provides="senaite.jsonapi.interfaces.IPushConsumer"
+      for="*"/>
+
 </configure>
