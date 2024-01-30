@@ -13,5 +13,7 @@
     <dependency>profile-senaite.lims:default</dependency>
     <dependency>profile-senaite.ast:default</dependency>
     <dependency>profile-senaite.patient:default</dependency>
+    <dependency>profile-senaite.storage:default</dependency>
   </dependencies>
+
 </metadata>

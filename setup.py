@@ -38,10 +38,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "senaite.lims>=2.5.0",
-        "senaite.ast",
-        "senaite.patient",
-        "senaite.storage",
+        "senaite.ast>=1.2.0",
+        "senaite.patient>=1.5.0",
+        "senaite.storage>=2.6.0",
         # senaite.core does no longer provides schemaextender
         # https://github.com/senaite/senaite.core/pull/1931
         "archetypes.schemaextender",
