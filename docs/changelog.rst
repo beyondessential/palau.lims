@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #116 Display out-of-stock analyses in results report
 - #112 Add Reagent Out of Stock Analysis transition
 - #107 Statistics report for analyses by department and month
 - #109 Change Statistic report names

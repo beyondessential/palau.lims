@@ -5,11 +5,13 @@
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
 from bika.lims import api
+from bika.lims.interfaces import IVerified
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_workflows
+from palau.lims.workflow.analysis.events import after_set_out_of_stock
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
@@ -146,6 +148,26 @@ def setup_analysis_workflow(tool):
     for brain in brains:
         obj = api.get_object(brain)
         wf.updateRoleMappingsFor(obj)
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Setup analysis workflow [DONE]")
+
+
+def fix_out_of_stock(tool):
+    """Walks through all analyses in out-of-stock status and sets the result
+    to Out of stock
+    """
+    query = {"portal_type": "Analysis", "review_state": "out_of_stock"}
+    brains = api.search(query, ANALYSIS_CATALOG)
+    for brain in brains:
+        obj = api.get_object(brain)
+        if IVerified.providedBy(obj):
+            continue
+
+        # Mark the analysis as out-of-stock and tries to submit the sample
+        after_set_out_of_stock(obj)
 
         # Flush the object from memory
         obj._p_deactivate()

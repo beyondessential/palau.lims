@@ -4,6 +4,18 @@
     i18n_domain="palau.lims">
 
   <genericsetup:upgradeStep
+      title="Flag out of stock analyses with IVerified"
+      description="
+        Assigns the IVerified interface to analyses that are in out-of-stock.
+        This makes samples with only one analysis (in out-of-stock) to be
+        transitioned to be published.
+      "
+      source="1005"
+      destination="1006"
+      handler=".v01_00_000.fix_out_of_stock"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Add Reagent Out of Stock Analysis transition"
       description="
         Re-runs the workflow import step to add the transition set_out_of_stock

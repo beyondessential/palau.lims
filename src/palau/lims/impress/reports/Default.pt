@@ -419,7 +419,8 @@
               </thead>
               <tbody>
               <tal:analyses tal:repeat="analysis analyses">
-                <tr tal:define="analysis_vars python:view.get_result_variables(analysis)">
+                <tr tal:define="analysis_vars python:view.get_result_variables(analysis);
+                                out_of_stock  python:view.is_out_of_stock(analysis)">
 
                   <!-- Analysis name -->
                   <td class="analysis">
@@ -473,44 +474,54 @@
 
                   </td>
 
-                  <!-- Variables -->
-                  <td class="result_variable text-nowrap" tal:repeat="var_name vars_names">
-                    <tal:interim define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars);
-                                         interim python: interim[0] if interim else None"
-                                 condition="interim">
-                      <span tal:replace="structure interim/formatted_value|nothing"/>
-                      <span class="units font-italic" tal:content="structure interim/formatted_unit|nothing"/>
-                    </tal:interim>
-                  </td>
+                  <tal:x condition="not:out_of_stock">
+                    <!-- Variables -->
+                    <td class="result_variable text-nowrap" tal:repeat="var_name vars_names">
+                      <tal:interim define="interim python: filter(lambda interim: interim.get('title') == var_name, analysis_vars);
+                                           interim python: interim[0] if interim else None"
+                                   condition="interim">
+                        <span tal:replace="structure interim/formatted_value|nothing"/>
+                        <span class="units font-italic" tal:content="structure interim/formatted_unit|nothing"/>
+                      </tal:interim>
+                    </td>
+                    <!-- Result -->
+                    <td class="text-nowrap">
+                      <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)">23</span>
 
-                  <!-- Result -->
-                  <td class="text-nowrap">
-                    <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)">23</span>
+                      <tal:result_unit condition="analysis/Unit">
+                        &nbsp;<span class="units font-italic" tal:content="structure python:sample.get_formatted_unit(analysis)"/>
+                      </tal:result_unit>
 
-                    <tal:result_unit condition="analysis/Unit">
-                      &nbsp;<span class="units font-italic" tal:content="structure python:sample.get_formatted_unit(analysis)"/>
-                    </tal:result_unit>
+                      <tal:result_uncertainty condition="analysis/Uncertainty">
+                        &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
+                      </tal:result_uncertainty>
 
-                    <tal:result_uncertainty condition="analysis/Uncertainty">
-                      &nbsp;<span tal:content="structure python:sample.get_formatted_uncertainty(analysis)"/>
-                    </tal:result_uncertainty>
+                      <!-- Out of range symbol -->
+                      <span class="font-weight-light outofrange text-danger"
+                            tal:condition="python: model.is_out_of_range(analysis)"
+                            tal:content="outofrange_symbol">
+                      </span>
+                    </td>
+                    <td class="text-nowrap">
+                        <!-- Range interval or range comment -->
+                      <tal:normal_values define="normal_values python:view.get_normal_values(model, analysis);"
+                                         condition="normal_values">
 
-                    <!-- Out of range symbol -->
-                    <span class="font-weight-light outofrange text-danger"
-                          tal:condition="python: model.is_out_of_range(analysis)"
-                          tal:content="outofrange_symbol">
-                    </span>
-                  </td>
-                  <td class="text-nowrap">
-                      <!-- Range interval or range comment -->
-                    <tal:normal_values define="normal_values python:view.get_normal_values(model, analysis);"
-                                       condition="normal_values">
-
-                      <span tal:content="normal_values"/>
-                      <span class="units font-italic"
-                            tal:content="structure python:sample.get_formatted_unit(analysis)"/>
-                    </tal:normal_values>
-                  </td>
+                        <span tal:content="normal_values"/>
+                        <span class="units font-italic"
+                              tal:content="structure python:sample.get_formatted_unit(analysis)"/>
+                      </tal:normal_values>
+                    </td>
+                  </tal:x>
+                  <tal:x condition="out_of_stock">
+                    <!-- Result -->
+                    <td class="text-nowrap"
+                        tal:attributes="colspan python: len(vars_names)+2">
+                      <span i18n:translate="" class="result">
+                        Out of stock
+                      </span>
+                    </td>
+                  </tal:x>
                 </tr>
               </tal:analyses>
               </tbody>
