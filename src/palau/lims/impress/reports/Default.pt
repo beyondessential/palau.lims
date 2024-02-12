@@ -518,7 +518,7 @@
                     <td class="text-nowrap"
                         tal:attributes="colspan python: len(vars_names)+2">
                       <span i18n:translate="" class="result">
-                        Out of stock
+                        Temporarily Unavailable
                       </span>
                     </td>
                   </tal:x>
