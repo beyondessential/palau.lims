@@ -306,12 +306,7 @@
             <!-- Patient name -->
             <td width="15%" class="label" i18n:translate="">Patient name</td>
             <td width="20%" class="overflow-hidden text-nowrap"
-                tal:define="patient python:model.PatientFullName or {};
-                            firstname python:patient.get('firstname','');
-                            lastname python:patient.get('lastname', '');
-                            fullname python:filter(None, [firstname, lastname]);
-                            fullname python: ' '.join(fullname);"
-                tal:content="fullname"/>
+                tal:content="python:model.PatientFullName"/>
 
             <!-- Patient Hospital Number -->
             <td width="15%" class="label" i18n:translate="">Hospital Number</td>
