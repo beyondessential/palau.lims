@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #125 Compatibility with senaite.app.supermodel#19
 - #123 Add Zendesk's BES Support Centre Icon
 - #122 Show "Temporarily Unavailable" in report instead of "Out of Stock"
 - #116 Display out-of-stock analyses in results report
