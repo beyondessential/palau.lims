@@ -4,6 +4,14 @@
     i18n_domain="palau.lims">
 
   <genericsetup:upgradeStep
+      title="Add Rejector role"
+      description="Setup Rejector role in user groups"
+      source="1006"
+      destination="1007"
+      handler=".v01_00_000.setup_rejector"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Flag out of stock analyses with IVerified"
       description="
         Assigns the IVerified interface to analyses that are in out-of-stock.
