@@ -47,8 +47,6 @@ def set_site_from_samplepoint(tool):
     """Re-assigns the value of Site field with the existing value of
     SamplePoint
     """
-    portal = api.get_portal()
-
     query = {"portal_type": "AnalysisRequest"}
     brains = api.search(query, SAMPLE_CATALOG)
     total = len(brains)
