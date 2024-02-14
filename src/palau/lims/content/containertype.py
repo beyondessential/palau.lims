@@ -21,9 +21,9 @@ NEW_FIELDS = [
         widget=BooleanWidget(
             label=_("BACTEC bottle"),
             description=_(
-                "Whether containers from this type are available for selection "
-                "when the default container for the selected sample type is a "
-                "BACTEC bottle"
+                "Whether containers from this type are available for "
+                "selection when the default container for the selected "
+                "sample type is a BACTEC bottle"
             )
         )
     )

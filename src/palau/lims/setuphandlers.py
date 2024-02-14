@@ -91,7 +91,7 @@ SETUP_FOLDERS = [
 # Tuples of (portal_type, list of behaviors)
 BEHAVIORS = [
     ("SampleContainer", [
-        "palau.lims.behaviors.samplecontainer.IExtendedSampleContainerBehavior",
+        "palau.lims.behaviors.samplecontainer.IExtendedSampleContainerBehavior",  # noqa
     ]),
     ("Patient", [
         "palau.lims.behaviors.patient.IExtendedPatientBehavior"
@@ -180,9 +180,9 @@ WORKFLOWS_TO_UPDATE = {
                 "new_state": "",
                 "action": "Create supplementary test",
                 "guard": {
-                    "guard_permissions": permissions.TransitionCreateSupplementary,
+                    "guard_permissions": permissions.TransitionCreateSupplementary,  # noqa
                     "guard_roles": "",
-                    "guard_expr": "python:here.guard_handler('create_supplementary')",
+                    "guard_expr": "python:here.guard_handler('create_supplementary')",  # noqa
                 }
             }
         }
@@ -718,7 +718,9 @@ def update_workflow_state(workflow, status_id, settings):
 
     # Set basic info (title, description, etc.)
     new_status.title = settings.get("title", new_status.title)
-    new_status.description = settings.get("description", new_status.description)
+    new_status.description = settings.get(
+        "description", new_status.description
+    )
 
     # Set transitions
     trans = settings.get("transitions", ())

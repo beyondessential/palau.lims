@@ -302,7 +302,7 @@ NEW_FIELDS = [
             size=20,
             label=_("Volume"),
             description=_(
-                "Volume of sample, expressed as quantity and unit (e.g '10 ml')"
+                "Volume of sample, expressed as quantity and unit (e.g '10 ml')"  # noqa
             ),
             visible={
                 'add': 'edit',
