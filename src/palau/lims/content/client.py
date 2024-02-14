@@ -30,7 +30,7 @@ NEW_FIELDS = [
                 "Logo to display in the header of results reports for this "
                 "client"
             )
-      ),
+        ),
     ),
 
     ExtStringField(

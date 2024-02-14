@@ -520,7 +520,7 @@ def hide_action(folder, action_id):
                 return n
         return -1
 
-    logger.info("Hide {} from control_panel".format(action_id, item.Title()))
+    logger.info("Hide {} from control_panel".format(action_id, item.Title()))  # noqa
     cp = api.get_tool("portal_controlpanel")
     action_index = get_action_index(action_id)
     if action_index == -1:
