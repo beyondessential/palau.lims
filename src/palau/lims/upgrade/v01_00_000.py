@@ -10,6 +10,7 @@ from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
+from palau.lims.setuphandlers import setup_roles_and_groups
 from palau.lims.setuphandlers import setup_workflows
 from palau.lims.workflow.analysis.events import after_set_out_of_stock
 from senaite.core.catalog import ANALYSIS_CATALOG
@@ -46,8 +47,6 @@ def set_site_from_samplepoint(tool):
     """Re-assigns the value of Site field with the existing value of
     SamplePoint
     """
-    portal = api.get_portal()
-
     query = {"portal_type": "AnalysisRequest"}
     brains = api.search(query, SAMPLE_CATALOG)
     total = len(brains)
@@ -173,3 +172,31 @@ def fix_out_of_stock(tool):
         obj._p_deactivate()
 
     logger.info("Setup analysis workflow [DONE]")
+
+
+def setup_rejector(tool):
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+
+    logger.info("Setting Rejector role for Analyses [BEGIN]...")
+
+    setup.runImportStepFromProfile(profile, "rolemap")
+    setup_roles_and_groups(portal)
+
+    # Update Analyses rolemap
+    states = ["assigned", "unassigned", "to_be_verified"]
+    query = {"portal_type": "Analysis", "review_state": states}
+    brains = api.search(query, ANALYSIS_CATALOG)
+
+    wf_tool = api.get_tool("portal_workflow")
+    wf = wf_tool.getWorkflowById(ANALYSIS_WORKFLOW)
+
+    for brain in brains:
+        obj = api.get_object(brain)
+        wf.updateRoleMappingsFor(obj)
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Rejector role set successfully for Analyses [END]...")
+    return True

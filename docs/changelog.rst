@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #127 Add a Rejector user defined role and group
 - #125 Compatibility with senaite.app.supermodel#19
 - #123 Add Zendesk's BES Support Centre Icon
 - #122 Show "Temporarily Unavailable" in report instead of "Out of Stock"

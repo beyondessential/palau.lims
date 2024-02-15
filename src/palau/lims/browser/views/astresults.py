@@ -79,7 +79,9 @@ class ManageASTResultsView(ManageResultsView):
         return items
 
     def get_panel_info(self, brain_or_object):
-        panel_info = super(ManageASTResultsView, self).get_panel_info(brain_or_object)
+        panel_info = super(ManageASTResultsView, self).get_panel_info(
+            brain_or_object
+        )
         panel_info["description"] = api.get_description(brain_or_object)
 
         # Get the microorganisms assigned to this sample
@@ -100,7 +102,9 @@ class ManageASTResultsView(ManageResultsView):
 
     def get_sensitivity_microorganisms(self, sample):
         analyses = get_ast_analyses(sample)
-        sensitivity = filter(lambda s: s.getKeyword() == RESISTANCE_KEY, analyses)
+        sensitivity = filter(
+            lambda s: s.getKeyword() == RESISTANCE_KEY, analyses
+        )
         return get_microorganisms(sensitivity)
 
     @view.memoize

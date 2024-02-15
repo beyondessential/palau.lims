@@ -30,7 +30,7 @@ NEW_FIELDS = [
                 "Logo to display in the header of results reports for this "
                 "client"
             )
-      ),
+        ),
     ),
 
     ExtStringField(
@@ -74,7 +74,9 @@ class ClientSchemaExtender(object):
     def getOrder(self, schematas):
         default_schemata = schematas["default"]
         idx = default_schemata.index("ClientID")
-        abbreviation = default_schemata.pop(default_schemata.index("Abbreviation"))
+        abbreviation = default_schemata.pop(
+            default_schemata.index("Abbreviation")
+        )
         default_schemata.insert(idx + 1, abbreviation)
 
         schematas["default"] = default_schemata

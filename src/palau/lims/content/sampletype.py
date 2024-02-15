@@ -95,6 +95,7 @@ FIELDS_ORDER = [
     ("MaximumVolume", "default", "MinimumVolume")
 ]
 
+
 @implementer(IOrderableSchemaExtender, IBrowserLayerAwareExtender)
 class SampleTypeSchemaExtender(object):
     """Extends Sample Type content type with additional fields
