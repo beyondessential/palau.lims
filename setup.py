@@ -38,6 +38,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        "requests",
         "senaite.ast>=1.2.0",
         "senaite.patient>=1.5.0",
         "senaite.storage>=2.6.0",
