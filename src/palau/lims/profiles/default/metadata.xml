@@ -6,12 +6,14 @@
   dependencies before installing this add-on own profile.
 -->
 <metadata>
-  <version>1003</version>
+  <version>1007</version>
 
   <!-- Be sure to install the following dependencies if not yet installed -->
   <dependencies>
     <dependency>profile-senaite.lims:default</dependency>
     <dependency>profile-senaite.ast:default</dependency>
     <dependency>profile-senaite.patient:default</dependency>
+    <dependency>profile-senaite.storage:default</dependency>
   </dependencies>
+
 </metadata>

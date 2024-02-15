@@ -27,12 +27,7 @@
       </tr>
       <tr>
         <td colspan="2" class="patient_name"
-            tal:define="patient python:item.PatientFullName or {};
-                   firstname python:patient.get('firstname','');
-                   lastname python:patient.get('lastname', '');
-                   fullname python:filter(None, [firstname, lastname]);
-                   fullname python: ' '.join(fullname);"
-            tal:content="fullname">Patient name</td>
+            tal:content="python:item.PatientFullName"/>
       </tr>
       <tr>
         <td colspan="2" class="date_received"

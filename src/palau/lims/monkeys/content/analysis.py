@@ -4,6 +4,7 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
+from bika.lims import api
 from bika.lims.interfaces import IAnalysis
 from palau.lims.utils import get_field_value
 from palau.lims.utils import set_field_value
@@ -39,3 +40,12 @@ def setInterimFields(self, value):  # noqa CamelCase
                 interim.update({"value": choices.get("N", "")})
 
     self.getField("InterimFields").set(self, value)
+
+
+def getDepartmentTitle(self):
+    """Returns the title of the department the analysis is assigned to, if
+    any. It works as a metacolumn for analysis catalog
+    """
+    department = self.getDepartment()
+    if department:
+        return api.get_title(department)

@@ -18,13 +18,7 @@
 
   <div class="sample_id" tal:content="sample_id">Sample ID</div>
 
-  <div class="patient_name"
-       tal:define="patient python:item.PatientFullName or {};
-                   firstname python:patient.get('firstname','');
-                   lastname python:patient.get('lastname', '');
-                   fullname python:filter(None, [firstname, lastname]);
-                   fullname python: ' '.join(fullname);"
-       tal:content="fullname">Patient name</div>
+  <div class="patient_name" tal:content="python:item.PatientFullName"></div>
 
   <div class="date_received"
        tal:define="received python:item.DateReceived;

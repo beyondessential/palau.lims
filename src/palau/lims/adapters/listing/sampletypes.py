@@ -3,10 +3,6 @@
 # This file is part of PALAU.LIMS
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
-
-
-import collections
-
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
 from zope.component import adapter

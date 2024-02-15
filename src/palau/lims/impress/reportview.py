@@ -15,6 +15,7 @@ from bika.lims.workflow import getTransitionActor
 from bika.lims.workflow import getTransitionDate
 from collections import OrderedDict
 from palau.lims import messageFactory as _
+from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from palau.lims.utils import get_field_value
 from palau.lims.utils import get_initials
 from senaite.ast.config import IDENTIFICATION_KEY
@@ -148,8 +149,8 @@ class DefaultReportView(SingleReportView):
                 if analysis.getKeyword() != RESISTANCE_KEY:
                     return False
 
-            reportable = ["to_be_verified", "verified", "published"]
-            return api.get_review_status(analysis) in reportable
+            status = api.get_review_status(analysis)
+            return status in ANALYSIS_REPORTABLE_STATUSES
 
         def get_growth_number(a, b):
             ast = [is_ast_analysis(a), is_ast_analysis(b)]
@@ -301,12 +302,9 @@ class DefaultReportView(SingleReportView):
         returns the value entered into "Out of range comment" field
         """
         specs = analysis.getResultsRange()
-        range_min = api.to_float(specs.get("min"), default=0)
         range_max = api.to_float(specs.get("max"), default=0)
-        if any([range_min, range_max]):
+        if range_max > 0:
             return model.get_formatted_specs(analysis)
-
-        specs = analysis.getResultsRange() or {}
         return specs.get("rangecomment")
 
     def get_analysis_conditions(self, analysis):
@@ -500,3 +498,8 @@ class DefaultReportView(SingleReportView):
         """
         obj = api.get_object(model)
         return getTransitionDate(obj, action_id, return_as_datetime=True)
+
+    def is_out_of_stock(self, analysis):
+        """Returns whether the analysis passed-in is out-of-stock
+        """
+        return api.get_review_status(analysis) == "out_of_stock"

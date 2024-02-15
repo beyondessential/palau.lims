@@ -39,7 +39,7 @@ NEW_FIELDS = [
         widget=StringWidget(
             label=_c("Minimum volume"),
             description=_c(
-                "The minimum sample volume required for analysis eg. '10 ml')"),
+                "The minimum sample volume required for analysis eg. '10 ml')"),  # noqa
         )
     ),
     ExtTextField(

@@ -8,6 +8,7 @@
 from palau.lims import utils
 from senaite.ast.browser.addpanel import AddPanelView as BaseView
 
+
 class AddPanelView(BaseView):
 
     def __call__(self):
@@ -17,4 +18,3 @@ class AddPanelView(BaseView):
 
         # return response from base class
         return super(AddPanelView, self).__call__()
-
