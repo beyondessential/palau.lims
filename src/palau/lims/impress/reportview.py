@@ -305,8 +305,6 @@ class DefaultReportView(SingleReportView):
         range_max = api.to_float(specs.get("max"), default=0)
         if range_max > 0:
             return model.get_formatted_specs(analysis)
-
-        specs = analysis.getResultsRange() or {}
         return specs.get("rangecomment")
 
     def get_analysis_conditions(self, analysis):
