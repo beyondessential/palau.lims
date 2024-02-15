@@ -4,7 +4,6 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-from bika.lims import api
 from plone.memoize.instance import memoize
 from palau.lims import messageFactory as _
 from palau.lims import utils
@@ -12,7 +11,6 @@ from palau.lims.config import UNKNOWN_DOCTOR_FULLNAME
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
 from senaite.app.listing.utils import add_review_state
-from senaite.core.api import measure as mapi
 from zope.component import adapts
 from zope.component import getMultiAdapter
 from zope.interface import implements

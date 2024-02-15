@@ -32,7 +32,7 @@ def update_patient(instance):
         if not patient_api.is_patient_creation_allowed(container):
             logger.warn("User '{}' is not allowed to create patients in '{}'"
                         " -> setting MRN to temporary".format(
-                api.user.get_user_id(), api.get_path(container)))
+                api.user.get_user_id(), api.get_path(container)))  # noqa
             # make the MRN temporary
             # XXX: Refactor logic from Widget -> Field/DataManager
             mrn_field = instance.getField("MedicalRecordNumber")

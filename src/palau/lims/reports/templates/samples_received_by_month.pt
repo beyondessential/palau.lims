@@ -2,7 +2,7 @@
   define="report_id string:samples_received_by_month">
 
   <h2 i18n:translate="">
-    1.1 Number of microbiology samples received by month
+    1.1 Number of each sample type received by month
   </h2>
 
   <form method="post">

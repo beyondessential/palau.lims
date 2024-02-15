@@ -5,6 +5,14 @@ Changelog
 ------------------
 
 - #130 Add more details to stickers
+- #127 Add a Rejector user defined role and group
+- #125 Compatibility with senaite.app.supermodel#19
+- #123 Add Zendesk's BES Support Centre Icon
+- #122 Show "Temporarily Unavailable" in report instead of "Out of Stock"
+- #116 Display out-of-stock analyses in results report
+- #112 Add Reagent Out of Stock Analysis transition
+- #107 Statistics report for analyses by department and month
+- #109 Change Statistic report names
 - #104 Add statistic reports
 - #101 Fix Sex is not properly translated in final report
 - #98 Show only interpreter initials not fullname after comments in final report

@@ -1,0 +1,27 @@
+<tal:r i18n:domain="palau.lims"
+  define="report_id string:analyses_lab_departments_by_month">
+
+  <h2 i18n:translate="">
+    Number of lab departments analyses received by month
+  </h2>
+
+  <form method="post">
+
+    <!-- Year control -->
+    <tal:year replace="structure python:view.year_control()"/>
+
+    <!-- Submit button -->
+    <input tabindex=""
+           class="searchButton allowMultiSubmit"
+           type="submit"
+           name="submit"
+           value="Generate report"
+           i18n:attributes="value"/>
+
+    <!-- hidden fields -->
+    <input tal:replace="structure context/@@authenticator/authenticator"/>
+    <input type="hidden" name="report_id" tal:attributes="value report_id"/>
+
+  </form>
+
+</tal:r>

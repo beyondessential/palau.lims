@@ -15,5 +15,5 @@ def is_field_writeable(self, field):
         # should be able to modify the value if there is one sibling in a
         # suitable status
         return is_growth_editable(self.context)
-    
+
     return super(ASTAnalysisDataManager, self).is_field_writeable(field)

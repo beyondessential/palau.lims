@@ -4,18 +4,18 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-from bika.lims.interfaces import IDoNotSupportSnapshots
 from senaite.ast import ISenaiteASTLayer
-from senaite.core.interfaces import IHideActionsMenu
 from senaite.core.interfaces import ISenaiteCore
 from senaite.impress.interfaces import ILayer as ISenaiteImpressLayer
 from senaite.lims.interfaces import ISenaiteLIMS
 from senaite.patient import ISenaitePatientLayer
+from senaite.storage import ISenaiteStorageLayer
 
 
 class IPalauLimsLayer(ISenaiteCore,
                       ISenaiteLIMS,
                       ISenaiteImpressLayer,
+                      ISenaiteStorageLayer,
                       ISenaiteASTLayer,
                       ISenaitePatientLayer):
     """Zope 3 browser Layer interface specific for palau.lims

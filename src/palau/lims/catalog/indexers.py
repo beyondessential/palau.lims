@@ -39,4 +39,3 @@ def sampletype_uid(instance):
     `MissingValue` entries too.
     """
     return instance.getRawSampleTypes() or [None]
-

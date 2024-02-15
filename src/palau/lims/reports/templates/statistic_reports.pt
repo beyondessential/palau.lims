@@ -39,13 +39,13 @@
       <div class="reports-view statistic-reports-view">
       <!-- 1. Number of microbiology samples received -->
 
-        <!-- 1.1 Number of microbiology samples received by month -->
+        <!-- 1.1 Number of each sample type received by month -->
         <div class="report-section"
              tal:define="id string:samples_received_by_month"
              tal:content="structure python:view.render_report_section(id)">
         </div>
 
-        <!-- 1.2 Number of microbiology samples received and stratified by department -->
+        <!-- 1.2 Number of samples received and stratified by department -->
         <div class="report-section"
              tal:define="id string:samples_received_by_department"
              tal:content="structure python:view.render_report_section(id)">
@@ -68,6 +68,12 @@
         <!-- Sample rejection summary  -->
         <div class="report-section"
              tal:define="id string:samples_rejected_summary"
+             tal:content="structure python:view.render_report_section(id)">
+        </div>
+
+        <!-- Analyses Lab Departments by month  -->
+        <div class="report-section"
+             tal:define="id string:analyses_lab_departments_by_month"
              tal:content="structure python:view.render_report_section(id)">
         </div>
 

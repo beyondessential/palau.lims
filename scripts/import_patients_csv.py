@@ -41,7 +41,7 @@ def sniff_csv_dialect(infile, default=None):
         with open(infile, 'rb') as f:
             dialect = csv.Sniffer().sniff(f.readline())
         return dialect
-    except:
+    except:  # noqa
         if default:
             return csv.register_dialect("dummy", **default)
         return None

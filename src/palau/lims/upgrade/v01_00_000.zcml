@@ -3,15 +3,60 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="palau.lims">
 
-    <genericsetup:upgradeStep
-        title="Setup statistic reports"
-        description="Setup statistic reports"
-        source="1002"
-        destination="1003"
-        handler=".v01_00_000.setup_statistic_reports"
-        profile="palau.lims:default"/>
+  <genericsetup:upgradeStep
+      title="Add Rejector role"
+      description="Setup Rejector role in user groups"
+      source="1006"
+      destination="1007"
+      handler=".v01_00_000.setup_rejector"
+      profile="palau.lims:default"/>
 
-    <genericsetup:upgradeStep
+  <genericsetup:upgradeStep
+      title="Flag out of stock analyses with IVerified"
+      description="
+        Assigns the IVerified interface to analyses that are in out-of-stock.
+        This makes samples with only one analysis (in out-of-stock) to be
+        transitioned to be published.
+      "
+      source="1005"
+      destination="1006"
+      handler=".v01_00_000.fix_out_of_stock"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
+      title="Add Reagent Out of Stock Analysis transition"
+      description="
+        Re-runs the workflow import step to add the transition set_out_of_stock
+        and the status out_of_stock. It also walks through all assigned and
+        unassigned analyses and update their role mappings for the analysis
+        workflow.
+      "
+      source="1004"
+      destination="1005"
+      handler=".v01_00_000.setup_analysis_workflow"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
+      title="Setup analysis by department report"
+      description="
+        Setup the catalog indexes/metadata required for the analysis by
+        department to work properly and reindex all analyses for the changes
+        to take effect to existing objects.
+      "
+      source="1003"
+      destination="1004"
+      handler=".v01_00_000.setup_analysis_by_department_report"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
+      title="Setup statistic reports"
+      description="Setup statistic reports"
+      source="1002"
+      destination="1003"
+      handler=".v01_00_000.setup_statistic_reports"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Add Patient behavior"
       description="Add Patient behavior"
       source="1001"

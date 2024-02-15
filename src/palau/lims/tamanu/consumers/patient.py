@@ -96,7 +96,7 @@ class PatientPushConsumer(object):
         address = next((
             patient_address for patient_address in patient_addresses
             if patient_address["type"] == "physical"
-               and patient_address["use"] == "home"
+               and patient_address["use"] == "home"  # noqa
         ), None)
         return address
 
