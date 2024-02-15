@@ -6,14 +6,11 @@
 
 import argparse
 import requests
-from base64 import b64encode
-
-from scripts.pull_tamanu_patients import basic_auth
+from pull_tamanu_patients import basic_auth
 
 # the id of the consumer for analysis request creation and update
 SERVICE_REQUEST_CONSUMER = "tamanu.consumers.analysisrequest"
 CATEGORY_URL = "http://snomed.info/sct|108252007"
-
 
 def get_tamanu_token(args):
     """
@@ -51,7 +48,7 @@ def pull_tamanu_service_requests(args):
         params=params,
         headers=headers
     )
-    service_requests = service_request_response.json().get("entry")
+    service_requests = service_request_response.json().get("entry", [])
 
     return service_requests
 
@@ -89,6 +86,7 @@ def main():
     parser.add_argument("--tamanu-domain", "-td", help="Tamanu domain")
     parser.add_argument("--tamanu-email", "-te", help="Tamanu email")
     parser.add_argument("--tamanu-password", "-tp", help="Tamanu password")
+    parser.add_argument("--last_updated", "-lu", help="Last Updated")
     parser.add_argument("--senaite_domain", "-sd", help="Senaite Domain")
     parser.add_argument("--senaite_username", "-su", help="Senaite Username")
     parser.add_argument("--senaite_password", "-sp", help="Senaite Password")
