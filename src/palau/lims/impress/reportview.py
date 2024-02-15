@@ -302,9 +302,8 @@ class DefaultReportView(SingleReportView):
         returns the value entered into "Out of range comment" field
         """
         specs = analysis.getResultsRange()
-        range_min = api.to_float(specs.get("min"), default=0)
         range_max = api.to_float(specs.get("max"), default=0)
-        if any([range_min, range_max]):
+        if range_max > 0:
             return model.get_formatted_specs(analysis)
 
         specs = analysis.getResultsRange() or {}
