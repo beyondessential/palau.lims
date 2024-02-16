@@ -25,4 +25,4 @@ def setSampleTypes(self, value):
     """Sets the sample types assigned to this object, if any
     """
     behavior = IPalauAnalysisProfileBehavior(self)
-    return behavior.set(self, value)
+    return behavior.setSampleTypes(value)
