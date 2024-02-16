@@ -4,19 +4,19 @@
     i18n_domain="palau.lims">
 
   <monkey:patch
-      class="bika.lims.content.analysisprofile.AnalysisProfile"
+      class="senaite.core.content.analysisprofile.AnalysisProfile"
       original="setSampleTypes"
       ignoreOriginal="True"
       replacement=".analysisprofile.setSampleTypes" />
 
   <monkey:patch
-      class="bika.lims.content.analysisprofile.AnalysisProfile"
+      class="senaite.core.content.analysisprofile.AnalysisProfile"
       original="getSampleTypes"
       ignoreOriginal="True"
       replacement=".analysisprofile.getSampleTypes" />
 
   <monkey:patch
-      class="bika.lims.content.analysisprofile.AnalysisProfile"
+      class="senaite.core.content.analysisprofile.AnalysisProfile"
       original="getRawSampleTypes"
       ignoreOriginal="True"
       replacement=".analysisprofile.getRawSampleTypes" />

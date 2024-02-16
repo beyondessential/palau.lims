@@ -95,7 +95,10 @@ BEHAVIORS = [
     ]),
     ("Patient", [
         "palau.lims.behaviors.patient.IExtendedPatientBehavior"
-    ])
+    ]),
+    ("AnalysisProfile", [
+        "palau.lims.behaviors.analysisprofile.IPalauAnalysisProfileBehavior",
+    ]),
 ]
 
 # Workflow updates

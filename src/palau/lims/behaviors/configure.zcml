@@ -21,4 +21,11 @@
       factory=".patient.ExtendedPatient"
       for="senaite.patient.interfaces.IPatient" />
 
+  <plone:behavior
+      name="palau.lims.behavior.sanalysisprofile"
+      title="PalauAnalysisProfileBehavior"
+      provides=".analysisprofile.IPalauAnalysisProfileBehavior"
+      factory=".analysisprofile.PalauAnalysisProfileBehavior"
+      for="senaite.core.interfaces.IAnalysisProfile" />
+
 </configure>

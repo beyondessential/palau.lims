@@ -4,20 +4,25 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
+from palau.lims.behaviors.analysisprofile import IPalauAnalysisProfileBehavior
+
 
 def getSampleTypes(self):
     """Returns the sample types assigned to this object, if any
     """
-    return self.getField("SampleTypes").get(self)
+    behavior = IPalauAnalysisProfileBehavior(self)
+    return behavior.getSampleTypes()
 
 
 def getRawSampleTypes(self):
     """Returns the UIDs of the sample types assigned to this object if any
     """
-    return self.getField("SampleTypes").getRaw(self)
+    behavior = IPalauAnalysisProfileBehavior(self)
+    return behavior.getRawSampleTypes()
 
 
 def setSampleTypes(self, value):
     """Sets the sample types assigned to this object, if any
     """
-    return self.getField("SampleTypes").set(self, value)
+    behavior = IPalauAnalysisProfileBehavior(self)
+    return behavior.set(self, value)
