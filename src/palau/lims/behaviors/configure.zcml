@@ -22,7 +22,7 @@
       for="senaite.patient.interfaces.IPatient" />
 
   <plone:behavior
-      name="palau.lims.behavior.sanalysisprofile"
+      name="palau.lims.behavior.analysisprofile"
       title="PalauAnalysisProfileBehavior"
       provides=".analysisprofile.IPalauAnalysisProfileBehavior"
       factory=".analysisprofile.PalauAnalysisProfileBehavior"

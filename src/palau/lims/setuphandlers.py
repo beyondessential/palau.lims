@@ -819,6 +819,8 @@ def setup_behaviors(portal):
     pt = api.get_tool("portal_types")
     for portal_type, behavior_ids in BEHAVIORS:
         fti = pt.get(portal_type)
+        if not hasattr(fti, "behaviors"):
+            continue
         fti_behaviors = fti.behaviors
         additional = filter(lambda b: b not in fti_behaviors, behavior_ids)
         if additional:
