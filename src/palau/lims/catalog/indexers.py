@@ -5,10 +5,10 @@
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
 from bika.lims import api
-from bika.lims.interfaces import IAnalysisProfile
 from bika.lims.interfaces.analysis import IRequestAnalysis
 from plone.indexer import indexer
 from senaite.core.catalog.indexer.senaitesetup import to_keywords_list
+from senaite.core.interfaces import IAnalysisProfile
 
 
 @indexer(IRequestAnalysis)

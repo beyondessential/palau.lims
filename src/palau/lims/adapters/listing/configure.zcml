@@ -42,7 +42,7 @@
 
   <!-- Analysis Profiles listing -->
   <subscriber
-      for="bika.lims.controlpanel.bika_analysisprofiles.AnalysisProfilesView
+      for="senaite.core.browser.controlpanel.analysisprofiles.view.AnalysisProfilesView
          *"
       provides="senaite.app.listing.interfaces.IListingViewAdapter"
       factory=".analysisprofiles.AnalysisProfilesListingAdapter" />
