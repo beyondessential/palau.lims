@@ -2,6 +2,7 @@
 
 import argparse
 from datetime import timedelta
+from bika.lims import api
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu.session import TamanuSession
 
@@ -19,7 +20,7 @@ parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
 def play(host, email, password):
 
     import pdb;pdb.set_trace()
-
+    portal = api.get_portal()
     # start a remote session with tamanu
     session = TamanuSession(host)
     session.login(email, password)
@@ -32,6 +33,21 @@ def play(host, email, password):
     # get the available keys
     service_request = resources[0]
     request_id = service_request.get("id")
+
+    organization = service_request.get("serviceProvider")
+    # organization = {
+    #     u'display': u'Facility 1', u'id': u'b451d7dc-746b-4203-afcb-7c695ca4a743'
+    # }
+
+    org_name = organization.get("display")
+    org_tamanu_uid = organization.get("id")
+    client = service_request.search("serviceProvider")
+
+    if not client:
+        client = api.create(portal.clients, "Client", title=org_name)
+        setattr(client, "tamanu_uid", org_tamanu_uid)
+        client.reindexObject()
+
     status = service_request.get("status")
     priority = service_request.get("priority")
 
