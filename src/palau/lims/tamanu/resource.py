@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from bika.lims import api
+from bika.lims.api import UID_CATALOG
+
 _marker = object()
 
 
@@ -43,6 +46,21 @@ class BaseResource(object):
             return self.get_reference(record)
 
         return record
+
+    def search(self, field_name=None):
+        """Search
+        """
+        tamanu_uid = self.get("id")
+        if field_name:
+            record = self.get_raw(field_name, _marker)
+            if self.is_reference(record):
+                obj = self.get_reference(record)
+                tamanu_uid = obj.get("id")
+        query = {"tamanu_uid": tamanu_uid}
+        results = api.search(query, catalog=UID_CATALOG)
+        if len(results) > 0:
+            return results[0]
+        return None
 
     def __repr__(self):
         return repr(self._data)
