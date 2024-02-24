@@ -9,4 +9,7 @@
   <adapter name="sampletype_title" factory=".indexers.sampletype_title"/>
   <adapter name="sampletype_uid" factory=".indexers.sampletype_uid"/>
 
+  <!-- Content Indexes -->
+  <adapter name="tamanu_uid" factory=".indexers.tamanu_uid"/>
+
 </configure>

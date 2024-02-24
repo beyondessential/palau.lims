@@ -8,6 +8,7 @@ from bika.lims import api
 from bika.lims.interfaces import IAnalysisProfile
 from bika.lims.interfaces.analysis import IRequestAnalysis
 from plone.indexer import indexer
+from Products.CMFCore.interfaces import IContentish
 from senaite.core.catalog.indexer.senaitesetup import to_keywords_list
 
 
@@ -39,3 +40,8 @@ def sampletype_uid(instance):
     `MissingValue` entries too.
     """
     return instance.getRawSampleTypes() or [None]
+
+
+@indexer(IContentish)
+def tamanu_uid(instance):
+    return getattr(instance, "tamanu_uid", None)
