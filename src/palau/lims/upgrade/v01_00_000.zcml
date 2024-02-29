@@ -4,6 +4,14 @@
     i18n_domain="palau.lims">
 
   <genericsetup:upgradeStep
+      title="Compatibility with core#2492"
+      description="Replaces the AnalysisProfile extender by a behavior"
+      source="1007"
+      destination="1008"
+      handler=".v01_00_000.setup_analysisprofile_behavior"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Add Rejector role"
       description="Setup Rejector role in user groups"
       source="1006"

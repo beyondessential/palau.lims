@@ -15,6 +15,7 @@ from palau.lims.setuphandlers import setup_workflows
 from palau.lims.workflow.analysis.events import after_set_out_of_stock
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.core.migration.migrator import get_attribute_storage
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
@@ -199,4 +200,22 @@ def setup_rejector(tool):
         obj._p_deactivate()
 
     logger.info("Rejector role set successfully for Analyses [END]...")
-    return True
+
+
+def setup_analysisprofile_behavior(tool):
+    logger.info("Setup AnalysisProfile behavior ...")
+    portal = tool.aq_inner.aq_parent
+
+    # register the new behavior
+    setup_behaviors(portal)
+
+    # walk-through all profles and update the field value
+    setup = api.get_senaite_setup()
+    for obj in setup.analysisprofiles.objectValues():
+        storage = get_attribute_storage(obj)
+        sample_types = storage.get("SampleTypes")
+        obj.setSampleTypes(sample_types)
+        obj.reindexObject()
+        obj._p_deactivate()
+
+    logger.info("Setup AnalysisProfile behavior [DONE]")
