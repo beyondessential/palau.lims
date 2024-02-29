@@ -11,11 +11,11 @@ from palau.lims import logger
 from palau.lims.tamanu.resource import BaseResource
 
 SLUGS = (
-    ("login", "v1"),
+    ("login", "api"),
 )
 
 # default slug
-DEFAULT_SLUG = "v1/integration/fhir/mat"
+DEFAULT_SLUG = "api/integration/fhir/mat"
 
 # basic headers
 HEADERS = (
