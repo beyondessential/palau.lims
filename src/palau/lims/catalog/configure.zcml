@@ -5,8 +5,4 @@
   <!-- Analysis Indexes -->
   <adapter name="date_sampled" factory=".indexers.date_sampled"/>
 
-  <!-- AnalysisProfile Indexes -->
-  <adapter name="sampletype_title" factory=".indexers.sampletype_title"/>
-  <adapter name="sampletype_uid" factory=".indexers.sampletype_uid"/>
-
 </configure>

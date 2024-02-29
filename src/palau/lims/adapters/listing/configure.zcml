@@ -40,13 +40,6 @@
     provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".sampletypes.SampleTypesClientsListingAdapter" />
 
-  <!-- Analysis Profiles listing -->
-  <subscriber
-      for="senaite.core.browser.controlpanel.analysisprofiles.view.AnalysisProfilesView
-         *"
-      provides="senaite.app.listing.interfaces.IListingViewAdapter"
-      factory=".analysisprofiles.AnalysisProfilesListingAdapter" />
-
   <!-- Analysis Reports listing (Client) -->
   <subscriber
       for="bika.lims.browser.publish.reports_listing.ReportsListingView
