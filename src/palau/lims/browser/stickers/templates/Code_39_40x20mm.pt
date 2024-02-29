@@ -30,9 +30,12 @@
             tal:content="python:item.PatientFullName"/>
       </tr>
       <tr>
+        <td colspan="2" tal:content="item/MedicalRecordNumber/value|nothing"></td>
+      </tr>
+      <tr>
         <td colspan="2" class="date_received"
             tal:define="received python:item.DateReceived;
-                   received python:view.short_date(received) if received else '-- due --'"
+                   received python:view.long_date(received) if received else '-- due --'"
             tal:content="received">Date received</td>
       </tr>
     </table>
