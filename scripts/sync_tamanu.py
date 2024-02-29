@@ -19,7 +19,6 @@ parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
 
 def play(host, email, password):
 
-    import pdb;pdb.set_trace()
     portal = api.get_portal()
     # start a remote session with tamanu
     session = TamanuSession(host)
@@ -34,19 +33,35 @@ def play(host, email, password):
     service_request = resources[0]
     request_id = service_request.get("id")
 
-    organization = service_request.get("serviceProvider")
-    # organization = {
-    #     u'display': u'Facility 1', u'id': u'b451d7dc-746b-4203-afcb-7c695ca4a743'
-    # }
+    encounter = service_request.get("encounter")
+    organization = encounter.get("serviceProvider")
 
-    org_name = organization.get("display")
-    org_tamanu_uid = organization.get("id")
-    client = service_request.search("serviceProvider")
+    if organization:
+        org_name = organization.get("display")
+        org_tamanu_uid = organization.get("id")
+        client = service_request.search_by_uid(org_tamanu_uid)
 
-    if not client:
-        client = api.create(portal.clients, "Client", title=org_name)
-        setattr(client, "tamanu_uid", org_tamanu_uid)
-        client.reindexObject()
+        if not client:
+            client = api.create(portal.clients, "Client", title=org_name)
+            setattr(client, "tamanu_uid", org_tamanu_uid)
+            client.reindexObject()
+
+    # get the contact via FHIR's requester
+    requester = service_request.get("requester")
+    contact = service_request.search_by_uid(requester.get("id"))
+    import pdb;pdb.set_trace()
+
+    if not contact:
+        name = requester.get("name")[0]
+        name_text = name.get("text")
+        contact_firstname, contact_lastname = name_text.split(" ", 1)
+        contact = api.create(
+            client, "Contact",
+            Firstname=contact_firstname,
+            Lastname=contact_lastname
+        )
+        setattr(contact, "tamanu_uid", requester.get("id"))
+        contact.reindexObject()
 
     status = service_request.get("status")
     priority = service_request.get("priority")
@@ -63,8 +78,6 @@ def play(host, email, password):
     # get the patient via FHIR's subject
     patient = service_request.get("subject")
 
-    # get the ward? via FHIR's encounter
-    encounter = service_request.get("encounter")
     locations = encounter.get("location")
 
     # get the tests requested via FHIR's orderDetail

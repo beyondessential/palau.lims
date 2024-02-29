@@ -56,7 +56,13 @@ class BaseResource(object):
             if self.is_reference(record):
                 obj = self.get_reference(record)
                 tamanu_uid = obj.get("id")
-        query = {"tamanu_uid": tamanu_uid}
+        results = self.search_by_uid(tamanu_uid)
+        return results
+
+    def search_by_uid(self, uid=None):
+        """Search
+        """
+        query = {"tamanu_uid": uid}
         results = api.search(query, catalog=UID_CATALOG)
         if len(results) > 0:
             return results[0]
