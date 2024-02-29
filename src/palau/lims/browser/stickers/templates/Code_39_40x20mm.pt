@@ -30,7 +30,7 @@
             tal:content="python:item.PatientFullName"/>
       </tr>
       <tr>
-        <td colspan="2" tal:content="item/MedicalRecordNumber/value"></td>
+        <td colspan="2" tal:content="item/MedicalRecordNumber/value|nothing"></td>
       </tr>
       <tr>
         <td colspan="2" class="date_received"
