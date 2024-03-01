@@ -29,7 +29,7 @@
 }
 
 .sticker .hazardous img {
-    width: 10px;
+    width: 8px;
 }
 
 .sticker .item-info table {
@@ -40,6 +40,10 @@
 
 .sticker .item-info table td {
     text-align: center;
+}
+
+.sticker .item-info table td .large-info {
+    font-size: 7pt;
 }
 
 .barcode {
