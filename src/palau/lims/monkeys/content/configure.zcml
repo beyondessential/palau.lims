@@ -4,7 +4,6 @@
 
   <!-- Includes -->
   <include file="analysis.zcml"/>
-  <include file="analysisprofile.zcml"/>
   <include file="analysisrequest.zcml"/>
   <include file="client.zcml"/>
   <include file="sampletype.zcml"/>

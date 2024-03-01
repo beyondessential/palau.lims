@@ -268,11 +268,6 @@ class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
     def get_object_info(self):
         object_info = self.get_base_info()
         uid = api.get_uid(self.context)
-        object_info["filter_queries"] = {
-            "Profiles": {
-                "sampletype_uid": [uid, None],
-            }
-        }
 
         # If there is only one specification assigned to this sample type,
         # auto-choose that specification
@@ -298,7 +293,7 @@ class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
 @adapter(IAddSampleFieldsFlush)
 class AddSampleFieldsFlush(object):
     """Health-specific flush of fields for Sample Add form. When the value for
-    SampleType changes, flush the fields "AnalysisProfile"
+    SampleType changes, flush the fields "Specification"
     """
 
     def __init__(self, context):
@@ -307,7 +302,6 @@ class AddSampleFieldsFlush(object):
     def get_flush_settings(self):
         return {
             "SampleType": [
-                "Profiles",
                 "Specification",
             ],
         }
