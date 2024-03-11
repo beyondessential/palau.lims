@@ -65,7 +65,7 @@ class BaseResource(object):
         query = {"tamanu_uid": uid}
         results = api.search(query, catalog=UID_CATALOG)
         if len(results) > 0:
-            return results[0]
+            return api.get_object(results[0])
         return None
 
     def __repr__(self):

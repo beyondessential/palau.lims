@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import transaction
 from datetime import timedelta
 from bika.lims import api
+from bika.lims.utils.analysisrequest import create_analysisrequest
+from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu.session import TamanuSession
 
@@ -34,43 +37,40 @@ def play(host, email, password):
     request_id = service_request.get("id")
 
     encounter = service_request.get("encounter")
-    organization = encounter.get("serviceProvider")
+    service_provider = encounter.get("serviceProvider")
 
-    if organization:
-        org_name = organization.get("display")
+    if service_provider:
+        organization = service_request.get_reference(service_provider)
+        org_name = organization.get("name")
         org_tamanu_uid = organization.get("id")
         client = service_request.search_by_uid(org_tamanu_uid)
+        import pdb; pdb.set_trace()
 
         if not client:
             client = api.create(portal.clients, "Client", title=org_name)
             setattr(client, "tamanu_uid", org_tamanu_uid)
             client.reindexObject()
 
-    # get the contact via FHIR's requester
-    requester = service_request.get("requester")
-    contact = service_request.search_by_uid(requester.get("id"))
-    import pdb;pdb.set_trace()
+        # get the contact via FHIR's requester
+        requester = service_request.get("requester")
+        contact = service_request.search_by_uid(requester.get("id"))
 
-    if not contact:
-        name = requester.get("name")[0]
-        name_text = name.get("text")
-        contact_firstname, contact_lastname = name_text.split(" ", 1)
-        contact = api.create(
-            client, "Contact",
-            Firstname=contact_firstname,
-            Lastname=contact_lastname
-        )
-        setattr(contact, "tamanu_uid", requester.get("id"))
-        contact.reindexObject()
+        if not contact:
+            name = requester.get("name")[0]
+            name_text = name.get("text")
+            contact_firstname, contact_lastname = name_text.split(" ", 1)
+            contact = api.create(
+                client, "Contact",
+                Firstname=contact_firstname,
+                Surname=contact_lastname
+            )
+            setattr(contact, "tamanu_uid", requester.get("id"))
 
     status = service_request.get("status")
     priority = service_request.get("priority")
 
     # get the raw returned information about the FHIR's requester
     contact = service_request.get_raw("requester")
-
-    # get the contact via FHIR's requester
-    contact = service_request.get("requester")
 
     # get the raw returned information about the FHIR's requester
     contact = service_request.get_raw("subject")
@@ -84,6 +84,10 @@ def play(host, email, password):
     tests = service_request.get("orderDetail")
     test_ids = [test["coding"][0]["code"] for test in tests]
 
+    # Commit transaction
+    logger.info("Commit transaction ...")
+    transaction.commit()
+    logger.info("Commit transaction [DONE]")
 
 
 def main(app):
