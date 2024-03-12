@@ -8,6 +8,7 @@ from bika.lims.utils.analysisrequest import create_analysisrequest
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu.session import TamanuSession
+from senaite.patient import api as patient_api
 
 __doc__ = """
 Import remote data from Tamanu
@@ -66,6 +67,15 @@ def play(host, email, password):
             )
             setattr(contact, "tamanu_uid", requester.get("id"))
 
+        # get the patient via FHIR's subject
+        subject = service_request.get("subject")
+        patient = service_request.search_by_uid(subject.get("id"))
+        if not patient:
+            patient_info = service_request.get_patient_info(subject)
+            container = patient_api.get_patient_folder()
+            patient = api.create(container, "Patient", **patient_info)
+            setattr(patient, "tamanu_uid", subject.get("id"))
+
     status = service_request.get("status")
     priority = service_request.get("priority")
 
@@ -74,9 +84,6 @@ def play(host, email, password):
 
     # get the raw returned information about the FHIR's requester
     contact = service_request.get_raw("subject")
-
-    # get the patient via FHIR's subject
-    patient = service_request.get("subject")
 
     locations = encounter.get("location")
 
