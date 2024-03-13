@@ -6,10 +6,11 @@ import json
 import requests
 import six
 from palau.lims import logger
+from palau.lims.tamanu.interfaces import ITamanuResource
+from palau.lims.tamanu.resources import TamanuResource
+from zope.component import queryAdapter
 
 # endpoint-specific slugs
-from palau.lims.tamanu.resource import BaseResource
-
 SLUGS = (
     ("login", "api"),
 )
@@ -96,7 +97,32 @@ class TamanuSession(object):
 
     def get_resource_by_uid(self, resource_type, uid):
         endpoint = "{}/{}".format(resource_type, uid)
-        return self.get(endpoint)
+        item = self.get(endpoint)
+        return self.to_resource(item)
+
+    def to_resource(self, item):
+        """Converts the item to a Tamanu resource of suitable type
+        """
+        if not item:
+            return None
+
+        # items without these keys are not supported
+        required = ["resourceType", "id"]
+        for key in required:
+            if not item.get(key, False):
+                logger.error("Cannot get resource: %s is empty" % key)
+                return None
+
+        # Look-up the proper type by using named adapters, where the name
+        # is the value for 'resourceType' name
+        resource_type = item.get("resourceType")
+        name = "tamanu.resource.{}".format(resource_type)
+        resource = queryAdapter(self, ITamanuResource, name)
+        if resource:
+            return resource.wrap(item)
+
+        # Fall-back to default
+        return TamanuResource(self, data=item)
 
     def get_resources(self, resource_type, **kwargs):
         last_updated = kwargs.pop("_lastUpdated", None)
@@ -113,6 +139,8 @@ class TamanuSession(object):
         entries = data.get("entry", [])
 
         # each entry has the resource itself under 'resource'
-        resources = map(lambda entry: entry.get("resource"), entries)
-        resources = filter(None, resources)
-        return [BaseResource(self, resource) for resource in resources]
+        items = map(lambda entry: entry.get("resource"), entries)
+
+        # return the proper resource types
+        resources = map(self.to_resource, items)
+        return filter(None, resources)

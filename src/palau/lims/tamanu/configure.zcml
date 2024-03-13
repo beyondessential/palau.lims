@@ -3,5 +3,6 @@
   <!-- Package includes -->
   <include package=".catalog" />
   <include package=".consumers" />
+  <include package=".resources" />
 
 </configure>

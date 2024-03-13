@@ -93,3 +93,11 @@ def get_object(thing, default=_marker):
         return api.get_object(thing)
 
     return api.get_object(thing, default=default)
+
+
+def get_status(thing):
+    """Gets the state of a resource or the review state of a SENAITE object
+    """
+    if is_tamanu_resource(thing):
+        return thing.get_raw("status")
+    return api.get_review_status(thing)

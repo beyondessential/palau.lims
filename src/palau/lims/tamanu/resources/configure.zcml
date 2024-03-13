@@ -1,0 +1,13 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <!-- ServiceRequest -->
+  <adapter name="tamanu.resource.ServiceRequest"
+           for="palau.lims.tamanu.session.TamanuSession"
+           factory=".servicerequest.ServiceRequest"/>
+
+  <!-- Patient -->
+  <adapter name="tamanu.resource.Patient"
+           for="palau.lims.tamanu.session.TamanuSession"
+           factory=".patient.PatientResource"/>
+
+</configure>
