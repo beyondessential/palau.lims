@@ -1,8 +1,7 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    i18n_domain="palau.lims">
+<configure xmlns="http://namespaces.zope.org/zope">
 
   <!-- Package includes -->
+  <include package=".catalog" />
   <include package=".consumers" />
 
 </configure>

@@ -5,7 +5,4 @@
   <!-- Analysis Indexes -->
   <adapter name="date_sampled" factory=".indexers.date_sampled"/>
 
-  <!-- Content Indexes -->
-  <adapter name="tamanu_uid" factory=".indexers.tamanu_uid"/>
-
 </configure>

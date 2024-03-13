@@ -240,3 +240,11 @@ def remove_analysisprofile_behavior(tool):
     reindex_index(SETUP_CATALOG, "sampletype_title")
 
     logger.info("Setup AnalysisProfile behavior [DONE]")
+
+
+def setup_tamanu_catalogs(tool):
+    """Setup the catalogs for the integration with Tamanu to work properly
+    """
+    from palau.lims.tamanu.setuphandlers import setup_catalogs
+    portal = tool.aq_inner.aq_parent
+    setup_catalogs(portal)

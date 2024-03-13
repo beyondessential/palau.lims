@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-#
-# This file is part of PALAU.LIMS
-#
-# Copyright 2020-2023 Beyond Essential Systems Pty Ltd
+
+import logging
+
+PRODUCT_NAME = "palau.lims.tamanu"
+
+logger = logging.getLogger(PRODUCT_NAME)

@@ -6,7 +6,6 @@
 
 from bika.lims.interfaces.analysis import IRequestAnalysis
 from plone.indexer import indexer
-from Products.CMFCore.interfaces import IContentish
 
 
 @indexer(IRequestAnalysis)
@@ -15,8 +14,3 @@ def date_sampled(instance):
     """
     sample = instance.getRequest()
     return sample.getDateSampled()
-
-
-@indexer(IContentish)
-def tamanu_uid(instance):
-    return getattr(instance, "tamanu_uid", None)
