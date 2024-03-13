@@ -2,12 +2,15 @@
 
 from bika.lims import api
 from bika.lims.api import UID_CATALOG
-from lims.tamanu.consumers.patient import TAMANU_SEXES
+from palau.lims.tamanu.consumers.patient import TAMANU_SEXES
+from palau.lims.tamanu.interfaces import ITamanuResource
+from zope.interface import implementer
 
 
 _marker = object()
 
 
+@implementer(ITamanuResource)
 class BaseResource(object):
 
     _refs = {}
@@ -15,6 +18,11 @@ class BaseResource(object):
     def __init__(self, session, data):
         self._session = session
         self._data = data
+
+    def UID(self):
+        """Returns the Tamanu UID of this resource
+        """
+        return self.get("id")
 
     def get_raw(self, field_name, default=None):
         return self._data.get(field_name, default)
