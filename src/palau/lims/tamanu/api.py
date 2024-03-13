@@ -57,7 +57,7 @@ def get_brain_by_tamanu_uid(uid, default=None):
         return default
 
     uc = api.get_tool(api.UID_CATALOG)
-    brains = uc(UID=uid)
+    brains = uc(tamanu_uid=uid)
     if len(brains) != 1:
         return default
     return brains[0]
@@ -105,7 +105,7 @@ def get_status(thing):
     return api.get_review_status(thing)
 
 
-def create_object(resource, **kwargs):
+def create_object(container, resource, **kwargs):
     """Creates an object for the given Tamanu resource
     """
     if not is_tamanu_resource(resource):
@@ -123,12 +123,15 @@ def create_object(resource, **kwargs):
     info.update(kwargs)
 
     # get the container and portal_type
-    container = info.pop("container")
     container = api.get_object(container)
     portal_type = info.pop("portal_type")
 
     # create the object
     obj = api.create(container, portal_type, **info)
+
+    # mark the object with ITamanuContent, so we can always know before hand
+    # if this object has a counterpart resource at Tamanu
+    alsoProvides(obj, ITamanuContent)
 
     # assign the tamanu uid, along with current data so we can always use
     # the original information, even when connection with Tamanu is lost
@@ -136,7 +139,14 @@ def create_object(resource, **kwargs):
     annotation["uid"] = tamanu_uid
     annotation["data"] = resource.to_dict()
 
-    # mark the object with ITamanuContent, so we can always know before hand
-    # if this object has a counterpart resource at Tamanu
-    alsoProvides(obj, ITamanuContent)
+    # XXX this shouldn't be necessary
+    # explicitly catalog in uid_catalog
+    uid_catalog = api.get_tool(api.UID_CATALOG)
+    # we catalog the object here below the absolute path, as it is done in
+    # `plone.app.referencablebehavior.uidcatalog``
+    abs_url = "/".join(obj.getPhysicalPath())
+    uid_catalog.catalog_object(obj, abs_url)
+    # reindex in registered catalogs
+    obj.reindexObject()
+
     return obj

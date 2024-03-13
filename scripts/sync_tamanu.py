@@ -41,8 +41,8 @@ def pull_and_sync(host, email, password):
         resource = service_request.getPatientResource()
         patient = resource.getObject()
         if not patient:
-            patient = tamanu_api.create_object(resource)
-
+            container = api.get_portal().patients
+            patient = tamanu_api.create_object(container, resource)
 
 
 def play(host, email, password):

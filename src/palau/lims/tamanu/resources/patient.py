@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from bika.lims import api
-from bika.lims.api import UID_CATALOG
-from palau.lims.tamanu.consumers.patient import TAMANU_SEXES
+from palau.lims.tamanu.config import TAMANU_SEXES
 from palau.lims.tamanu.resources import TamanuResource
 
 _marker = object()
@@ -10,76 +9,59 @@ _marker = object()
 
 class PatientResource(TamanuResource):
 
-    def search(self, field_name=None):
-        """Search
-        """
-        tamanu_uid = self.get("id")
-        if field_name:
-            record = self.get_raw(field_name, _marker)
-            if self.is_reference(record):
-                obj = self.get_reference(record)
-                tamanu_uid = obj.get("id")
-        results = self.search_by_uid(tamanu_uid)
-        return results
-
-    def search_by_uid(self, uid=None):
-        """Search
-        """
-        query = {"tamanu_uid": uid}
-        results = api.search(query, catalog=UID_CATALOG)
-        if len(results) > 0:
-            return api.get_object(results[0])
-        return None
-
-    def get_patient_fullname(self, patient_names):
+    def get_fullname(self):
         """Get patient's full name from resource payload
         """
+        patient_names = self.get("name")
         fullname = next((
             name for name in patient_names
-            if name["use"] == "official"
+            if name.get("use") == "official"
         ), None)
         return fullname
 
-    def get_patient_givenname(self, fullname):
+    def get_givenname(self):
         """Get patient's given name from full name
         """
+        fullname = self.get_fullname()
         if fullname:
             return fullname.get("given", "")
         return ""
 
-    def get_patient_address(self, patient_addresses):
+    def get_address(self):
         """Get patient's address from resource payload
         """
+        patient_addresses = self.get("address")
         address = next((
             patient_address for patient_address in patient_addresses
-            if patient_address["type"] == "physical"
-               and patient_address["use"] == "home"  # noqa
+            if patient_address.get("type") == "physical"
+               and patient_address.get("use") == "home"  # noqa
         ), None)
         return address
 
-    def get_patient_info(self, patient_resource):
-        """Convert to patient dict from patient object data
+    def to_object_info(self):
+        """Returns a dict representation of the Patient resource, suitable for
+        the creation and edition of SENAITE Patient objects
         """
         sexes = dict(TAMANU_SEXES)
 
         usual_identifier = next(iter(
             filter(
-                lambda x: x["use"] == "usual",
-                patient_resource['identifier']
+                lambda x: x.get("use") == "usual",
+                self.get('identifier')
             )
         ))
         mrn = usual_identifier.get("value")
-        sex = sexes[patient_resource.get("gender", "")]
-        fullname = self.get_patient_fullname(patient_resource["name"])
-        givenname = self.get_patient_givenname(fullname)
+        sex = sexes.get(self.get("gender")) or ""
+        fullname = self.get_fullname()
+        givenname = self.get_givenname()
         firstname = givenname[0] if givenname != "" else ""
         middlename = (
             givenname[1]
             if givenname != "" and len(givenname) == 2 else ""
         )
         lastname = fullname.get("family", "")
-        birthdate = patient_resource.get("birthDate", None)
-        address = self.get_patient_address(patient_resource["address"])
+        birthdate = self.get("birthDate")
+        address = self.get_address()
 
         if address:
             address_line = address.get("line", [""])
@@ -100,4 +82,5 @@ class PatientResource(TamanuResource):
             "firstname": api.safe_unicode(firstname),
             "middlename": api.safe_unicode(middlename),
             "lastname": api.safe_unicode(lastname),
+            "portal_type": "Patient",
         }
