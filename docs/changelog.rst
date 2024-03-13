@@ -4,6 +4,10 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #133 Compatibility with senaite.core#2509
+- #130 Add more details to stickers
+- #132 Compatibility with senaite.core#2492
+- #129 Consider specification ranges with max=='0' to be within normal values
 - #127 Add a Rejector user defined role and group
 - #125 Compatibility with senaite.app.supermodel#19
 - #123 Add Zendesk's BES Support Centre Icon

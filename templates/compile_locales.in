@@ -1,13 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-LOCALES=${buildout:src-dir}/src/palau/lims/locales
+SRC_BASE_DIR=${buildout:directory}/src
+LOCALES=$SRC_BASE_DIR/palau.lims/src/palau/lims/locales
 
 # Clean all generated .mo files
-find $LOCALES -name "*.mo" -delete
+find "$LOCALES" -name "*.mo" -delete
 
 # Manually compile all po files
 for po in $(find "$LOCALES" -name '*.po' | sort -t '\0' -n)
 do
     echo "Compiling $(dirname "$po")/$(basename "$po") ..."
-    msgfmt -o "$(dirname "$po")/$(basename "$po" .po).mo" "$po";
+    msgfmt -o "$(dirname "$po")/$(basename "$po" .po).mo" "$po" --use-fuzzy;
 done
