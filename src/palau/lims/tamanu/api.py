@@ -5,11 +5,13 @@
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
 from bika.lims import api
+from palau.lims.tamanu import logger
 from palau.lims.tamanu.config import TAMANU_STORAGE
 from palau.lims.tamanu.interfaces import ITamanuContent
 from palau.lims.tamanu.interfaces import ITamanuResource
 from persistent.dict import PersistentDict
 from zope.annotation.interfaces import IAnnotations
+from zope.interface import alsoProvides
 
 _marker = object
 
@@ -42,7 +44,7 @@ def get_tamanu_uid(obj):
     """Returns the UID of the counterpart content at Tamanu, if any
     """
     if is_tamanu_resource(obj):
-        return obj.UID()
+        return obj.UID
 
     storage = get_tamanu_storage(obj)
     return storage.get("uid", None)
@@ -86,7 +88,7 @@ def get_object(thing, default=_marker):
     """Get the full content object
     """
     if is_tamanu_resource(thing):
-        return get_object_by_tamanu_uid(thing.UID(), default=default)
+        return get_object_by_tamanu_uid(thing.UID, default=default)
 
     # rely on core's api
     if default is _marker:
@@ -101,3 +103,40 @@ def get_status(thing):
     if is_tamanu_resource(thing):
         return thing.get_raw("status")
     return api.get_review_status(thing)
+
+
+def create_object(resource, **kwargs):
+    """Creates an object for the given Tamanu resource
+    """
+    if not is_tamanu_resource(resource):
+        raise ValueError("Type not supported: {}".format(repr(type(resource))))
+
+    # check if the object exists already!
+    tamanu_uid = resource.UID
+    brain = get_brain_by_tamanu_uid(tamanu_uid)
+    if brain:
+        raise ValueError("An object with Tamanu's UID {} exists already"
+                         .format(tamanu_uid))
+
+    # get the data from the resource
+    info = resource.to_object_info()
+    info.update(kwargs)
+
+    # get the container and portal_type
+    container = info.pop("container")
+    container = api.get_object(container)
+    portal_type = info.pop("portal_type")
+
+    # create the object
+    obj = api.create(container, portal_type, **info)
+
+    # assign the tamanu uid, along with current data so we can always use
+    # the original information, even when connection with Tamanu is lost
+    annotation = get_tamanu_storage(obj)
+    annotation["uid"] = tamanu_uid
+    annotation["data"] = resource.to_dict()
+
+    # mark the object with ITamanuContent, so we can always know before hand
+    # if this object has a counterpart resource at Tamanu
+    alsoProvides(obj, ITamanuContent)
+    return obj

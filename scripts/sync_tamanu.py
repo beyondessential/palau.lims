@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import transaction
 from datetime import timedelta
+
 from bika.lims import api
-from bika.lims.utils.analysisrequest import create_analysisrequest
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
+from palau.lims.tamanu import api as tamanu_api
 from palau.lims.tamanu.session import TamanuSession
-from senaite.patient import api as patient_api
 
 __doc__ = """
 Import remote data from Tamanu
@@ -19,6 +18,31 @@ parser = argparse.ArgumentParser(description=__doc__,
 
 parser.add_argument("--tamanu_host", "-th", help="Tamanu host")
 parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
+
+
+def pull_and_sync(host, email, password):
+    # start a remote session with tamanu
+    session = TamanuSession(host)
+    session.login(email, password)
+
+    # get the service requests created/modified since 15d ago
+    since = timedelta(days=-15)
+    resources = session.get_resources("ServiceRequest", _lastUpdated=since)
+    for service_request in resources:
+        import pdb;pdb.set_trace()
+
+        # check if a sample for this service_request exists already
+        sample = service_request.getObject()
+        if sample:
+            # XXX Update the sample with Tamanu's info?
+            continue
+
+        # get or create the patient via FHIR's subject
+        resource = service_request.getPatientResource()
+        patient = resource.getObject()
+        if not patient:
+            patient = tamanu_api.create_object(resource)
+
 
 
 def play(host, email, password):
@@ -45,7 +69,6 @@ def play(host, email, password):
         org_name = organization.get("name")
         org_tamanu_uid = organization.get("id")
         client = service_request.search_by_uid(org_tamanu_uid)
-        import pdb; pdb.set_trace()
 
         if not client:
             client = api.create(portal.clients, "Client", title=org_name)
@@ -67,14 +90,6 @@ def play(host, email, password):
             )
             setattr(contact, "tamanu_uid", requester.get("id"))
 
-        # get the patient via FHIR's subject
-        subject = service_request.get("subject")
-        patient = service_request.search_by_uid(subject.get("id"))
-        if not patient:
-            patient_info = service_request.get_patient_info(subject)
-            container = patient_api.get_patient_folder()
-            patient = api.create(container, "Patient", **patient_info)
-            setattr(patient, "tamanu_uid", subject.get("id"))
 
     status = service_request.get("status")
     priority = service_request.get("priority")
@@ -93,7 +108,7 @@ def play(host, email, password):
 
     # Commit transaction
     logger.info("Commit transaction ...")
-    transaction.commit()
+    #transaction.commit()
     logger.info("Commit transaction [DONE]")
 
 
@@ -116,7 +131,7 @@ def main(app):
     # Setup environment
     setup_script_environment(app)
 
-    play(host, parts[0], parts[1])
+    pull_and_sync(host, parts[0], parts[1])
 
 
 

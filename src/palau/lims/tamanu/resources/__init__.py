@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import copy
+from senaite.core.api import dtime
+from palau.lims.tamanu.api import get_object_by_tamanu_uid
 from palau.lims.tamanu import logger
 from palau.lims.tamanu.interfaces import ITamanuResource
 from zope.interface import implementer
@@ -21,10 +24,32 @@ class TamanuResource(object):
         self._data = data
         return self
 
+    @property
     def UID(self):
         """Returns the Tamanu UID of this resource
+        Mimics the behavior of DX and AT types
         """
         return self.get_raw("id")
+
+    @property
+    def modified(self):
+        """Returns the last modification date of this resource
+        Mimics te behavior of DX and AT types
+        """
+        meta = self.get_raw("meta") or {}
+        last_updated = meta.get("lastUpdated", None)
+        return dtime.to_dt(last_updated)
+
+    def getObject(self):
+        """Returns the counterpart SENAITE object of this Tamanu resource
+        Mimics the behavior of DX and AT types
+        """
+        return get_object_by_tamanu_uid(self.UID, default=None)
+
+    def to_dict(self):
+        """Returns a dict representation of this object
+        """
+        return copy.deepcopy(self._data)
 
     def get_raw(self, field_name, default=None):
         return self._data.get(field_name, default)
@@ -63,6 +88,12 @@ class TamanuResource(object):
             return self.get_reference(record)
 
         return record
+
+    def to_object_info(self):
+        """Returns a dict with the necessary information for the creation of
+        an object counterpart at senaite
+        """
+        raise NotImplementedError("To be implemented by subclass")
 
     def __repr__(self):
         return repr(self._data)
