@@ -17,3 +17,16 @@ class ServiceRequest(TamanuResource):
         """
         specimen = self.get("specimen")
         return map(self.get_reference, specimen)
+
+    def getEncounter(self):
+        """Returns the Encounter resource assigned to this ServiceRequest
+        """
+        return self.get("encounter")
+
+    def getServiceProvider(self):
+        """Returns the Organization that provides the service
+        """
+        encounter = self.getEncounter()
+        if not encounter:
+            return None
+        return encounter.getServiceProvider()

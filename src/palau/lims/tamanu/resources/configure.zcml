@@ -15,4 +15,14 @@
            for="palau.lims.tamanu.session.TamanuSession"
            factory=".specimen.SpecimenResource"/>
 
+  <!-- Encounter -->
+  <adapter name="tamanu.resource.Encounter"
+           for="palau.lims.tamanu.session.TamanuSession"
+           factory=".encounter.Encounter"/>
+
+  <!-- Encounter -->
+  <adapter name="tamanu.resource.Organization"
+           for="palau.lims.tamanu.session.TamanuSession"
+           factory=".organization.Organization"/>
+
 </configure>

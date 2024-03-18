@@ -6,7 +6,7 @@ from datetime import timedelta
 from bika.lims import api
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
-from palau.lims.tamanu import api as tamanu_api
+from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu.session import TamanuSession
 
 __doc__ = """
@@ -37,6 +37,14 @@ def pull_and_sync(host, email, password):
             # XXX Update the sample with Tamanu's info?
             continue
 
+        # get or create the client via FHIR's encounter/serviceProvider
+        resource = service_request.getServiceProvider()
+        client = resource.getObject()
+        if not client:
+            container = api.get_portal().clients
+            client = tapi.create_object(container, resource,
+                                        portal_type="Client")
+
         # get SampleType, Site and DateSampled via FHIR's specimen
         specimen_resource = service_request.getSpecimenResource()
         specimen = specimen_resource[0]
@@ -49,7 +57,7 @@ def pull_and_sync(host, email, password):
         patient = resource.getObject()
         if not patient:
             container = api.get_portal().patients
-            patient = tamanu_api.create_object(container, resource)
+            patient = tapi.create_object(container, resource)
 
 
 def play(host, email, password):
