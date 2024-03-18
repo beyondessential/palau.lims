@@ -4,6 +4,8 @@ import argparse
 from datetime import timedelta
 
 from bika.lims import api
+from bika.lims.interfaces import IClient
+from bika.lims.interfaces import IContact
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
@@ -18,6 +20,31 @@ parser = argparse.ArgumentParser(description=__doc__,
 
 parser.add_argument("--tamanu_host", "-th", help="Tamanu host")
 parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
+
+
+def get_client(resource):
+    """Returns a client object counterpart for the given resource
+    """
+    client = resource.getObject()
+    if not client:
+        container = api.get_portal().clients
+        return tapi.create_object(container, resource, portal_type="Client")
+    if IClient.providedBy(client):
+        return client
+    raise TypeError("Object %s is not from Client type" % repr(client))
+
+
+def get_contact(client, resource):
+    """Returns a contact object counterpart for the given resource and client
+    """
+    contact = resource.getObject()
+    if not contact:
+        return tapi.create_object(client, resource, portal_type="Contact")
+    if IContact.providedBy(contact):
+        if api.get_parent(contact) == client:
+            return contact
+        raise TypeError("Contact %s does not belong to client %s")
+    raise TypeError("Object %s is not from Contact type" % repr(contact))
 
 
 def pull_and_sync(host, email, password):
@@ -39,18 +66,11 @@ def pull_and_sync(host, email, password):
 
         # get or create the client via FHIR's encounter/serviceProvider
         resource = service_request.getServiceProvider()
-        client = resource.getObject()
-        if not client:
-            container = api.get_portal().clients
-            client = tapi.create_object(container, resource,
-                                        portal_type="Client")
+        client = get_client(resource)
 
-        # get or create the client (FHIR's practitioner)
+        # get or create the contact via FHIR's requester
         resource = service_request.getRequester()
-        contact = resource.getObject()
-        if not contact:
-            contact = tapi.create_object(client, resource,
-                                         portal_type="Contact")
+        contact = get_contact(client, resource)
 
         # TODO what if the contact does not belong to same client?
 
