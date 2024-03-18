@@ -33,7 +33,7 @@ class Practitioner(TamanuResource):
         """Returns the name HL7 record for the given use (e.g. 'official')
         """
         for name in self._get_name():
-            if name.get("use") == "official":
+            if name.get("use") == use:
                 return name
         return None
 
