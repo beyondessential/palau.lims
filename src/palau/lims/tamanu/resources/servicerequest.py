@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from palau.lims import logger
+from palau.lims.tamanu import logger
 from palau.lims.tamanu.resources import TamanuResource
 
 

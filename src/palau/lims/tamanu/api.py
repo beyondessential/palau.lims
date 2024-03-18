@@ -141,13 +141,5 @@ def create_object(container, resource, **kwargs):
     annotation["data"] = resource.to_dict()
 
     # XXX this shouldn't be necessary
-    # explicitly catalog in uid_catalog
-    uid_catalog = api.get_tool(api.UID_CATALOG)
-    # we catalog the object here below the absolute path, as it is done in
-    # `plone.app.referencablebehavior.uidcatalog``
-    abs_url = "/".join(obj.getPhysicalPath())
-    uid_catalog.catalog_object(obj, abs_url)
-    # reindex in registered catalogs
-    obj.reindexObject()
-
+    api.catalog_object(obj)
     return obj

@@ -5,7 +5,7 @@ from datetime import timedelta
 import json
 import requests
 import six
-from palau.lims import logger
+from palau.lims.tamanu import logger
 from palau.lims.tamanu.interfaces import ITamanuResource
 from palau.lims.tamanu.resources import TamanuResource
 from zope.component import queryAdapter

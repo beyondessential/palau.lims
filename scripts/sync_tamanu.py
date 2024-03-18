@@ -166,6 +166,7 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
         request = api.get_request() or api.get_test_request()
         sample = create_sample(client, request, values, services)
         logger.info("Object created: %s" % repr(sample))
+        sample.reindexObject()
 
     if dry_mode:
         # Dry mode. Do not do transaction
