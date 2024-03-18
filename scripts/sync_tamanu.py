@@ -6,6 +6,7 @@ from datetime import timedelta
 from bika.lims import api
 from bika.lims.interfaces import IClient
 from bika.lims.interfaces import IContact
+from senaite.patient.interfaces import IPatient
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
@@ -22,9 +23,10 @@ parser.add_argument("--tamanu_host", "-th", help="Tamanu host")
 parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
 
 
-def get_client(resource):
+def get_client(service_request):
     """Returns a client object counterpart for the given resource
     """
+    resource = service_request.getServiceProvider()
     client = resource.getObject()
     if not client:
         container = api.get_portal().clients
@@ -34,9 +36,13 @@ def get_client(resource):
     raise TypeError("Object %s is not from Client type" % repr(client))
 
 
-def get_contact(client, resource):
+def get_contact(service_request):
     """Returns a contact object counterpart for the given resource and client
     """
+    # get the client
+    client = get_client(service_request)
+    # get the contact
+    resource = service_request.getRequester()
     contact = resource.getObject()
     if not contact:
         return tapi.create_object(client, resource, portal_type="Contact")
@@ -45,6 +51,19 @@ def get_contact(client, resource):
             return contact
         raise TypeError("Contact %s does not belong to client %s")
     raise TypeError("Object %s is not from Contact type" % repr(contact))
+
+
+def get_patient(service_request):
+    """Returns a patient object counterpart for the given resource
+    """
+    resource = service_request.getPatientResource()
+    patient = resource.getObject()
+    if not patient:
+        container = api.get_portal().patients
+        return tapi.create_object(container, resource, portal_type="Patient")
+    if IPatient.providedBy(patient):
+        return patient
+    raise TypeError("Object %s is not from Patient type" % repr(patient))
 
 
 def pull_and_sync(host, email, password):
@@ -65,14 +84,13 @@ def pull_and_sync(host, email, password):
             continue
 
         # get or create the client via FHIR's encounter/serviceProvider
-        resource = service_request.getServiceProvider()
-        client = get_client(resource)
+        client = get_client(service_request)
 
         # get or create the contact via FHIR's requester
-        resource = service_request.getRequester()
-        contact = get_contact(client, resource)
+        contact = get_contact(service_request)
 
-        # TODO what if the contact does not belong to same client?
+        # get or create the patient via FHIR's subject
+        patient = get_patient(service_request)
 
         # get SampleType, Site and DateSampled via FHIR's specimen
         specimen_resource = service_request.getSpecimenResource()
@@ -81,12 +99,7 @@ def pull_and_sync(host, email, password):
         site = specimen.get_site()
         date_sampled = specimen.get_date_sampled()
 
-        # get or create the patient via FHIR's subject
-        resource = service_request.getPatientResource()
-        patient = resource.getObject()
-        if not patient:
-            container = api.get_portal().patients
-            patient = tapi.create_object(container, resource)
+        # TODO create the sample
 
 
 def play(host, email, password):

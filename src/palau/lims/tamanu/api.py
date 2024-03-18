@@ -128,6 +128,7 @@ def create_object(container, resource, **kwargs):
 
     # create the object
     obj = api.create(container, portal_type, **info)
+    logger.info("Object created: %s" % repr(obj))
 
     # mark the object with ITamanuContent, so we can always know before hand
     # if this object has a counterpart resource at Tamanu
