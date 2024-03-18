@@ -79,6 +79,11 @@ class TamanuResource(object):
         return self._refs[ref_id]
 
     def get(self, field_name, default=None):
+        # is there any converter for this specific field
+        func = getattr(self, "_get_{}".format(field_name), None)
+        if func and callable(func):
+            return func()
+
         record = self.get_raw(field_name, _marker)
         if record is _marker:
             return default

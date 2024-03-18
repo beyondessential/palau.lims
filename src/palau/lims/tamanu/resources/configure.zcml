@@ -10,7 +10,7 @@
            for="palau.lims.tamanu.session.TamanuSession"
            factory=".patient.PatientResource"/>
 
-  <!-- Speciment -->
+  <!-- Specimen -->
   <adapter name="tamanu.resource.Specimen"
            for="palau.lims.tamanu.session.TamanuSession"
            factory=".specimen.SpecimenResource"/>
@@ -20,9 +20,14 @@
            for="palau.lims.tamanu.session.TamanuSession"
            factory=".encounter.Encounter"/>
 
-  <!-- Encounter -->
+  <!-- Organization -->
   <adapter name="tamanu.resource.Organization"
            for="palau.lims.tamanu.session.TamanuSession"
            factory=".organization.Organization"/>
+
+  <!-- Practitioner -->
+  <adapter name="tamanu.resource.Practitioner"
+           for="palau.lims.tamanu.session.TamanuSession"
+           factory=".practitioner.Practitioner"/>
 
 </configure>

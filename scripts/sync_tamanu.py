@@ -34,7 +34,7 @@ def pull_and_sync(host, email, password):
         # check if a sample for this service_request exists already
         sample = service_request.getObject()
         if sample:
-            # XXX Update the sample with Tamanu's info?
+            # TODO update the sample with Tamanu's info
             continue
 
         # get or create the client via FHIR's encounter/serviceProvider
@@ -44,6 +44,15 @@ def pull_and_sync(host, email, password):
             container = api.get_portal().clients
             client = tapi.create_object(container, resource,
                                         portal_type="Client")
+
+        # get or create the client (FHIR's practitioner)
+        resource = service_request.getRequester()
+        contact = resource.getObject()
+        if not contact:
+            contact = tapi.create_object(client, resource,
+                                         portal_type="Contact")
+
+        # TODO what if the contact does not belong to same client?
 
         # get SampleType, Site and DateSampled via FHIR's specimen
         specimen_resource = service_request.getSpecimenResource()

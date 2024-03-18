@@ -30,3 +30,8 @@ class ServiceRequest(TamanuResource):
         if not encounter:
             return None
         return encounter.getServiceProvider()
+
+    def getRequester(self):
+        """Returns the Requester resource (Practitioner)
+        """
+        return self.get("requester")

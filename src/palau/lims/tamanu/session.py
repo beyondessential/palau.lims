@@ -88,8 +88,7 @@ class TamanuSession(object):
         kwargs["headers"] = headers
 
         # do the GET request
-        logger.info("[GET] {}".format(url))
-        logger.info("[GET PARAMS] {}".format(repr(params)))
+        logger.info("[GET] {} (params={})".format(url, repr(params)))
         resp = requests.get(url, params=params, **kwargs)
 
         # return the response
