@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-from datetime import timedelta
-
+import transaction
 from bika.lims import api
 from bika.lims.interfaces import IClient
 from bika.lims.interfaces import IContact
-from bika.lims.utils.analysisrequest import create_analysisrequest as create_sample
-from senaite.patient.interfaces import IPatient
+from bika.lims.utils.analysisrequest import \
+    create_analysisrequest as create_sample
+from datetime import timedelta
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu.session import TamanuSession
+from senaite.patient.interfaces import IPatient
 
 __doc__ = """
 Import remote data from Tamanu
@@ -172,7 +173,7 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
 
     # Commit transaction
     logger.info("Commit transaction ...")
-    #transaction.commit()
+    transaction.commit()
     logger.info("Commit transaction [DONE]")
 
 
