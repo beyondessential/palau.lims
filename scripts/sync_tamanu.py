@@ -37,6 +37,13 @@ def pull_and_sync(host, email, password):
             # XXX Update the sample with Tamanu's info?
             continue
 
+        # get SampleType, Site and DateSampled via FHIR's specimen
+        specimen_resource = service_request.getSpecimenResource()
+        specimen = specimen_resource[0]
+        sample_type = specimen.get_sample_type()
+        site = specimen.get_site()
+        date_sampled = specimen.get_date_sampled()
+
         # get or create the patient via FHIR's subject
         resource = service_request.getPatientResource()
         patient = resource.getObject()

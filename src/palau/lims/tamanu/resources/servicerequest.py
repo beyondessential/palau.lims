@@ -11,3 +11,9 @@ class ServiceRequest(TamanuResource):
         """Returns the Patient resource assigned to this ServiceRequest, if any
         """
         return self.get("subject")
+
+    def getSpecimenResource(self):
+        """Returns the SampleType resource assigned to this ServiceRequest
+        """
+        specimen = self.get("specimen")
+        return map(self.get_reference, specimen)

@@ -10,4 +10,9 @@
            for="palau.lims.tamanu.session.TamanuSession"
            factory=".patient.PatientResource"/>
 
+  <!-- Speciment -->
+  <adapter name="tamanu.resource.Specimen"
+           for="palau.lims.tamanu.session.TamanuSession"
+           factory=".specimen.SpecimenResource"/>
+
 </configure>
