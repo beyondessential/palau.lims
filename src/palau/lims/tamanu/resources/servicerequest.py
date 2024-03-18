@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from palau.lims import logger
 from palau.lims.tamanu.resources import TamanuResource
 
 
@@ -12,11 +13,17 @@ class ServiceRequest(TamanuResource):
         """
         return self.get("subject")
 
-    def getSpecimenResource(self):
+    def getSpecimen(self):
         """Returns the SampleType resource assigned to this ServiceRequest
         """
-        specimen = self.get("specimen")
-        return map(self.get_reference, specimen)
+        specimens = self.get("specimen")
+        if not specimens:
+            return None
+        if len(specimens) > 1:
+            # TODO only one specimen per service request is supported
+            logger.error("More than one specimen: %s" % repr(specimens))
+            return None
+        return self.get_reference(specimens[0])
 
     def getEncounter(self):
         """Returns the Encounter resource assigned to this ServiceRequest

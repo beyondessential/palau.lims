@@ -6,6 +6,7 @@ from datetime import timedelta
 from bika.lims import api
 from bika.lims.interfaces import IClient
 from bika.lims.interfaces import IContact
+from bika.lims.utils.analysisrequest import create_analysisrequest as create_sample
 from senaite.patient.interfaces import IPatient
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
@@ -21,6 +22,19 @@ parser = argparse.ArgumentParser(description=__doc__,
 
 parser.add_argument("--tamanu_host", "-th", help="Tamanu host")
 parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
+parser.add_argument("--since", "-s", help="Last updated since (days)")
+parser.add_argument("--dry", "-d", help="Run in dry mode")
+
+# Service Request statuses to skip
+SKIP_STATUSES = ["revoked", "draft", "entered-in-error"]
+
+# Priorities mapping
+PRIORITIES = (
+    ("routine", "5"),
+    ("urgent", "3"),
+    ("asap", "3"),
+    ("stat", "1"),
+)
 
 
 def get_client(service_request):
@@ -66,102 +80,95 @@ def get_patient(service_request):
     raise TypeError("Object %s is not from Patient type" % repr(patient))
 
 
-def pull_and_sync(host, email, password):
+def get_services(service_request):
+    """Returns the service objects counterpart for the given resource
+    """
+    # TODO Implement
+    return []
+
+
+def pull_and_sync(host, email, password, since=15, dry_mode=True):
     # start a remote session with tamanu
     session = TamanuSession(host)
     session.login(email, password)
 
-    # get the service requests created/modified since 15d ago
-    since = timedelta(days=-15)
+    # get the service requests created/modified since?
+    since = timedelta(days=-since)
     resources = session.get_resources("ServiceRequest", _lastUpdated=since)
-    for service_request in resources:
-        import pdb;pdb.set_trace()
+    for sr in resources:
 
         # check if a sample for this service_request exists already
-        sample = service_request.getObject()
+        sample = sr.getObject()
         if sample:
             # TODO update the sample with Tamanu's info
             continue
 
-        # get or create the client via FHIR's encounter/serviceProvider
-        client = get_client(service_request)
-
-        # get or create the contact via FHIR's requester
-        contact = get_contact(service_request)
-
-        # get or create the patient via FHIR's subject
-        patient = get_patient(service_request)
+        if sr.status in SKIP_STATUSES:
+            logger.info("Skip (status=%s): %s" % (sr.status, repr(sr)))
+            continue
 
         # get SampleType, Site and DateSampled via FHIR's specimen
-        specimen_resource = service_request.getSpecimenResource()
-        specimen = specimen_resource[0]
+        specimen = sr.getSpecimen()
+        if not specimen:
+            logger.error("No specimen: %s" % repr(sr))
+            continue
+
         sample_type = specimen.get_sample_type()
-        site = specimen.get_site()
+        sample_point = specimen.get_site()
         date_sampled = specimen.get_date_sampled()
 
-        # TODO create the sample
+        # get the priority and others
+        priority = sr.get("priority")
+        priority = dict(PRIORITIES).get(priority, "5")
 
+        # get or create the client via FHIR's encounter/serviceProvider
+        client = get_client(sr)
 
-def play(host, email, password):
+        # get or create the contact via FHIR's requester
+        contact = get_contact(sr)
 
-    portal = api.get_portal()
-    # start a remote session with tamanu
-    session = TamanuSession(host)
-    session.login(email, password)
+        # get or create the patient via FHIR's subject
+        patient = get_patient(sr)
+        patient_mrn = patient.getMRN()
+        patient_dob = patient.getBirthdate()
+        patient_sex = patient.getSex()
+        patient_name = {
+            "firstname": patient.getFirstname(),
+            "middlename": patient.getMiddlename(),
+            "lastname": patient.getLastname(),
+        }
 
-    # get the service requests created/modified since 15d ago
-    since = timedelta(days=-15)
-    resources = session.get_resources("ServiceRequest", _lastUpdated=since)
+        # create the sample
+        services = get_services(sr)
+        values = {
+            "Client": client,
+            "Contact": contact,
+            "SampleType": sample_type,
+            "SamplePoint": sample_point,
+            "DateSampled": date_sampled,
+            "Template": None,
+            "Profiles": [],
+            "MedicalRecordNumber": {"value": patient_mrn},
+            "PatientFullName": patient_name,
+            "DateOfBirth": patient_dob,
+            "Sex": patient_sex,
+            "Priority": priority,
+            #"Ward": api.get_uid(ward),
+            #"ClinicalInformation": "",
+            #"DateOfAdmission": doa,
+            #"CurrentAntibiotics": antibiotics,
+            #"Volume": volume,
+            #"WardDepartment": department,
+            #"Location": dict(LOCATIONS).get("location", ""),
+            #"Site": api.get_uid(sample_point) if sample_point else "",
+        }
+        request = api.get_request() or api.get_test_request()
+        sample = create_sample(client, request, values, services)
+        logger.info("Object created: %s" % repr(sample))
 
-    # inspect the first service request
-    # get the available keys
-    service_request = resources[0]
-    request_id = service_request.get("id")
-
-    encounter = service_request.get("encounter")
-    service_provider = encounter.get("serviceProvider")
-
-    if service_provider:
-        organization = service_request.get_reference(service_provider)
-        org_name = organization.get("name")
-        org_tamanu_uid = organization.get("id")
-        client = service_request.search_by_uid(org_tamanu_uid)
-
-        if not client:
-            client = api.create(portal.clients, "Client", title=org_name)
-            setattr(client, "tamanu_uid", org_tamanu_uid)
-            client.reindexObject()
-
-        # get the contact via FHIR's requester
-        requester = service_request.get("requester")
-        contact = service_request.search_by_uid(requester.get("id"))
-
-        if not contact:
-            name = requester.get("name")[0]
-            name_text = name.get("text")
-            contact_firstname, contact_lastname = name_text.split(" ", 1)
-            contact = api.create(
-                client, "Contact",
-                Firstname=contact_firstname,
-                Surname=contact_lastname
-            )
-            setattr(contact, "tamanu_uid", requester.get("id"))
-
-
-    status = service_request.get("status")
-    priority = service_request.get("priority")
-
-    # get the raw returned information about the FHIR's requester
-    contact = service_request.get_raw("requester")
-
-    # get the raw returned information about the FHIR's requester
-    contact = service_request.get_raw("subject")
-
-    locations = encounter.get("location")
-
-    # get the tests requested via FHIR's orderDetail
-    tests = service_request.get("orderDetail")
-    test_ids = [test["coding"][0]["code"] for test in tests]
+    if dry_mode:
+        # Dry mode. Do not do transaction
+        return
 
     # Commit transaction
     logger.info("Commit transaction ...")
@@ -185,11 +192,17 @@ def main(app):
         print("User and/or password are missing")
         return
 
+    # get since days
+    since = api.to_int(args.since, default=5)
+
+    # dry mode
+    trues = ["True", "true", "1", "yes", "y"]
+    dry = args.dry in trues
+
     # Setup environment
-    setup_script_environment(app)
+    setup_script_environment(app, stream_out=False)
 
-    pull_and_sync(host, parts[0], parts[1])
-
+    pull_and_sync(host, parts[0], parts[1], since=since, dry_mode=dry)
 
 
 if __name__ == "__main__":

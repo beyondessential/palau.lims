@@ -40,6 +40,12 @@ class TamanuResource(object):
         last_updated = meta.get("lastUpdated", None)
         return dtime.to_dt(last_updated)
 
+    @property
+    def status(self):
+        """Returns the status of this resource
+        """
+        return self.get_raw("status")
+
     def getObject(self):
         """Returns the counterpart SENAITE object of this Tamanu resource
         Mimics the behavior of DX and AT types
