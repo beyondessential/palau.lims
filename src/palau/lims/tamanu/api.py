@@ -139,7 +139,9 @@ def create_object(container, resource, **kwargs):
     annotation = get_tamanu_storage(obj)
     annotation["uid"] = tamanu_uid
     annotation["data"] = resource.to_dict()
+    #setattr(obj, "tamanu_uid", tamanu_uid)
 
     # XXX this shouldn't be necessary
     api.catalog_object(obj)
+    obj.reindexObject()
     return obj

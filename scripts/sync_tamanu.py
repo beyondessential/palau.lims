@@ -13,6 +13,7 @@ from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu.session import TamanuSession
 from senaite.patient.interfaces import IPatient
+from senaite.core.catalog import SETUP_CATALOG
 
 __doc__ = """
 Import remote data from Tamanu
@@ -85,7 +86,23 @@ def get_services(service_request):
     """Returns the service objects counterpart for the given resource
     """
     # TODO Implement
-    return []
+    details = service_request.get("orderDetail")
+    keywords = set()
+    for detail in details:
+        keyword = detail.get("text")
+        keywords.add(keyword)
+
+    keywords = list(keywords)
+    if not keywords:
+        return []
+
+    query = {
+        "portal_type": "AnalysisService",
+        "is_active": True,
+        "getKeyword": list(keywords)
+    }
+    brains = api.search(query, SETUP_CATALOG)
+    return map(api.get_object, brains)
 
 
 def pull_and_sync(host, email, password, since=15, dry_mode=True):
