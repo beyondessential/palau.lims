@@ -134,6 +134,17 @@ def create_object(container, resource, **kwargs):
     obj = api.create(container, portal_type, **info)
     logger.info("Object created: %s" % repr(obj))
 
+    # link the tamanu resource to this object
+    link_tamanu_resource(obj, resource)
+    return obj
+
+
+def link_tamanu_resource(obj, resource):
+    """Assigns the tamanu uid to the given object
+    """
+    if not is_tamanu_resource(resource):
+        raise ValueError("Type not supported: {}".format(repr(type(resource))))
+
     # mark the object with ITamanuContent, so we can always know before hand
     # if this object has a counterpart resource at Tamanu
     alsoProvides(obj, ITamanuContent)
@@ -141,13 +152,11 @@ def create_object(container, resource, **kwargs):
     # assign the tamanu uid, along with current data so we can always use
     # the original information, even when connection with Tamanu is lost
     annotation = get_tamanu_storage(obj)
-    annotation["uid"] = tamanu_uid
+    annotation["uid"] = resource.UID
     annotation["data"] = resource.to_dict()
 
     # index tamanu_uid from uid_catalog
     catalog_object(obj)
-
-    return obj
 
 
 def catalog_object(obj):

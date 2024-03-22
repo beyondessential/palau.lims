@@ -119,6 +119,7 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
         sample = sr.getObject()
         if sample:
             # TODO update the sample with Tamanu's info
+            logger.info("----> TO UPDATE: %s" % repr(sample))
             continue
 
         if sr.status in SKIP_STATUSES:
@@ -182,8 +183,9 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
         }
         request = api.get_request() or api.get_test_request()
         sample = create_sample(client, request, values, services)
+        # link the tamanu resource to this sample
+        tapi.link_tamanu_resource(sample, sr)
         logger.info("Object created: %s" % repr(sample))
-        sample.reindexObject()
 
     if dry_mode:
         # Dry mode. Do not do transaction
