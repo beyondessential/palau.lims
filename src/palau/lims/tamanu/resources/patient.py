@@ -1,42 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from bika.lims import api
-from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu.config import TAMANU_SEXES
 from palau.lims.tamanu.resources import TamanuResource
-from senaite.patient import api as papi
 
 _marker = object()
 
 
 class PatientResource(TamanuResource):
-
-    _obj_uid = None
-
-    def getObject(self):
-        """Returns the counterpart SENAITE object of this Tamanu resource
-        Mimics the behavior of DX and AT types
-        """
-        # TODO Duplicate MRN are found!!!
-        obj = api.get_object_by_uid(self._obj_uid, None)
-        if obj:
-            return obj
-
-        obj = tapi.get_object_by_tamanu_uid(self.UID, default=None)
-        if obj:
-            self._obj_uid = api.get_uid(obj)
-            return obj
-
-        mrn = self.get_mrn()
-        if not mrn:
-            return None
-
-        obj = papi.get_patient_by_mrn(mrn, include_inactive=True)
-        if obj:
-            self._obj_uid = api.get_uid(obj)
-            return obj
-
-        return None
 
     def get_mrn(self):
         identifier = self.get_identifier("usual")

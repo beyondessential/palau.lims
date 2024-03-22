@@ -1,6 +1,0 @@
-<configure xmlns="http://namespaces.zope.org/zope">
-
-  <!-- Content Indexes -->
-  <adapter name="tamanu_uid" factory=".indexers.tamanu_uid"/>
-
-</configure>

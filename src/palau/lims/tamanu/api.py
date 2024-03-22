@@ -10,10 +10,13 @@ from palau.lims.tamanu.config import TAMANU_STORAGE
 from palau.lims.tamanu.interfaces import ITamanuContent
 from palau.lims.tamanu.interfaces import ITamanuResource
 from persistent.dict import PersistentDict
+from Products.Archetypes.utils import getRelURL
 from zope.annotation.interfaces import IAnnotations
 from zope.interface import alsoProvides
 
 _marker = object
+
+UID_CATALOG = "uid_catalog"
 
 
 def is_tamanu_content(obj):
@@ -23,7 +26,7 @@ def is_tamanu_content(obj):
 
 
 def is_tamanu_resource(obj):
-    """Returnsw whether the object passed in is a Tamanu's HL7 resource
+    """Returns whether the object passed in is a Tamanu's HL7 resource
     """
     return ITamanuResource.providedBy(obj)
 
@@ -45,9 +48,10 @@ def get_tamanu_uid(obj):
     """
     if is_tamanu_resource(obj):
         return obj.UID
-
-    storage = get_tamanu_storage(obj)
-    return storage.get("uid", None)
+    if is_tamanu_content(obj):
+        storage = get_tamanu_storage(obj)
+        return storage.get("uid", None)
+    return None
 
 
 def get_brain_by_tamanu_uid(uid, default=None):
@@ -139,9 +143,28 @@ def create_object(container, resource, **kwargs):
     annotation = get_tamanu_storage(obj)
     annotation["uid"] = tamanu_uid
     annotation["data"] = resource.to_dict()
-    #setattr(obj, "tamanu_uid", tamanu_uid)
 
-    # XXX this shouldn't be necessary
-    api.catalog_object(obj)
-    obj.reindexObject()
+    # index tamanu_uid from uid_catalog
+    catalog_object(obj)
+
     return obj
+
+
+def catalog_object(obj):
+    """Catalog the object in all registered catalogs
+    """
+    uid_catalog = api.get_tool(UID_CATALOG)
+    if api.is_at_content(obj):
+        # For ATs, the uids of uid_catalog are relative paths to portal root
+        # see Products.Archetypes.UIDCatalog.UIDResolver.catalog_object
+        url = getRelURL(uid_catalog, obj.getPhysicalPath())
+    else:
+        # For DXs, the uids of uid_catalog are absolute paths to portal root
+        # see plone.app.referencablebehavior.uidcatalog
+        url = "/".join(obj.getPhysicalPath())
+
+    # explicitly catalog in uid_catalog
+    uid_catalog.catalog_object(obj, url)
+
+    # reindex in registered catalogs
+    obj.reindexObject()

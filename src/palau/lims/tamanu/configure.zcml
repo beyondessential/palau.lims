@@ -1,8 +1,8 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
   <!-- Package includes -->
-  <include package=".catalog" />
   <include package=".consumers" />
+  <include package=".patches" />
   <include package=".resources" />
 
 </configure>
