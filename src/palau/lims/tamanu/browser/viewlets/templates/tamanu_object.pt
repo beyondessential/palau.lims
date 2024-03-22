@@ -1,0 +1,16 @@
+<div tal:omit-tag=""
+     tal:condition="python: view.is_visible()"
+     i18n:domain="palau.lims">
+
+  <div class="visualClear"></div>
+
+  <div id="portal-alert">
+    <div class="portlet-alert-item alert alert-info">
+      <p class="title mb-0">
+        <strong i18n:translate="">Resource from Tamanu</strong>:
+        <a tal:attributes="href python: view.get_tamanu_metadata_url()"
+           i18n:translate="">show original metadata (JSON)</a>&nbsp;
+      </p>
+    </div>
+  </div>
+</div>
