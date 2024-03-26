@@ -4,6 +4,9 @@ from palau.lims.tamanu import logger
 from palau.lims.tamanu.resources import TamanuResource
 
 
+LAB_TEST = "http://data-dictionary.tamanu-fiji.org/tamanu-mrid-labrequest.html"
+
+
 class ServiceRequest(TamanuResource):
     """Object that represents a ServiceRequest resource from Tamanu
     """
@@ -42,3 +45,9 @@ class ServiceRequest(TamanuResource):
         """Returns the Requester resource (Practitioner)
         """
         return self.get("requester")
+
+    def getLabTestID(self):
+        """Returns the Lab Test ID
+        """
+        identifiers = self.get_identifiers()
+        return identifiers.get(LAB_TEST)
