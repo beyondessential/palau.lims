@@ -218,7 +218,6 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
             "Client": client,
             "Contact": contact,
             "SampleType": sample_type,
-            # TODO SamplePoint field is disabled, we used Site instead
             "SamplePoint": sample_point,
             "Site": sample_point_uid,
             "DateSampled": date_sampled,
@@ -235,9 +234,9 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
             #"DateOfAdmission": doa,
             #"CurrentAntibiotics": antibiotics,
             #"Volume": volume,
+            # TODO WardDepartment: sr.get("encounter").get("location")?
             #"WardDepartment": department,
             #"Location": dict(LOCATIONS).get("location", ""),
-            #"Site": api.get_uid(sample_point) if sample_point else "",
         }
         request = api.get_request() or api.get_test_request()
         sample = create_sample(client, request, values, services)
