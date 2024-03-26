@@ -228,7 +228,7 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
             "DateOfBirth": patient_dob,
             "Sex": patient_sex,
             "Priority": priority,
-            "ClientSampleID": lab_test_id,
+            "ClientOrderNumber": lab_test_id,
             #"Ward": api.get_uid(ward),
             #"ClinicalInformation": "",
             #"DateOfAdmission": doa,
