@@ -13,6 +13,7 @@ from zope.component import queryAdapter
 # endpoint-specific slugs
 SLUGS = (
     ("login", "api"),
+    ("DiagnosticReport", "v1/integration/fhir/mat/DiagnosticReport")
 )
 
 # default slug
@@ -29,11 +30,14 @@ HEADERS = (
 class TamanuSession(object):
 
     token = "unk"
+    _auth = None
 
     def __init__(self, host):
         self.host = host
 
     def login(self, email, password):
+        # TODO remove _auth
+        self._auth = (email, password)
         auth = dict(email=email, password=password)
         resp = self.post("login", payload=auth)
         self.token = resp.json().get("token")

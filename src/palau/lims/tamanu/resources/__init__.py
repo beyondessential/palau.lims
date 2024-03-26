@@ -25,6 +25,10 @@ class TamanuResource(object):
         return self
 
     @property
+    def session(self):
+        return self._session
+
+    @property
     def UID(self):
         """Returns the Tamanu UID of this resource
         Mimics the behavior of DX and AT types
