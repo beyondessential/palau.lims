@@ -52,6 +52,15 @@ class TamanuResource(object):
         """
         return get_object_by_tamanu_uid(self.UID, default=None)
 
+    def get_identifiers(self):
+        """Returns a dict of {identifier_type:identifier_value}
+        """
+        identifiers = {}
+        items = self.get_raw("identifier") or []
+        for item in items:
+            identifiers[item.get("system")] = item.get("value")
+        return identifiers
+
     def to_dict(self):
         """Returns a dict representation of this object
         """
