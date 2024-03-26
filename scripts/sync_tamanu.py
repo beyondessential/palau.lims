@@ -91,14 +91,39 @@ def get_sample_type(service_request):
     if sample_type:
         return sample_type
 
-    # TODO QA We create the sample type if no matches are found!
     info = specimen.get_sample_type_info()
+    if not info:
+        raise ValueError("Sample type is missing: %s" % repr(specimen))
+
+    # TODO QA We create the sample type if no matches are found!
     title = info.get("title")
     if not title:
         raise ValueError("Sample type without title: %s" % repr(specimen))
 
     container = api.get_setup().bika_sampletypes
     return api.create(container, "SampleType", **info)
+
+
+def get_sample_point(service_request):
+    """Returns a sample type counterpart for the given resource if defined
+    """
+    specimen = service_request.getSpecimen()
+    sample_point = specimen.get_sample_point()
+    if sample_point:
+        return sample_point
+
+    info = specimen.get_sample_point_info()
+    if not info:
+        # Sample point is not a required field
+        return None
+
+    # TODO QA We create the sample point if no matches are found!
+    title = info.get("title")
+    if not title:
+        raise ValueError("Sample point without title: %s" % repr(specimen))
+
+    container = api.get_setup().bika_samplepoints
+    return api.create(container, "SamplePoint", **info)
 
 
 def get_services(service_request):
@@ -157,7 +182,10 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
         # get the sample type
         sample_type = get_sample_type(sr)
 
-        sample_point = specimen.get_site()
+        # get the sample point
+        sample_point = get_sample_point(sr)
+
+        # date sampled
         date_sampled = specimen.get_date_sampled()
 
         # get the priority and others
