@@ -25,6 +25,7 @@ parser = argparse.ArgumentParser(description=__doc__,
 parser.add_argument("--tamanu_host", "-th", help="Tamanu host")
 parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
 parser.add_argument("--since", "-s", help="Last updated since (days)")
+parser.add_argument("--identifier", "-i", help="Identifier")
 parser.add_argument("--dry", "-d", help="Run in dry mode")
 
 # Service Request statuses to skip
@@ -149,14 +150,17 @@ def get_services(service_request):
     return map(api.get_object, brains)
 
 
-def pull_and_sync(host, email, password, since=15, dry_mode=True):
+def pull_and_sync(host, email, password, since=15, identifier=None,
+                  dry_mode=True):
     # start a remote session with tamanu
     session = TamanuSession(host)
     session.login(email, password)
 
     # get the service requests created/modified since?
     since = timedelta(days=-since)
-    resources = session.get_resources("ServiceRequest", _lastUpdated=since)
+    resources = session.get_resources(
+        "ServiceRequest", _lastUpdated=since, identifier=identifier
+    )
     for sr in resources:
 
         # get the Tamanu's test ID for this ServiceRequest
@@ -276,11 +280,13 @@ def main(app):
     # dry mode
     trues = ["True", "true", "1", "yes", "y"]
     dry = args.dry in trues
-
+    identifier = args.identifier or None
     # Setup environment
     setup_script_environment(app, stream_out=False)
 
-    pull_and_sync(host, parts[0], parts[1], since=since, dry_mode=dry)
+    pull_and_sync(
+        host, parts[0], parts[1], since=since, dry_mode=dry, identifier=identifier
+    )
 
 
 if __name__ == "__main__":
