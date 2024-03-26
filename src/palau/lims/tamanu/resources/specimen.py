@@ -12,17 +12,13 @@ class SpecimenResource(TamanuResource):
     def get_sample_type(self):
         """Get sample type from resource payload
         """
-        specimen_type = self.get("type")
-        coding = specimen_type.get("coding")
-        if not coding:
-            return None
-
-        # TODO QA We search by sample type title name of code!
-        title = coding[0].get("display")
-        prefix = coding[0].get("code")
+        # TODO Wrap all this in a SpecimenTypeResource.getObject()
+        info = self.get_sample_type_info()
+        title = info.get("title")
         if not title:
             return None
 
+        # TODO QA We search by sample type title instead of prefix!
         query = {
             "portal_type": "SampleType",
             "is_active": True,
@@ -41,9 +37,7 @@ class SpecimenResource(TamanuResource):
             if name == title:
                 return api.get_object(brain)
 
-        # TODO Create the Sample Type if not found?
-        container = api.get_setup().bika_sampletypes
-        return api.create(container, "SampleType", title=title, Prefix=prefix)
+        return None
 
     def get_collection(self):
         return self.get("collection")
@@ -85,3 +79,16 @@ class SpecimenResource(TamanuResource):
     def get_date_sampled(self):
         collection = self.get_collection()
         return collection.get("collectedDateTime")
+
+    def get_sample_type_info(self):
+        """Returns a dict-like object that represents a SampleType based on the
+        information provided in the current resource
+        """
+        specimen_type = self.get("type")
+        coding = specimen_type.get("coding")
+        if not coding:
+            return {}
+        return {
+            "title": coding[0].get("display"),
+            "Prefix": coding[0].get("code"),
+        }

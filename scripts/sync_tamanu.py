@@ -83,6 +83,24 @@ def get_patient(service_request):
     raise TypeError("Object %s is not from Patient type" % repr(patient))
 
 
+def get_sample_type(service_request):
+    """Returns a sample type counterpart for the given resource
+    """
+    specimen = service_request.getSpecimen()
+    sample_type = specimen.get_sample_type()
+    if sample_type:
+        return sample_type
+
+    # TODO QA We create the sample type if no matches are found!
+    info = specimen.get_sample_type_info()
+    title = info.get("title")
+    if not title:
+        raise ValueError("Sample type without title: %s" % repr(specimen))
+
+    container = api.get_setup().bika_sampletypes
+    return api.create(container, "SampleType", **info)
+
+
 def get_services(service_request):
     """Returns the service objects counterpart for the given resource
     """
@@ -136,7 +154,9 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
             logger.error("No specimen: %s" % repr(sr))
             continue
 
-        sample_type = specimen.get_sample_type()
+        # get the sample type
+        sample_type = get_sample_type(sr)
+
         sample_point = specimen.get_site()
         date_sampled = specimen.get_date_sampled()
 
