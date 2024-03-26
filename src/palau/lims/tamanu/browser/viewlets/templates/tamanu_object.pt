@@ -12,5 +12,18 @@
            i18n:translate="">show original metadata (JSON)</a>&nbsp;
       </p>
     </div>
+    <div class="portal-alert-item alert alert-warning"
+         tal:define="diffs python: view.get_differences()"
+         tal:condition="diffs">
+      <p class="title mb-0">
+        <strong i18n:translate="">
+          There are inconsistencies with Tamanu's record
+        </strong>
+      </p>
+      <p class="description mb-0">
+        <span i18n:translate="">Missing tests</span>:
+        <span tal:content="python: ', '.join(diffs)"/>
+      </p>
+    </div>
   </div>
 </div>

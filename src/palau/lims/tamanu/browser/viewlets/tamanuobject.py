@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
 from bika.lims import api
+from bika.lims.interfaces import IAnalysisRequest
 from palau.lims.tamanu import api as tapi
 from plone.app.layout.viewlets import ViewletBase
 
@@ -27,3 +27,23 @@ class TamanuObjectViewlet(ViewletBase):
         context was built from on import, if any
         """
         return "{}/tamanu_metadata".format(api.get_url(self.context))
+
+    def get_differences(self):
+        if not IAnalysisRequest.providedBy(self.context):
+            return None
+
+        meta = self.get_tamanu_metadata()
+        if not meta:
+            return None
+
+        # check analyses
+        data = meta.get("data") or {}
+        order_detail = data.get("orderDetail") or []
+        expected = [detail.get("text") for detail in order_detail]
+        if not expected:
+            return None
+
+        # get the analyses present in the sample and compare
+        analyses = self.context.getAnalyses(full_objects=True)
+        keywords = [an.getKeyword() for an in analyses]
+        return filter(lambda key: key not in keywords, expected)
