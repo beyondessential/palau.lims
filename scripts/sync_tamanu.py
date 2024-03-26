@@ -65,7 +65,8 @@ def get_contact(service_request):
     if IContact.providedBy(contact):
         if api.get_parent(contact) == client:
             return contact
-        raise TypeError("Contact %s does not belong to client %s")
+        raise TypeError("Contact %s does not belong to client %s" % (
+            repr(contact), repr(client)))
     raise TypeError("Object %s is not from Contact type" % repr(contact))
 
 
