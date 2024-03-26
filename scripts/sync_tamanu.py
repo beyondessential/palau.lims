@@ -116,6 +116,9 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
     resources = session.get_resources("ServiceRequest", _lastUpdated=since)
     for sr in resources:
 
+        # get the Tamanu's test ID for this ServiceRequest
+        lab_test_id = sr.getLabTestID()
+
         # check if a sample for this service_request exists already
         sample = sr.getObject()
         if sample:
@@ -164,7 +167,9 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
             "Client": client,
             "Contact": contact,
             "SampleType": sample_type,
+            # TODO SamplePoint field is disabled, we used Site instead
             "SamplePoint": sample_point,
+            "Site": sample_point,
             "DateSampled": date_sampled,
             "Template": None,
             "Profiles": [],
@@ -173,6 +178,7 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
             "DateOfBirth": patient_dob,
             "Sex": patient_sex,
             "Priority": priority,
+            "ClientSampleID": lab_test_id,
             #"Ward": api.get_uid(ward),
             #"ClinicalInformation": "",
             #"DateOfAdmission": doa,
