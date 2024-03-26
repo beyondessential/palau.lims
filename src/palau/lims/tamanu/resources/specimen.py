@@ -17,16 +17,16 @@ class SpecimenResource(TamanuResource):
         if not coding:
             return None
 
-        # TODO QA We search by sample type name instead of code!
-        #term = coding[0].get("code")
-        term = coding[0].get("display")
-        if not term:
+        # TODO QA We search by sample type title name of code!
+        title = coding[0].get("display")
+        prefix = coding[0].get("code")
+        if not title:
             return None
 
         query = {
             "portal_type": "SampleType",
             "is_active": True,
-            "title": term,
+            "title": title,
         }
         brains = api.search(query, SETUP_CATALOG)
         if len(brains) == 1:
@@ -35,13 +35,15 @@ class SpecimenResource(TamanuResource):
 
         # TODO QA Searches are case-aware, fallback to direct search by title
         del(query["title"])
-        term = term.strip().lower()
+        title = title.strip().lower()
         for brain in api.search(query, SETUP_CATALOG):
-            title = api.get_title(brain).strip().lower()
-            if title == term:
+            name = api.get_title(brain).strip().lower()
+            if name == title:
                 return api.get_object(brain)
 
-        return None
+        # TODO Create the Sample Type if not found?
+        container = api.get_setup().bika_sampletypes
+        return api.create(container, "SampleType", title=title, Prefix=prefix)
 
     def get_collection(self):
         return self.get("collection")
@@ -51,7 +53,6 @@ class SpecimenResource(TamanuResource):
         body_site = collection.get("bodySite")
         if not body_site:
             return None
-
         coding = body_site.get("coding")
         if not coding:
             return None
