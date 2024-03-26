@@ -185,6 +185,9 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
         # get the sample point
         sample_point = get_sample_point(sr)
 
+        # TODO XX store the uid, cause Site field allows free text as well
+        sample_point_uid = api.get_uid(sample_point) if sample_point else None
+
         # date sampled
         date_sampled = specimen.get_date_sampled()
 
@@ -217,7 +220,7 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
             "SampleType": sample_type,
             # TODO SamplePoint field is disabled, we used Site instead
             "SamplePoint": sample_point,
-            "Site": sample_point,
+            "Site": sample_point_uid,
             "DateSampled": date_sampled,
             "Template": None,
             "Profiles": [],
