@@ -14,16 +14,22 @@ class SpecimenResource(TamanuResource):
         """
         specimen_type = self.get("type")
         coding = specimen_type.get("coding")
+        title = coding[0].get("display")
+        prefix = coding[0].get("code")
         query = {
             "portal_type": "SampleType",
             "is_active": True,
-            "title": coding[0].get("code"),
+            "title": title,
         }
         brains = api.search(query, SETUP_CATALOG)
-        if len(brains) == 1:
+        if len(brains) == 0:
+            container = api.get_setup().bika_analysiscategories
+            sample_type = api.create(
+                container, "SampleType", title=title, Prefix=prefix
+            )
+        else:
             sample_type = api.get_object(brains[0])
-            return sample_type
-        return None
+        return sample_type
 
     def get_collection(self):
         return self.get("collection")
