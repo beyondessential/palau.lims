@@ -15,6 +15,7 @@ from persistent.dict import PersistentDict
 from Products.Archetypes.utils import getRelURL
 from zope.annotation.interfaces import IAnnotations
 from zope.interface import alsoProvides
+from senaite.core.api import dtime
 
 _marker = object
 
@@ -65,6 +66,21 @@ def get_tamanu_host(obj):
         storage = get_tamanu_storage(obj)
         return storage.get("host", None)
     return None
+
+
+def get_tamanu_modified(obj):
+    """Returns the datetime when the obj was modified at Tamanu
+    """
+    modified = None
+    if is_tamanu_resource(obj):
+        meta = obj.get("meta") or {}
+        modified = meta.get("lastUpdated")
+    if is_tamanu_content(obj):
+        storage = get_tamanu_storage(obj)
+        data = storage.get("data")
+        meta = data.get("meta") or {}
+        modified = meta.get("lastUpdated")
+    return dtime.to_dt(modified)
 
 
 def get_tamanu_session(host, email, password):

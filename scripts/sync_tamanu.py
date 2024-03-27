@@ -3,19 +3,22 @@
 import argparse
 import transaction
 from bika.lims import api
+from bika.lims.api.security import check_permission
 from bika.lims.interfaces import IClient
 from bika.lims.interfaces import IContact
 from bika.lims.utils.analysisrequest import \
     create_analysisrequest as create_sample
+from bika.lims.workflow import doActionFor
 from datetime import timedelta
-from palau.lims import logger
+from palau.lims.tamanu import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
-from senaite.patient.interfaces import IPatient
+from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.catalog import SETUP_CATALOG
+from senaite.patient.interfaces import IPatient
 
 __doc__ = """
 Import remote data from Tamanu
@@ -32,6 +35,12 @@ parser.add_argument("--dry", "-d", help="Run in dry mode")
 
 # Service Request statuses to skip
 SKIP_STATUSES = ["revoked", "draft", "entered-in-error"]
+
+TRANSITIONS = (
+    # Tuples of (tamanu status, transition)
+    ("revoked", "cancel"),
+    ("entered-in-error", "reject"),
+)
 
 # Priorities mapping
 PRIORITIES = (
@@ -242,17 +251,26 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
     for sr in resources:
 
         # get the Tamanu's test ID for this ServiceRequest
-        lab_test_id = sr.getLabTestID()
+        tid = sr.getLabTestID()
 
-        # check if a sample for this service_request exists already
+        # get the sample for this ServiceRequest, if any
         sample = sr.getObject()
-        if sample:
-            # TODO update the sample with Tamanu's info
-            logger.info("----> TO UPDATE: %s" % repr(sample))
+
+        # skip if sample does not exist yet and no valid status
+        if not sample and sr.status in SKIP_STATUSES:
+            logger.info("Skip (%s): %s" % (sr.status, tid))
             continue
 
-        if sr.status in SKIP_STATUSES:
-            logger.info("Skip (status=%s): %s" % (sr.status, repr(sr)))
+        # skip if sample is up-to-date
+        tamanu_modified = tapi.get_tamanu_modified(sr)
+        sample_modified = tapi.get_tamanu_modified(sample)
+        if sample and tamanu_modified <= sample_modified:
+            logger.info("Skip (up-to-date): %s %s" % (tid, repr(sample)))
+            continue
+
+        # skip if the sample cannot be edited
+        if sample and not api.is_active(sample):
+            logger.warn("Skip (non-active): %s %s" % (tid, repr(sample)))
             continue
 
         # get SampleType, Site and DateSampled via FHIR's specimen
@@ -266,8 +284,6 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
 
         # get the sample point
         sample_point = get_sample_point(sr)
-
-        # TODO XX store the uid, cause Site field allows free text as well
         sample_point_uid = api.get_uid(sample_point) if sample_point else None
 
         # date sampled
@@ -301,8 +317,10 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
         profiles = get_profiles(sr)
         profiles = map(api.get_uid, profiles)
 
-        # create the sample
+        # get the services
         services = get_services(sr)
+
+        # create the sample
         values = {
             "Client": client,
             "Contact": contact,
@@ -310,14 +328,13 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
             "SamplePoint": sample_point,
             "Site": sample_point_uid,
             "DateSampled": date_sampled,
-            "Template": None,
             "Profiles": profiles,
             "MedicalRecordNumber": {"value": patient_mrn},
             "PatientFullName": patient_name,
             "DateOfBirth": patient_dob,
             "Sex": patient_sex,
             "Priority": priority,
-            "ClientOrderNumber": lab_test_id,
+            "ClientOrderNumber": tid,
             "Remarks": remarks,
             #"Ward": api.get_uid(ward),
             #"ClinicalInformation": "",
@@ -329,10 +346,23 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
             #"Location": dict(LOCATIONS).get("location", ""),
         }
         request = api.get_request() or api.get_test_request()
-        sample = create_sample(client, request, values, services)
+        if sample:
+            # edit sample
+            edit_sample(sample, **values)
+            logger.info("Object edited: %s %s" % (tid, repr(sample)))
+        else:
+            # create the sample
+            sample = create_sample(client, request, values, services)
+            logger.info("Object created: %s %s" % (tid, repr(sample)))
+
         # link the tamanu resource to this sample
         tapi.link_tamanu_resource(sample, sr)
-        logger.info("Object created: %s" % repr(sample))
+
+        # do the transition
+        action = dict(TRANSITIONS).get(sr.status)
+        if action:
+            doActionFor(sample, action)
+            logger.info("Action (%s): %s %s" % (action, tid, repr(sample)))
 
     if dry_mode:
         # Dry mode. Do not do transaction
@@ -342,6 +372,24 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
     logger.info("Commit transaction ...")
     transaction.commit()
     logger.info("Commit transaction [DONE]")
+
+
+def edit_sample(sample, **kwargs):
+    # pop non-editable fields
+    fields = api.get_fields(sample)
+    for field_name, field in fields.items():
+        # cannot update readonly fields
+        readonly = getattr(field, "readonly", False)
+        if readonly:
+            kwargs.pop(field_name, None)
+
+        # check field writable permission
+        perm = getattr(field, "write_permission", ModifyPortalContent)
+        if perm and not check_permission(perm, sample):
+            kwargs.pop(field_name, None)
+
+    # edit the sample
+    api.edit(sample, **kwargs)
 
 
 def main(app):
