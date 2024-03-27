@@ -11,6 +11,7 @@ from datetime import timedelta
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
+from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from senaite.patient.interfaces import IPatient
 from senaite.core.catalog import SETUP_CATALOG
@@ -127,27 +128,53 @@ def get_sample_point(service_request):
     return api.create(container, "SamplePoint", **info)
 
 
+def get_codings(items, system):
+    """Return the codes from a list of a dicts for the system specified
+    """
+    if not items:
+        return []
+    if not isinstance(items, list):
+        items = [items]
+    codings = []
+    for item in items:
+        coding = item.get("coding") or []
+        for code in coding:
+            if code.get("system") != system:
+                continue
+            codings.append(code)
+    return codings
+
+
 def get_services(service_request):
     """Returns the service objects counterpart for the given resource
     """
-    # TODO Implement
+    services = []
+
+    # get all services and group them by title
+    by_title = {}
+    by_keyword = {}
+    sc = api.get_tool(SETUP_CATALOG)
+    for brain in sc(portal_type="AnalysisService"):
+        obj = api.get_object(brain)
+        by_title[api.get_title(obj)] = obj
+        by_keyword[obj.getKeyword()] = obj
+
+    # get the codes requested in the ServiceRequest
     details = service_request.get("orderDetail")
-    keywords = set()
-    for detail in details:
-        keyword = detail.get("text")
-        keywords.add(keyword)
+    for coding in get_codings(details, SENAITE_TESTS_CODING_SYSTEM):
+        # get the analysis by keyword
+        code = coding.get("code")
+        service = by_keyword.get(code)
+        if not service:
+            # fallback to title
+            # TODO Fallback searches by analysis to CommercialName instead?
+            display = coding.get("display")
+            service = by_title.get(display)
 
-    keywords = list(keywords)
-    if not keywords:
-        return []
+        if service:
+            services.append(service)
 
-    query = {
-        "portal_type": "AnalysisService",
-        "is_active": True,
-        "getKeyword": list(keywords)
-    }
-    brains = api.search(query, SETUP_CATALOG)
-    return map(api.get_object, brains)
+    return services
 
 
 def pull_and_sync(host, email, password, since=15, identifier=None,

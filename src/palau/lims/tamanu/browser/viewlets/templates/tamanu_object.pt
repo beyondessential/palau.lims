@@ -20,9 +20,9 @@
           There are inconsistencies with Tamanu's record
         </strong>
       </p>
-      <p class="description mb-0">
-        <span i18n:translate="">Missing tests</span>:
-        <span tal:content="python: ', '.join(diffs)"/>
+      <p class="description mb-0" tal:repeat="diff diffs">
+        <span tal:content="python: diff[0]"/>:
+        <span tal:content="python: diff[1]"/>
       </p>
     </div>
   </div>

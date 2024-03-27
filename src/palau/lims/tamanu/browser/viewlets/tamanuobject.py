@@ -2,7 +2,11 @@
 
 from bika.lims import api
 from bika.lims.interfaces import IAnalysisRequest
+from palau.lims import messageFactory as _
 from palau.lims.tamanu import api as tapi
+from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
+from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
+from palau.lims.utils import translate as t
 from plone.app.layout.viewlets import ViewletBase
 
 
@@ -28,6 +32,78 @@ class TamanuObjectViewlet(ViewletBase):
         """
         return "{}/tamanu_metadata".format(api.get_url(self.context))
 
+    def get_codings(self, items, system):
+        """Return the codes from a list of a dicts for the system specified
+        """
+        # TODO present at sync_tamanu as well, port to API?
+        if not items:
+            return []
+        if not isinstance(items, list):
+            items = [items]
+        codings = []
+        for item in items:
+            coding = item.get("coding") or []
+            for code in coding:
+                if code.get("system") != system:
+                    continue
+                codings.append(code)
+        return codings
+
+    def get_missing_tests(self, meta):
+        """Returns a list with the missing tests
+        """
+        # get the analyses present in the sample and compare
+        terms = {}
+        for analysis in self.context.getAnalyses(full_objects=True):
+            terms[analysis.getKeyword()] = True
+            terms[api.get_title(analysis)] = True
+
+        # check analyses
+        missing = []
+        data = meta.get("data") or {}
+        details = data.get("orderDetail")
+        for coding in self.get_codings(details, SENAITE_TESTS_CODING_SYSTEM):
+            # search by keyword
+            code = coding.get("code")
+            if terms.get(code):
+                continue
+            # search by title
+            # TODO Fallback searches by analysis to CommercialName?
+            display = coding.get("display")
+            if terms.get(display):
+                continue
+
+            text = "{} ({})".format(display, code)
+            missing.append(text)
+
+        return missing
+
+    def get_missing_profiles(self, meta):
+        """Returns a list with the missing profiles
+        """
+        terms = {}
+        for profile in self.context.getProfiles():
+            terms[profile.getProfileKey()] = True
+            terms[api.get_title(profile)] = True
+
+        missing = []
+        data = meta.get("data") or {}
+        profile = data.get("code")
+        for item in self.get_codings(profile, SENAITE_PROFILES_CODING_SYSTEM):
+            # search by profile key
+            code = item.get("code")
+            if terms.get(code):
+                continue
+            # search by title
+            display = item.get("display")
+            if terms.get(display):
+                continue
+
+            text = "{} ({})".format(display, code)
+            missing.append(text)
+
+        return missing
+
     def get_differences(self):
         if not IAnalysisRequest.providedBy(self.context):
             return None
@@ -36,14 +112,18 @@ class TamanuObjectViewlet(ViewletBase):
         if not meta:
             return None
 
-        # check analyses
-        data = meta.get("data") or {}
-        order_detail = data.get("orderDetail") or []
-        expected = [detail.get("text") for detail in order_detail]
-        if not expected:
-            return None
+        diffs = []
 
-        # get the analyses present in the sample and compare
-        analyses = self.context.getAnalyses(full_objects=True)
-        keywords = [an.getKeyword() for an in analyses]
-        return filter(lambda key: key not in keywords, expected)
+        # missing profiles
+        missing_profiles = self.get_missing_profiles(meta)
+        if missing_profiles:
+            key = t(_("Missing profiles"))
+            diffs.append((key, ", ".join(missing_profiles)))
+
+        # missing tests
+        missing_tests = self.get_missing_tests(meta)
+        if missing_tests:
+            key = t(_("Missing test"))
+            diffs.append((key, ", ".join(missing_tests)))
+
+        return diffs
