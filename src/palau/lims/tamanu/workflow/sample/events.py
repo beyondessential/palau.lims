@@ -40,6 +40,7 @@ def after_publish(sample):
     tamanu_uid = tapi.get_tamanu_uid(sample)
     modified = api.get_modification_date(sample)
     modified = dtime.to_iso_format(modified)
+
     payload = {
         # meta information about the DiagnosticReport (ARReport)
         "resourceType": "DiagnosticReport",
@@ -55,11 +56,12 @@ def after_publish(sample):
             "type": "ServiceRequest",
             "reference": "ServiceRequest/{}".format(tamanu_uid),
         }],
-        # Tamanu test panel info
-        "code": data.get("code"),
-        # tests that were requested that are included in this report
-        "result": [],
     }
+
+    # add the test panel (profile) if set
+    panel = data.get("code")
+    if panel:
+        payload["code"] = panel
 
     # notify back to Tamanu
     # TODO Fix forbidden error when notifying back Tamanu with DiagnosticReport
