@@ -11,6 +11,7 @@ from datetime import timedelta
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
+from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from senaite.patient.interfaces import IPatient
@@ -177,6 +178,40 @@ def get_services(service_request):
     return services
 
 
+def get_profiles(service_request):
+    """Returns the profile objects counterpart for the given resource
+    """
+    profiles = []
+
+    # get all profiles and group them by profile key and title
+    by_title = {}
+    by_keyword = {}
+    sc = api.get_tool(SETUP_CATALOG)
+    for brain in sc(portal_type="AnalysisProfile"):
+        obj = api.get_object(brain)
+        by_title[api.get_title(obj)] = obj
+        key = obj.getProfileKey()
+        if key:
+            by_keyword[key] = obj
+
+    # get the profile codes requested in the ServiceRequest
+    codings = service_request.get("code")
+    for coding in get_codings(codings, SENAITE_PROFILES_CODING_SYSTEM):
+        # get the profile by keyword
+        code = coding.get("code")
+        profile = by_keyword.get(code)
+        if not profile:
+            # fallback to title
+            # TODO Fallback searches by analysis to CommercialName instead?
+            display = coding.get("display")
+            profile = by_title.get(display)
+
+        if profile:
+            profiles.append(profile)
+
+    return profiles
+
+
 def pull_and_sync(host, email, password, since=15, identifier=None,
                   dry_mode=True):
     # start a remote session with tamanu
@@ -243,6 +278,10 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
             "lastname": patient.getLastname(),
         }
 
+        # get profiles
+        profiles = get_profiles(sr)
+        profiles = map(api.get_uid, profiles)
+
         # create the sample
         services = get_services(sr)
         values = {
@@ -253,7 +292,7 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
             "Site": sample_point_uid,
             "DateSampled": date_sampled,
             "Template": None,
-            "Profiles": [],
+            "Profiles": profiles,
             "MedicalRecordNumber": {"value": patient_mrn},
             "PatientFullName": patient_name,
             "DateOfBirth": patient_dob,

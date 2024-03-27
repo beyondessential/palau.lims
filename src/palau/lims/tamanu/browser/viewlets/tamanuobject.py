@@ -83,7 +83,9 @@ class TamanuObjectViewlet(ViewletBase):
         """
         terms = {}
         for profile in self.context.getProfiles():
-            terms[profile.getProfileKey()] = True
+            key = profile.getProfileKey()
+            if key:
+                terms[key] = True
             terms[api.get_title(profile)] = True
 
         missing = []

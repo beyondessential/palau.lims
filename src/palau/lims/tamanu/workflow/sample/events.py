@@ -2,7 +2,6 @@
 
 from palau.lims.tamanu import api as tapi
 from bika.lims import api
-from palau.lims.tamanu.config import LOINC_CODING_SYSTEM
 from senaite.core.api import dtime
 
 
