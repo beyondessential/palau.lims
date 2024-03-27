@@ -13,7 +13,7 @@ from zope.component import queryAdapter
 # endpoint-specific slugs
 SLUGS = (
     ("login", "api"),
-    ("DiagnosticReport", "v1/integration/fhir/mat/DiagnosticReport")
+    ("DiagnosticReport", "v1/integration/fhir/mat")
 )
 
 # default slug
