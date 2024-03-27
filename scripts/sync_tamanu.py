@@ -212,6 +212,22 @@ def get_profiles(service_request):
     return profiles
 
 
+def get_remarks(service_request):
+    """Returns the Remarks counterpart for the given resource
+    """
+    remarks = []
+    notes = service_request.get("note") or []
+    for note in notes:
+        item = {
+            "user_id": "tamanu",
+            "user_name": "Tamanu",
+            "created": note.get("time"),
+            "content": note.get("text")
+        }
+        remarks.append(item)
+    return remarks
+
+
 def pull_and_sync(host, email, password, since=15, identifier=None,
                   dry_mode=True):
     # start a remote session with tamanu
@@ -257,9 +273,12 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
         # date sampled
         date_sampled = specimen.get_date_sampled()
 
-        # get the priority and others
+        # get the priority
         priority = sr.get("priority")
         priority = dict(PRIORITIES).get(priority, "5")
+
+        # get the remarks (notes)
+        remarks = get_remarks(sr)
 
         # get or create the client via FHIR's encounter/serviceProvider
         client = get_client(sr)
@@ -299,6 +318,7 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
             "Sex": patient_sex,
             "Priority": priority,
             "ClientOrderNumber": lab_test_id,
+            "Remarks": remarks,
             #"Ward": api.get_uid(ward),
             #"ClinicalInformation": "",
             #"DateOfAdmission": doa,
