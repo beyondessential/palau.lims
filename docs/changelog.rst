@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #134 Fix sticker 'Code_39_40x20mm' fitting issue
 - #133 Compatibility with senaite.core#2509
 - #130 Add more details to stickers
 - #132 Compatibility with senaite.core#2492

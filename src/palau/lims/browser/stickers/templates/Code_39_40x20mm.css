@@ -24,12 +24,12 @@
 
 .sticker .barcode {
     margin: 0 auto;
-    padding: 1mm 0 !important;
+    padding: 0 0 !important;
     text-align: center;
 }
 
 .sticker .hazardous img {
-    width: 10px;
+    width: 8px;
 }
 
 .sticker .item-info table {
@@ -40,6 +40,11 @@
 
 .sticker .item-info table td {
     text-align: center;
+    padding:0;
+}
+
+.sticker .item-info table td .large-info {
+    font-size: 7pt;
 }
 
 .barcode {
