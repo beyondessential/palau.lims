@@ -8,7 +8,7 @@
   <div class="barcode"
        tal:attributes="data-id item_id;"
        data-code="code39"
-       data-barHeight="14"
+       data-barHeight="11"
        data-addQuietZone="false"
        data-showHRI="false">
   </div>
