@@ -1,0 +1,29 @@
+<tal:r i18n:domain="palau.lims"
+  define="report_id string:analyses_results">
+
+  <h2 i18n:translate="">
+    Analyses results
+  </h2>
+
+  <form method="post">
+
+    <!-- Controls -->
+    <tal:result replace="structure python:view.result_control()"/>
+    <tal:category replace="structure python:view.category_control()"/>
+    <tal:department replace="structure python:view.department_control()"/>
+
+    <!-- Submit button -->
+    <input tabindex=""
+           class="searchButton allowMultiSubmit"
+           type="submit"
+           name="submit"
+           value="Generate report"
+           i18n:attributes="value"/>
+
+    <!-- Hidden fields -->
+    <input tal:replace="structure context/@@authenticator/authenticator"/>
+    <input type="hidden" name="report_id" tal:attributes="value report_id"/>
+
+  </form>
+
+</tal:r>

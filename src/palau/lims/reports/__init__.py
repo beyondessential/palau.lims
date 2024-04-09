@@ -4,13 +4,18 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
+import re
+
 from datetime import datetime
 
 from bika.lims import api
 from senaite.core.api import dtime
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.core.catalog import SETUP_CATALOG
 
+
+INT_RE = re.compile(r"\d+")
 
 def get_received_samples(from_date, to_date, **kwargs):
     """Returns the primary samples (no Partitions) that were received within
@@ -112,3 +117,56 @@ def get_analyses_by_year(year, **kwargs):
     from_date = dtime.date_to_string(datetime(year, 1, 1))
     to_date = dtime.date_to_string(datetime(year, 12, 31))
     return get_analyses(from_date, to_date, **kwargs)
+
+
+def get_analyses_by_result_category_department(resultText, category, department, **kwargs):  # noqa
+    """Returns the analyses filtering by the result
+    """
+    analyses_result_filtered = []
+    query = {
+        "portal_type": "Analysis",
+    }
+
+    # if resultText:
+    #     query["getResultOptions"] = {
+    #         "query": {
+    #             "ResultText": {
+    #                 "query": resultText
+    #             }
+    #         }
+    #     }
+
+    if category:
+        query["getCategoryTitle"] = {"query": category}
+    if department:
+        department_query = {
+            "portal_type": "Department",
+            "Title": department
+        }
+        department_brain = api.search(department_query, SETUP_CATALOG)[0]
+        department_obj = api.get_object(department_brain)
+        department_uid = department_obj.getDepartmentID()
+
+        query["getDepartment"] = {"query": department_uid}
+
+    query.update(**kwargs)
+
+    brains = api.search(query, ANALYSIS_CATALOG)
+    if not brains:
+        return analyses_result_filtered
+
+    objs = map(api.get_object, brains)
+
+    if not resultText:
+        return objs
+
+    for analysis in objs:
+        for option in analysis.getResultOptions():
+            result_matches = INT_RE.search(analysis.getResult())
+            result = result_matches.group(0) if result_matches else ''
+
+            if option["ResultText"] == resultText and option["ResultValue"] == result:
+                analyses_result_filtered.append(analysis)
+                break
+                
+    return analyses_result_filtered

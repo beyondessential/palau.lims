@@ -1,0 +1,14 @@
+<div class="form-group form-inline"
+     i18n:domain="palau.lims">
+
+  <!-- Result -->
+  <label for="result" class="field mr-2" i18n:translate="">Result</label>
+  <select name="result" class="form-control form-control-sm mr-2">
+    <option value="" selected disabled/> 
+    <tal:options repeat="result python:view.get_results()">
+      <option tal:attributes="value result"
+              tal:content="result"/>
+    </tal:options>
+  </select>
+
+</div>
