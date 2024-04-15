@@ -70,7 +70,8 @@ class TamanuSession(object):
 
     def post(self, endpoint, payload, timeout=5):
         url = self.get_url(endpoint)
-        payload = self.jsonify(payload)
+        #payload = self.jsonify(payload)
+        payload = json.dumps(payload)
 
         # Send the POST request
         logger.info("[POST] {}".format(url))
