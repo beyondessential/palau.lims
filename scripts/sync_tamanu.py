@@ -244,7 +244,7 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
     session.login(email, password)
 
     # get the service requests created/modified since?
-    since = timedelta(minutes=-since)
+    since = timedelta(days=-since)
     resources = session.get_resources(
         "ServiceRequest", _lastUpdated=since, identifier=identifier
     )
