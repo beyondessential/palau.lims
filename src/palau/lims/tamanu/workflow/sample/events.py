@@ -83,21 +83,24 @@ def after_publish(sample):
         }],
     }
 
-    # add the test panel (profile) if set
-    panel = data.get("code")
-    if panel:
-        payload["code"] = panel
-    else:
+    # add the test panel (profile) if set or use LOINC's generic
+    panel = data.get("code") or {}
+    coding = panel.get("coding") or []
+    if not coding:
         # Use generic LOINC code 30954-2 (https://loinc.org/30954-2)
-        payload["code"] = {
-            "coding": [
-                {
-                    "system": "http://loinc.org",
-                    "code": " 30954-2",
-                    "display": "Relevant Dx tests/lab data"
-                }
-            ]
-        }
+        coding = [{
+            "system": "http://loinc.org",
+            "code": " 30954-2",
+            "display": "Relevant Dx tests/lab data"
+        }]
+
+    # attach the pdf encoded in base64
+    pdf = report.getPdf()
+    coding[0].update({
+        "data": pdf.data.encode("base64"),
+        "contentType": "application/pdf",
+    })
+    payload["code"] = {"coding": coding}
 
     # notify back to Tamanu
     # TODO Fix forbidden error when notifying back Tamanu with DiagnosticReport
