@@ -5,6 +5,18 @@ from bika.lims import api
 from senaite.core.api import dtime
 
 
+def after_republish(sample):
+    """Event fired after a Sample is republished
+    """
+    after_republish(sample)
+
+
+def after_prepublish(sample):
+    """Event fired after a Sample is pre-published
+    """
+    after_publish(sample)
+
+
 def after_publish(sample):
     """Event fired after a sample gets published. Sends a POST back to the
     Tamanu instance if the sample has a Tamanu resource counterpart
@@ -41,6 +53,18 @@ def after_publish(sample):
     modified = api.get_modification_date(sample)
     modified = dtime.to_iso_format(modified)
 
+    # handle the status to report back to Tamanu
+    # registered | partial | preliminary | final
+    sample_status = api.get_review_status(sample)
+    if sample_status == "published":
+        # TODO status 'final' only if all requested analyses were included in
+        #      the ARReport. Otherwise, 'partial'
+        status = "final"
+    elif sample_status in ["verified", "to_be_verified"]:
+        status = "preliminary"
+    else:
+        status = "registered"
+
     payload = {
         # meta information about the DiagnosticReport (ARReport)
         "resourceType": "DiagnosticReport",
@@ -49,7 +73,8 @@ def after_publish(sample):
             "lastUpdated": modified,
         },
         # the status of the DiagnosticReport (ARReport)
-        "status": "final",
+        # registered | partial | preliminary | final
+        "status": status,
         # the ServiceRequest(s) this ARReport is based on
         # TODO What about a DiagnosticReport with more than one basedOn
         "basedOn": [{
@@ -62,6 +87,17 @@ def after_publish(sample):
     panel = data.get("code")
     if panel:
         payload["code"] = panel
+    else:
+        # Use generic LOINC code 30954-2 (https://loinc.org/30954-2)
+        payload["code"] = {
+            "coding": [
+                {
+                    "system": "http://loinc.org",
+                    "code": " 30954-2",
+                    "display": "Relevant Dx tests/lab data"
+                }
+            ]
+        }
 
     # notify back to Tamanu
     # TODO Fix forbidden error when notifying back Tamanu with DiagnosticReport
