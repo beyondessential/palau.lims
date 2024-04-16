@@ -4,8 +4,6 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
-import re
-
 from bika.lims import api
 
 from palau.lims import messageFactory as _
@@ -13,30 +11,30 @@ from palau.lims.reports import get_analyses_by_result_category_department
 from palau.lims.reports.forms import CSVReport
 from palau.lims.utils import get_field_value
 
-INT_RE = re.compile(r"\d+")
 SEX_CAST = {
     "m": "male",
     "f": "female",
 }
 
 class AnalysesResults(CSVReport):
-    """Analyses Lab Departments by month
+    """Analyses by result, category and department
     """
 
     def process_form(self):
-        # verified and published samples that were received within a given year
+        # Always filter analyses by verified and published in this form
         statuses = ["verified", "published"]
 
-        # Filter the analyses per result, category and department
+        # Collect the analyses filters (result, category and department)
         resultText = self.request.form.get("result") or None
         category = self.request.form.get("category") or None
-        department = self.request.form.get("department") or None
+        department_title = self.request.form.get("department") or None
 
+        # Get the filtered analyses list
         brains = get_analyses_by_result_category_department(
-            resultText, category, department, review_state=statuses
+            resultText, category, department_title, review_state=statuses
         )
 
-        # add the first row (header)
+        # Add the first row (header)
         rows = [[
             _("Analysis Title"),
             _("Analysis Request ID"),
@@ -57,24 +55,17 @@ class AnalysesResults(CSVReport):
             _("Requesting Physician"),
         ]]
 
+        # Add the info per analysis in a row
         for brain in brains:
             analysis = api.get_object(brain)
+
             sample = analysis.getRequest()
             patient_name = get_field_value(sample, "PatientFullName", default={})
             mrn = get_field_value(sample, "MedicalRecordNumber", default={})
             mrn = mrn.get("value", "")
 
-            if not resultText:
-                result_matches = INT_RE.search(analysis.getResult())
-                result = result_matches.group(0) if result_matches else ''
-                for option in analysis.getResultOptions():
-                    if option["ResultText"] == resultText and option["ResultValue"] == result:
-                        resultText = option["ResultText"]
-                        break
-
-            if not department:
-                department = analysis.getDepartment()
-
+            resultText = resultText or analysis.getFormattedResult() or ""
+            department_title = department_title or analysis.getDepartmentTitle() or ""
             category = category or analysis.getCategoryTitle() or ""
 
             # add the info for each analysis in a row
@@ -84,7 +75,7 @@ class AnalysesResults(CSVReport):
                     analysis.getRequestID() or "",
                     analysis.getId() or "",
                     category,
-                    department.Title() if department else "",
+                    department_title,
                     patient_name.get("firstname", ""),
                     patient_name.get("lastname", ""),
                     patient_name.get("middlename", ""),
@@ -92,7 +83,7 @@ class AnalysesResults(CSVReport):
                     sample.getDateOfBirth()[0] or "",
                     SEX_CAST.get(sample.getSex(), ""),
                     sample.getDateSampled() or "",
-                    analysis.getResultCaptureDate() or "",
+                    analysis.getResultCaptureDate() or "", 
                     sample.getSampleTypeTitle() or "",
                     resultText or "",
                     sample.getClientTitle() or "",
