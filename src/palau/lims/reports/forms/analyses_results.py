@@ -16,6 +16,7 @@ SEX_CAST = {
     "f": "female",
 }
 
+
 class AnalysesResults(CSVReport):
     """Analyses by result, category and department
     """
@@ -27,11 +28,11 @@ class AnalysesResults(CSVReport):
         # Collect the analyses filters (result, category and department)
         resultText = self.request.form.get("result") or None
         category = self.request.form.get("category") or None
-        department_title = self.request.form.get("department") or None
+        department = self.request.form.get("department") or None
 
         # Get the filtered analyses list
         brains = get_analyses_by_result_category_department(
-            resultText, category, department_title, review_state=statuses
+            resultText, category, department, review_state=statuses
         )
 
         # Add the first row (header)
@@ -60,12 +61,14 @@ class AnalysesResults(CSVReport):
             analysis = api.get_object(brain)
 
             sample = analysis.getRequest()
-            patient_name = get_field_value(sample, "PatientFullName", default={})
+            patient_name = get_field_value(
+                sample, "PatientFullName", default={}
+            )
             mrn = get_field_value(sample, "MedicalRecordNumber", default={})
             mrn = mrn.get("value", "")
 
             resultText = resultText or analysis.getFormattedResult() or ""
-            department_title = department_title or analysis.getDepartmentTitle() or ""
+            department = department or analysis.getDepartmentTitle() or ""
             category = category or analysis.getCategoryTitle() or ""
 
             # add the info for each analysis in a row
@@ -75,7 +78,7 @@ class AnalysesResults(CSVReport):
                     analysis.getRequestID() or "",
                     analysis.getId() or "",
                     category,
-                    department_title,
+                    department,
                     patient_name.get("firstname", ""),
                     patient_name.get("lastname", ""),
                     patient_name.get("middlename", ""),
@@ -83,7 +86,7 @@ class AnalysesResults(CSVReport):
                     sample.getDateOfBirth()[0] or "",
                     SEX_CAST.get(sample.getSex(), ""),
                     sample.getDateSampled() or "",
-                    analysis.getResultCaptureDate() or "", 
+                    analysis.getResultCaptureDate() or "",
                     sample.getSampleTypeTitle() or "",
                     resultText or "",
                     sample.getClientTitle() or "",
