@@ -12,8 +12,8 @@ from palau.lims.reports.forms import CSVReport
 from palau.lims.utils import get_field_value
 
 SEX_CAST = {
-    "m": "male",
-    "f": "female",
+    "m": "Male",
+    "f": "Female",
 }
 
 
@@ -67,28 +67,28 @@ class AnalysesResults(CSVReport):
             mrn = get_field_value(sample, "MedicalRecordNumber", default={})
             mrn = mrn.get("value", "")
 
-            resultText = resultText or analysis.getFormattedResult() or ""
-            department = department or analysis.getDepartmentTitle() or ""
-            category = category or analysis.getCategoryTitle() or ""
+            resultText = resultText or analysis.getFormattedResult() or  ""
+            department = department or analysis.getDepartmentTitle() or  ""
+            category = category or analysis.getCategoryTitle() or  ""
 
             # add the info for each analysis in a row
             rows.append(
                 [
-                    analysis.Title() or "",
-                    analysis.getRequestID() or "",
-                    analysis.getId() or "",
+                    analysis.Title(),
+                    analysis.getRequestID(),
+                    analysis.getId(),
                     category,
                     department,
                     patient_name.get("firstname", ""),
                     patient_name.get("lastname", ""),
                     patient_name.get("middlename", ""),
-                    mrn or "",
+                    mrn,
                     sample.getDateOfBirth()[0] or "",
                     SEX_CAST.get(sample.getSex(), ""),
                     sample.getDateSampled() or "",
                     analysis.getResultCaptureDate() or "",
                     sample.getSampleTypeTitle() or "",
-                    resultText or "",
+                    resultText,
                     sample.getClientTitle() or "",
                     sample.getContactFullName() or "",
                 ]
