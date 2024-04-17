@@ -117,14 +117,14 @@ def get_analyses_by_year(year, **kwargs):
 def get_analyses_by_result_category_department(resultText, category, department_title, **kwargs):  # noqa
     """Returns the analyses filtering by the result
     """
-    query = {"portal_type": "Analysis", }
+    query = {"portal_type": "Analysis"}
 
     if category:
-        query["getCategoryTitle"] = {"query": category, }
+        query.update({"getCategoryTitle": {"query": category}})
     if department_title:
-        query["getDepartmentTitle"] = {"query": department_title, }
+        query.update({"getDepartmentTitle": department_title})
     if resultText:
-        query["getFormattedResult"] = {"query": resultText, }
+        query.update({"getFormattedResult": resultText})
 
     query.update(**kwargs)
     brains = api.search(query, ANALYSIS_CATALOG)
