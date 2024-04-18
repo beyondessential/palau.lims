@@ -115,20 +115,20 @@ def get_analyses_by_year(year, **kwargs):
     return get_analyses(from_date, to_date, **kwargs)
 
 
-def get_analyses_by_result_category_department(resultText, category, department_title, **kwargs):  # noqa
+def get_analyses_by_result_category_department(resultText, category, department, **kwargs):  # noqa
     """Returns the analyses filtering by the result
     """
     query = {"portal_type": "Analysis"}
     if category:
         query.update(
             {'getCategoryUID': {
-                'query': get_uid("AnalysisCategory", category),
+                'query': get_uid("AnalysisCategory", category, SETUP_CATALOG),
             }}
         )
-    if department_title:
+    if department:
         query.update(
             {'getDepartmentUID': {
-                'query': get_uid("Department", department_title),
+                'query': get_uid("Department", department, SETUP_CATALOG),
             }}
         )
 
@@ -143,11 +143,11 @@ def get_analyses_by_result_category_department(resultText, category, department_
     return objs
 
 
-def get_uid(portal_type, title):
+def get_uid(portal_type, title, catalog):
     query = {
         "portal_type": portal_type,
         "Title": title,
     }
-    brain = api.search(query, SETUP_CATALOG)[0]
+    brain = api.search(query, catalog)[0]
     object = api.get_object(brain)
     return api.get_uid(object)
