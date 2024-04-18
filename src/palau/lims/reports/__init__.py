@@ -10,6 +10,7 @@ from bika.lims import api
 from senaite.core.api import dtime
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.core.catalog import SETUP_CATALOG
 
 
 def get_received_samples(from_date, to_date, **kwargs):
@@ -118,16 +119,35 @@ def get_analyses_by_result_category_department(resultText, category, department_
     """Returns the analyses filtering by the result
     """
     query = {"portal_type": "Analysis"}
-
     if category:
-        query.update({"getCategoryTitle": {"query": category}})
+        query.update(
+            {'getCategoryUID': {
+                'query': get_uid("AnalysisCategory", category),
+            }}
+        )
     if department_title:
-        query.update({"getDepartmentTitle": department_title})
-    if resultText:
-        query.update({"getFormattedResult": resultText})
+        query.update(
+            {'getDepartmentUID': {
+                'query': get_uid("Department", department_title),
+            }}
+        )
 
     query.update(**kwargs)
     brains = api.search(query, ANALYSIS_CATALOG)
     objs = map(api.get_object, brains)
 
+    if resultText:
+        objs = [analysis for analysis in objs
+                if analysis.getFormattedResult() == resultText]
+
     return objs
+
+
+def get_uid(portal_type, title):
+    query = {
+        "portal_type": portal_type,
+        "Title": title,
+    }
+    brain = api.search(query, SETUP_CATALOG)[0]
+    object = api.get_object(brain)
+    return api.get_uid(object)

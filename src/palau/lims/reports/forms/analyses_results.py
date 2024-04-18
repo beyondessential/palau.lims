@@ -67,9 +67,9 @@ class AnalysesResults(CSVReport):
             mrn = get_field_value(sample, "MedicalRecordNumber", default={})
             mrn = mrn.get("value", "")
 
-            resultText = resultText or analysis.getFormattedResult() or  ""
-            department = department or analysis.getDepartmentTitle() or  ""
-            category = category or analysis.getCategoryTitle() or  ""
+            resultText = resultText or analysis.getFormattedResult() or ""
+            department = department or analysis.getDepartmentTitle() or ""
+            category = category or analysis.getCategoryTitle() or ""
 
             # add the info for each analysis in a row
             rows.append(
