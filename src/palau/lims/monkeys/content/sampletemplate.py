@@ -13,7 +13,7 @@ def getMinimumVolume(self):
 
 def setMinimumVolume(self, value):
     behavior = get_behavior(self)
-    return behavior.setMinimumVolume(value)
+    behavior.setMinimumVolume(value)
 
 
 def getInsufficientVolumeText(self):
@@ -23,4 +23,4 @@ def getInsufficientVolumeText(self):
 
 def setInsufficientVolumeText(self, value):
     behavior = get_behavior(self)
-    return behavior.setInsufficientVolumeText(value)
+    behavior.setInsufficientVolumeText(value)
