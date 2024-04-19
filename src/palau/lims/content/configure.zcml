@@ -28,18 +28,6 @@
       provides="archetypes.schemaextender.interfaces.ISchemaModifier"
       factory=".sampletype.SampleTypeSchemaModifier" />
 
-  <!-- Schema extender for AR Template -->
-  <adapter
-      name="palau.lims.artemplate.schemaextender"
-      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
-      factory=".artemplate.ARTemplateSchemaExtender" />
-
-  <!-- Schema modifier for AR Template -->
-  <adapter
-      name="palau.lims.artemplate.schemamodifier"
-      provides="archetypes.schemaextender.interfaces.ISchemaModifier"
-      factory=".artemplate.ARTemplateSchemaModifier" />
-
   <!-- Schema extender for LIMS Setup -->
   <adapter
       name="palau.lims.setup.schemaextender"
