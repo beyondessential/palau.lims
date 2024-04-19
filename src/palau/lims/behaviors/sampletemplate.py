@@ -98,7 +98,7 @@ class ExtendedSampleTemplate(object):
     @security.protected(permissions.ModifyPortalContent)
     def setInsufficientVolumeText(self, value):
         mutator = self.context.mutator("insufficient_volume_text")
-        mutator(self.context, api.safe_unicode(value))
+        mutator(self.context, value)
 
     insufficient_volume_text = property(getInsufficientVolumeText,
                                         setInsufficientVolumeText)
