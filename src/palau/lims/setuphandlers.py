@@ -93,6 +93,9 @@ BEHAVIORS = [
     ("SampleContainer", [
         "palau.lims.behaviors.samplecontainer.IExtendedSampleContainerBehavior",  # noqa
     ]),
+    ("SampleTemplate", [
+        "palau.lims.behaviors.sampletemplate.IExtendedSampleTemplateBehavior",
+    ]),
     ("Patient", [
         "palau.lims.behaviors.patient.IExtendedPatientBehavior"
     ]),
