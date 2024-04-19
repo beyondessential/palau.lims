@@ -21,8 +21,6 @@ FIELDS = {
 class SampleTemplateEditForm(EditFormAdapterBase):
     """Edit form adapter for Sample Template
     """
-    field_prefix = "form.widgets.IExtendedSampleTemplateBehavior"
-    minimum_volume = "%s.minimum_volume" % field_prefix
 
     def get_field_id(self, field_name):
         fields = FIELDS.get("SampleTemplate", {})
@@ -48,7 +46,8 @@ class SampleTemplateEditForm(EditFormAdapterBase):
         None otherwise
         """
         form = data.get("form")
-        return form.get(self.minimum_volume) or None
+        field_id = self.get_field_id("MinimumVolume")
+        return form.get(field_id) or None
 
     def get_sample_type_minimum_volume(self, data):
         """Returns the minimum volume of the Sample Type currently selected, if
@@ -83,7 +82,8 @@ class SampleTemplateEditForm(EditFormAdapterBase):
                 error_msg = _("Volume is below {}").format(st_min_volume)
 
         # Set or clear the field error message
-        self.add_error_field(self.minimum_volume, error_msg)
+        field_id = self.get_field_id("MinimumVolume")
+        self.add_error_field(field_id, error_msg)
 
 
 class ContainerEditForm(EditFormAdapterBase):
