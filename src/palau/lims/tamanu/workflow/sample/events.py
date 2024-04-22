@@ -2,6 +2,7 @@
 
 from palau.lims.tamanu import api as tapi
 from bika.lims import api
+from palau.lims.tamanu.config import LOINC_GENERIC_DIAGNOSTIC
 from senaite.core.api import dtime
 
 
@@ -57,13 +58,11 @@ def after_publish(sample):
     # registered | partial | preliminary | final
     sample_status = api.get_review_status(sample)
     if sample_status == "published":
-        # TODO status 'final' only if all requested analyses were included in
-        #      the ARReport. Otherwise, 'partial'
         status = "final"
     elif sample_status in ["verified", "to_be_verified"]:
         status = "preliminary"
     else:
-        status = "registered"
+        status = "partial"
 
     payload = {
         # meta information about the DiagnosticReport (ARReport)
@@ -85,14 +84,7 @@ def after_publish(sample):
 
     # add the test panel (profile) if set or use LOINC's generic
     panel = data.get("code") or {}
-    coding = panel.get("coding") or []
-    if not coding:
-        # Use generic LOINC code 30954-2 (https://loinc.org/30954-2)
-        coding = [{
-            "system": "http://loinc.org",
-            "code": " 30954-2",
-            "display": "Relevant Dx tests/lab data"
-        }]
+    coding = panel.get("coding") or [LOINC_GENERIC_DIAGNOSTIC]
 
     # attach the pdf encoded in base64
     pdf = report.getPdf()
