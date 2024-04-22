@@ -1,0 +1,30 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="palau.lims">
+
+  <monkey:patch
+      class="senaite.core.content.sampletemplate.SampleTemplate"
+      original="getMinimumVolume"
+      ignoreOriginal="True"
+      replacement=".sampletemplate.getMinimumVolume"/>
+
+  <monkey:patch
+      class="senaite.core.content.sampletemplate.SampleTemplate"
+      original="setMinimumVolume"
+      ignoreOriginal="True"
+      replacement=".sampletemplate.setMinimumVolume"/>
+
+  <monkey:patch
+      class="senaite.core.content.sampletemplate.SampleTemplate"
+      original="getInsufficientVolumeText"
+      ignoreOriginal="True"
+      replacement=".sampletemplate.getInsufficientVolumeText"/>
+
+  <monkey:patch
+      class="senaite.core.content.sampletemplate.SampleTemplate"
+      original="setInsufficientVolumeText"
+      ignoreOriginal="True"
+      replacement=".sampletemplate.setInsufficientVolumeText"/>
+
+</configure>

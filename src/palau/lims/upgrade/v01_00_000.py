@@ -13,6 +13,7 @@ from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_roles_and_groups
 from palau.lims.setuphandlers import setup_workflows
 from palau.lims.workflow.analysis.events import after_set_out_of_stock
+from Products.Archetypes.BaseUnit import BaseUnit
 from senaite.core.api.catalog import reindex_index
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
@@ -240,6 +241,32 @@ def remove_analysisprofile_behavior(tool):
     reindex_index(SETUP_CATALOG, "sampletype_title")
 
     logger.info("Setup AnalysisProfile behavior [DONE]")
+
+
+def setup_sampletemplate_behavior(tool):
+    logger.info("Setup SampleTemplate behavior ...")
+    portal = tool.aq_inner.aq_parent
+
+    # register the new behavior
+    setup_behaviors(portal)
+
+    # walk-through all templates and update the field value
+    sc = api.get_tool(SETUP_CATALOG)
+    for brain in sc(portal_type="SampleTemplate"):
+        obj = api.get_object(brain)
+        storage = get_attribute_storage(obj)
+        volume = storage.get("MinimumVolume")
+        text = storage.get("InsufficientVolumeText")
+        # text comes wrapped in BaseUnit
+        if isinstance(text, BaseUnit):
+            text = text()
+
+        obj.setMinimumVolume(volume)
+        obj.setInsufficientVolumeText(text)
+        obj.reindexObject()
+        obj._p_deactivate()
+
+    logger.info("Setup SampleTemplate behavior [DONE]")
 
 
 def setup_tamanu_catalogs(tool):

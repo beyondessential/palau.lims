@@ -4,13 +4,19 @@
 
   <genericsetup:upgradeStep
       title="Setup catalogs for integration with Tamanu"
-      description="
-        Setup new catalogs and/or modify existing ones for the integration with
-        Tamanu to work properly.
-      "
+      description="Setup new catalogs and/or modify existing ones for the
+        integration with Tamanu to work properly"
+      source="1010"
+      destination="1011"
+      handler=".v01_00_000.setup_tamanu_catalogs"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
+      title="Compatibility with core#2521"
+      description="Replaces the ARTemplate extender by a behavior"
       source="1009"
       destination="1010"
-      handler=".v01_00_000.setup_tamanu_catalogs"
+      handler=".v01_00_000.setup_sampletemplate_behavior"
       profile="palau.lims:default"/>
 
   <genericsetup:upgradeStep

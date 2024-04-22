@@ -10,7 +10,6 @@ import os
 import six
 from bika.lims import api
 from bika.lims.interfaces import IAnalysisRequest
-from bika.lims.interfaces import IARTemplate
 from bika.lims.interfaces import IClient
 from bika.lims.interfaces import ISampleType
 from bika.lims.utils import t as _t
@@ -21,6 +20,7 @@ from senaite.ast.utils import get_ast_analyses
 from senaite.ast.utils import get_ast_siblings
 from senaite.ast.utils import get_identified_microorganisms
 from senaite.core.api import measure as mapi
+from senaite.core.interfaces import ISampleTemplate
 
 
 def set_field_value(instance, field_name, value):
@@ -86,8 +86,8 @@ def get_minimum_volume(obj, default="0 ml"):
     if ISampleType.providedBy(obj):
         min_volume = get_field_value(obj, "MinimumVolume")
 
-    elif IARTemplate.providedBy(obj):
-        min_volume = get_field_value(obj, "MinimumVolume")
+    elif ISampleTemplate.providedBy(obj):
+        min_volume = obj.getMinimumVolume()
 
     elif IAnalysisRequest.providedBy(obj):
         min_volume = get_minimum_volume(obj.getTemplate())
@@ -224,9 +224,6 @@ def get_maximum_volume(obj, default=0):
     """Returns the maximum volume required for the given object
     """
     if ISampleType.providedBy(obj):
-        return get_field_value(obj, "MaximumVolume")
-
-    if IARTemplate.providedBy(obj):
         return get_field_value(obj, "MaximumVolume")
 
     if IAnalysisRequest.providedBy(obj):
