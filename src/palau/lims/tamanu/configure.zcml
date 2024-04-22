@@ -5,6 +5,6 @@
   <include package=".consumers" />
   <include package=".patches" />
   <include package=".resources" />
-  <include package=".workflow" />
+  <include package=".subscribers" />
 
 </configure>

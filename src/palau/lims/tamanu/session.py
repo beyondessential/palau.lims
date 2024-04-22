@@ -21,7 +21,7 @@ DEFAULT_SLUG = "api/integration/fhir/mat"
 
 # basic headers
 HEADERS = (
-    ("X-Version", "1.0.0"),
+    ("X-Version", "0.0.1"),
     ("X-Tamanu-Client", "mSupply"),
     ("Content-Type", "application/json"),
 )
@@ -68,15 +68,21 @@ class TamanuSession(object):
             output[key] = value
         return output
 
-    def post(self, endpoint, payload, timeout=5):
+    def post(self, endpoint, payload, **kwargs):
         url = self.get_url(endpoint)
-        #payload = self.jsonify(payload)
-        payload = json.dumps(payload)
+
+        # add the default headers
+        headers = kwargs.pop("headers", {})
+        headers.update(dict(HEADERS))
+        kwargs["headers"] = headers
+
+        payload = self.jsonify(payload)
+        #payload = json.dumps(payload)
 
         # Send the POST request
         logger.info("[POST] {}".format(url))
         logger.info("[POST PAYLOAD] {}".format(repr(payload)))
-        resp = requests.post(url, json=payload, timeout=timeout)
+        resp = requests.post(url, json=payload, **kwargs)
 
         # Return the response
         return resp

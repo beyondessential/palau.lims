@@ -4,18 +4,19 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-from uuid import UUID
-
 from bika.lims import api
 from palau.lims.tamanu import logger
+from palau.lims.tamanu.config import DEFAULT_TAMANU_STATE
+from palau.lims.tamanu.config import TAMANU_STATUSES
 from palau.lims.tamanu.config import TAMANU_STORAGE
 from palau.lims.tamanu.interfaces import ITamanuContent
 from palau.lims.tamanu.interfaces import ITamanuResource
 from persistent.dict import PersistentDict
 from Products.Archetypes.utils import getRelURL
+from senaite.core.api import dtime
+from uuid import UUID
 from zope.annotation.interfaces import IAnnotations
 from zope.interface import alsoProvides
-from senaite.core.api import dtime
 
 _marker = object
 
@@ -181,6 +182,14 @@ def get_status(thing):
     return api.get_review_status(thing)
 
 
+def get_tamanu_status(thing, default=DEFAULT_TAMANU_STATE):
+    """Gets the states of a tamanu resource or the counterpart state from a
+    SENAITE object
+    """
+    status = get_status(thing)
+    return dict(TAMANU_STATUSES).get(status, default)
+
+
 def create_object(container, resource, **kwargs):
     """Creates an object for the given Tamanu resource
     """
@@ -252,3 +261,20 @@ def catalog_object(obj):
 
     # reindex in registered catalogs
     obj.reindexObject()
+
+
+def get_codings(items, system):
+    """Return the codes from a list of a dicts for the system specified
+    """
+    if not items:
+        return []
+    if not isinstance(items, list):
+        items = [items]
+    codings = []
+    for item in items:
+        coding = item.get("coding") or []
+        for code in coding:
+            if code.get("system") != system:
+                continue
+            codings.append(code)
+    return codings

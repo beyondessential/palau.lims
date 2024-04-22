@@ -15,9 +15,9 @@ from bika.lims.workflow import getTransitionActor
 from bika.lims.workflow import getTransitionDate
 from collections import OrderedDict
 from palau.lims import messageFactory as _
-from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from palau.lims.utils import get_field_value
 from palau.lims.utils import get_initials
+from palau.lims.utils import is_reportable
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import is_ast_analysis
@@ -130,27 +130,21 @@ class DefaultReportView(SingleReportView):
         collection, but only those in a "reportable" status are returned.
         If "parts" is False, analyses from partitions won't be included
         """
-        analyses = super(SingleReportView, self).get_analyses(
-            model_or_collection)
+        # get the analyses to be reported "by default"
+        base = super(SingleReportView, self)
+        all_analyses = base.get_analyses(model_or_collection)
 
+        # remove non-reportable analyses
+        analyses = []
         sample_uid = api.get_uid(model_or_collection)
-
-        def is_reportable(analysis):
-            hidden = analysis.getHidden()
-            if hidden:
-                return False
-
+        for analysis in all_analyses:
+            if not is_reportable(analysis):
+                continue
             if not parts:
-                # Skip partitions
+                # skip analyses from partitions
                 if analysis.getRequestUID() != sample_uid:
-                    return False
-
-            if is_ast_analysis(analysis):
-                if analysis.getKeyword() != RESISTANCE_KEY:
-                    return False
-
-            status = api.get_review_status(analysis)
-            return status in ANALYSIS_REPORTABLE_STATUSES
+                    continue
+            analyses.append(analysis)
 
         def get_growth_number(a, b):
             ast = [is_ast_analysis(a), is_ast_analysis(b)]

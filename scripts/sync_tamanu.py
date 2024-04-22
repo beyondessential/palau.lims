@@ -138,23 +138,6 @@ def get_sample_point(service_request):
     return api.create(container, "SamplePoint", **info)
 
 
-def get_codings(items, system):
-    """Return the codes from a list of a dicts for the system specified
-    """
-    if not items:
-        return []
-    if not isinstance(items, list):
-        items = [items]
-    codings = []
-    for item in items:
-        coding = item.get("coding") or []
-        for code in coding:
-            if code.get("system") != system:
-                continue
-            codings.append(code)
-    return codings
-
-
 def get_services(service_request):
     """Returns the service objects counterpart for the given resource
     """
@@ -171,7 +154,7 @@ def get_services(service_request):
 
     # get the codes requested in the ServiceRequest
     details = service_request.get("orderDetail")
-    for coding in get_codings(details, SENAITE_TESTS_CODING_SYSTEM):
+    for coding in tapi.get_codings(details, SENAITE_TESTS_CODING_SYSTEM):
         # get the analysis by keyword
         code = coding.get("code")
         service = by_keyword.get(code)
@@ -205,7 +188,7 @@ def get_profiles(service_request):
 
     # get the profile codes requested in the ServiceRequest
     codings = service_request.get("code")
-    for coding in get_codings(codings, SENAITE_PROFILES_CODING_SYSTEM):
+    for coding in tapi.get_codings(codings, SENAITE_PROFILES_CODING_SYSTEM):
         # get the profile by keyword
         code = coding.get("code")
         profile = by_keyword.get(code)
@@ -241,7 +224,9 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
                   dry_mode=True):
     # start a remote session with tamanu
     session = TamanuSession(host)
-    session.login(email, password)
+    logged = session.login(email, password)
+    if not logged:
+        raise ValueError("Cannot login, wrong credentials")
 
     # get the service requests created/modified since?
     since = timedelta(days=-since)
