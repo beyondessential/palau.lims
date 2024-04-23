@@ -114,7 +114,7 @@ def send_diagnostic_report(sample, report):
             }
 
         # append the observations
-        payload.setdefault("results", []).append(observation)
+        #payload.setdefault("results", []).append(observation)
 
     # attach the pdf encoded in base64
     pdf = report.getPdf()
