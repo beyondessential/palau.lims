@@ -17,7 +17,7 @@ LOINC_GENERIC_DIAGNOSTIC = (
     # default in DiagnosticReport callbacks when no panel was defined in the
     # original Tamanu's ServiceRequest
     ("system", "http://loinc.org"),
-    ("code", " 30954-2"),
+    ("code", "30954-2"),
     ("display", "Relevant Dx tests/lab data"),
 )
 

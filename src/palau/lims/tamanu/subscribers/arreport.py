@@ -118,13 +118,11 @@ def send_diagnostic_report(sample, report):
 
     # attach the pdf encoded in base64
     pdf = report.getPdf()
-    coding[0].update({
+    payload["presentedForm"] = [{
         "data": pdf.data.encode("base64"),
         "contentType": "application/pdf",
-    })
-    payload["code"] = {"coding": coding}
+        "title": api.get_id(sample),
+    }]
 
     # notify back to Tamanu
-    # TODO Fix forbidden error when notifying back Tamanu with DiagnosticReport
-    # {u'error': {u'status': 403, u'message': u'', u'name': u'ForbiddenError'}}
     session.post("DiagnosticReport", payload)
