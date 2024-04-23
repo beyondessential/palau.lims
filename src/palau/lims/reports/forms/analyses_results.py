@@ -6,15 +6,14 @@
 
 from bika.lims import api
 
+from datetime import datetime
 from palau.lims import messageFactory as _
-from palau.lims.reports import get_analyses_by_result_category_department
+from palau.lims.reports import get_analyses
 from palau.lims.reports.forms import CSVReport
 from palau.lims.utils import get_field_value
-
-SEX_CAST = {
-    "m": "Male",
-    "f": "Female",
-}
+from senaite.core.api import dtime
+from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.patient.config import SEXES
 
 
 class AnalysesResults(CSVReport):
@@ -22,18 +21,11 @@ class AnalysesResults(CSVReport):
     """
 
     def process_form(self):
-        # Always filter analyses by verified and published in this form
-        statuses = ["verified", "published"]
-
-        # Collect the analyses filters (result, category and department)
-        resultText = self.request.form.get("result") or None
-        category = self.request.form.get("category") or None
-        department = self.request.form.get("department") or None
+        # Collect the analyses filters (date received)
+        date_from, date_to = self.parse_date_for_query()
 
         # Get the filtered analyses list
-        brains = get_analyses_by_result_category_department(
-            resultText, category, department, review_state=statuses
-        )
+        brains = get_analyses(date_from, date_to)
 
         # Add the first row (header)
         rows = [[
@@ -64,29 +56,36 @@ class AnalysesResults(CSVReport):
             patient_name = get_field_value(
                 sample, "PatientFullName", default={}
             )
-            mrn = get_field_value(sample, "MedicalRecordNumber", default={})
-            mrn = mrn.get("value", "")
+            dob = self.parse_date_to_output(sample.getDateOfBirth()[0])
+            sampled = self.parse_date_to_output(sample.getDateSampled())
+            result_captured = self.parse_date_to_output(
+                analysis.getResultCaptureDate()
+            )
 
-            resultText = resultText or analysis.getFormattedResult() or ""
-            department = department or analysis.getDepartmentTitle() or ""
-            category = category or analysis.getCategoryTitle() or ""
+            # Only show results that appear on the final reports
+            resultText = ""
+            if analysis.getDatePublished():
+                resultText = analysis.getFormattedResult() or resultText
+
+            department = analysis.getDepartmentTitle() or ""
+            category = analysis.getCategoryTitle() or ""
 
             # add the info for each analysis in a row
             rows.append(
                 [
                     analysis.Title(),
                     analysis.getRequestID(),
-                    analysis.getId(),
+                    analysis.getKeyword(),
                     category,
                     department,
                     patient_name.get("firstname", ""),
                     patient_name.get("lastname", ""),
                     patient_name.get("middlename", ""),
-                    mrn,
-                    sample.getDateOfBirth()[0] or "",
-                    SEX_CAST.get(sample.getSex(), ""),
-                    sample.getDateSampled() or "",
-                    analysis.getResultCaptureDate() or "",
+                    sample.getMedicalRecordNumberValue() or "",
+                    dob,
+                    dict(SEXES).get(sample.getSex(), ""),
+                    sampled,
+                    result_captured,
                     sample.getSampleTypeTitle() or "",
                     resultText,
                     sample.getClientTitle() or "",
@@ -95,3 +94,34 @@ class AnalysesResults(CSVReport):
             )
 
         return rows
+
+    def parse_date_for_query(self):
+        # Get earliest possible date (first sample date)
+        date0 = self.get_first_sample_date()
+
+        # Get latest possible date (today)
+        current_date = datetime.now()
+
+        # Set date range
+        date_from = self.request.form.get('date_from') or date0
+        date_to = self.request.form.get('date_to') or current_date
+
+        # Parse dates for query
+        date_from = dtime.to_DT(date_from).earliestTime()
+        date_to = dtime.to_DT(date_to).latestTime()
+
+        return date_from, date_to
+
+    def get_first_sample_date(self):
+        query = {
+            "portal_type": "AnalysisRequest",
+            "sort_on": "created",
+            "sort_order": "ascending",
+            "sort_limit": 1,
+        }
+        brains = api.search(query, SAMPLE_CATALOG)
+        year = brains[0].created.year()
+        return datetime(year, 1, 1)
+
+    def parse_date_to_output(self, date):
+        return dtime.to_localized_time(date, long_format=False) or ""

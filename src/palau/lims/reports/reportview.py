@@ -10,15 +10,11 @@ from plone.memoize import view
 from palau.lims.config import TARGET_PATIENTS
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as PT
-from senaite.core.catalog import SETUP_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
 
 YEAR_CONTROL = "controls/year.pt"
 DATE_CONTROL = "controls/date.pt"
 TARGET_PATIENT_CONTROL = "controls/target_patient.pt"
-RESULT_CONTROL = "controls/result.pt"
-CATEGORY_CONTROL = "controls/category.pt"
-DEPARTMENT_CONTROL = "controls/department.pt"
 
 
 class StatisticReportsView(BrowserView):
@@ -52,75 +48,6 @@ class StatisticReportsView(BrowserView):
         """Returns the control for year selection
         """
         return PT(TARGET_PATIENT_CONTROL)(self)
-
-    def result_control(self):
-        """Returns the control for year selection
-        """
-        return PT(RESULT_CONTROL)(self)
-
-    def category_control(self):
-        """Returns the control for year selection
-        """
-        return PT(CATEGORY_CONTROL)(self)
-
-    def department_control(self):
-        """Returns the control for year selection
-        """
-        return PT(DEPARTMENT_CONTROL)(self)
-
-    def get_analyses_brains(self):
-        return api.search({"portal_type": "AnalysisService"}, SETUP_CATALOG)
-
-    @view.memoize
-    def get_results(self):
-        """Returns the list of results of all analyses
-        """
-        results_set = set()
-        brains = self.get_analyses_brains()
-
-        if not brains:
-            return results_set
-
-        for brain in brains:
-            analysis = api.get_object(brain)
-            for result_option in analysis.getResultOptions():
-                results_set.add(result_option["ResultText"])
-
-        return results_set
-
-    @view.memoize
-    def get_categories(self):
-        """Returns the list of categories of all analyses
-        """
-        categories_set = set()
-        brains = self.get_analyses_brains()
-
-        if not brains:
-            return categories_set
-
-        for brain in brains:
-            analysis = api.get_object(brain)
-            categories_set.add(analysis.getCategoryTitle())
-
-        return categories_set
-
-    @view.memoize
-    def get_departments(self):
-        """Returns the list of departments of all analyses
-        """
-        department_set = set()
-        brains = self.get_analyses_brains()
-
-        if not brains:
-            return department_set
-
-        for brain in brains:
-            analysis = api.get_object(brain)
-            department = analysis.getDepartment()
-            if department:
-                department_set.add(department.Title())
-
-        return department_set
 
     @view.memoize
     def get_years(self):

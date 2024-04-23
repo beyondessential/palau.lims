@@ -7,10 +7,8 @@
 
   <form method="post">
 
-    <!-- Controls -->
-    <tal:result replace="structure python:view.result_control()"/>
-    <tal:category replace="structure python:view.category_control()"/>
-    <tal:department replace="structure python:view.department_control()"/>
+    <!-- Date control -->
+    <tal:date replace="structure python:view.date_control()"/>
 
     <!-- Submit button -->
     <input tabindex=""
