@@ -60,29 +60,26 @@ class TamanuSession(object):
             endpoint = "/".join(parts)
         return endpoint
 
-    def jsonify(self, data):
-        output = {}
-        for key, value in data.items():
-            if not isinstance(value, six.string_types):
-                value = json.dumps(value)
-            output[key] = value
-        return output
-
     def post(self, endpoint, payload, **kwargs):
         url = self.get_url(endpoint)
 
         # add the default headers
         headers = kwargs.pop("headers", {})
         headers.update(dict(HEADERS))
-        kwargs["headers"] = headers
 
-        payload = self.jsonify(payload)
-        #payload = json.dumps(payload)
+        # inject the auth token
+        if self.token:
+            headers["Authorization"] = "Bearer {}".format(self.token)
+
+        kwargs["headers"] = headers
 
         # Send the POST request
         logger.info("[POST] {}".format(url))
         logger.info("[POST PAYLOAD] {}".format(repr(payload)))
-        resp = requests.post(url, json=payload, **kwargs)
+        resp = requests.post(url, data=json.dumps(payload), **kwargs)
+        code = resp.status_code
+        if code not in [200, 201]:
+            logger.error("[ERROR {}]: {}".format(str(code), resp.content))
 
         # Return the response
         return resp
