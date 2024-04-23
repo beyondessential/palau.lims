@@ -2,6 +2,7 @@
 
 from bika.lims import api
 from palau.lims.tamanu import api as tapi
+from palau.lims.tamanu.config import LOINC_CODING_SYSTEM
 from palau.lims.tamanu.config import LOINC_GENERIC_DIAGNOSTIC
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.utils import is_reportable
@@ -64,8 +65,14 @@ def send_diagnostic_report(sample, report):
     }
 
     # add the test panel (profile) if set or use LOINC's generic
+    # tamanu doesn't recognizes more than one coding, keep only the LOINC one
+    coding = [dict(LOINC_GENERIC_DIAGNOSTIC)]
     panel = data.get("code") or {}
-    coding = panel.get("coding") or [dict(LOINC_GENERIC_DIAGNOSTIC)]
+    for code in panel.get("coding") or []:
+        if code.get("system") == LOINC_CODING_SYSTEM:
+            coding = [code]
+            break
+    payload["code"] = {"coding": coding}
 
     # group the tests (orderDetails) requested by their original id
     ordered_tests_by_key = {}
