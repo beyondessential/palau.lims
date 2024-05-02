@@ -134,7 +134,7 @@ def get_sample_point(service_request):
     if not title:
         raise ValueError("Sample point without title: %s" % repr(specimen))
 
-    container = api.get_setup().bika_samplepoints
+    container = api.get_senaite_setup().samplepoints
     return api.create(container, "SamplePoint", **info)
 
 
