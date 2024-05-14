@@ -4,11 +4,9 @@
   <h2 i18n:translate="">
     Analyses results
   </h2>
-  <p>All published analyses results following the criteria: Published, not flagged as hidden,
-     that are for sensitivity testing (AST) but "Resistance" only, that have a reportable status,
-     and that are not internal reports.</p>
 
   <form method="post">
+    <p>Only analyses results that have been published on the final reports.</p>
 
     <!-- Date control -->
     <tal:date replace="structure python:view.date_control()"/>
