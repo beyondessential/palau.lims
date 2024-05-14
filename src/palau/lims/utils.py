@@ -15,10 +15,13 @@ from bika.lims.interfaces import ISampleType
 from bika.lims.utils import t as _t
 from palau.lims import messageFactory as _
 from palau.lims.config import UNKNOWN_DOCTOR_FULLNAME
+from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from Products.CMFPlone.i18nl10n import ulocalized_time
+from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import get_ast_analyses
 from senaite.ast.utils import get_ast_siblings
 from senaite.ast.utils import get_identified_microorganisms
+from senaite.ast.utils import is_ast_analysis
 from senaite.core.api import measure as mapi
 from senaite.core.interfaces import ISampleTemplate
 
@@ -278,3 +281,16 @@ def set_ast_panel_to_sample(value, sample):
     sample.panels = getattr(sample, "panels", []) or []
     if value not in sample.panels:
         sample.panels.append(value)
+
+
+def is_reportable(analysis):
+    hidden = analysis.getHidden()
+    if hidden:
+        return False
+
+    if is_ast_analysis(analysis):
+        if analysis.getKeyword() != RESISTANCE_KEY:
+            return False
+
+    status = api.get_review_status(analysis)
+    return status in ANALYSIS_REPORTABLE_STATUSES

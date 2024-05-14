@@ -11,6 +11,7 @@ from palau.lims import messageFactory as _
 from palau.lims.reports import get_analyses
 from palau.lims.reports.forms import CSVReport
 from palau.lims.utils import get_field_value
+from palau.lims.utils import is_reportable
 from senaite.core.api import dtime
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.patient.config import SEXES
@@ -21,11 +22,14 @@ class AnalysesResults(CSVReport):
     """
 
     def process_form(self):
+        statuses = ["published"]
         # Collect the analyses filters (date received)
         date_from, date_to = self.parse_date_for_query()
 
         # Get the filtered analyses list
-        brains = get_analyses(date_from, date_to)
+        brains = get_analyses(date_from, date_to, review_state=statuses)
+        objs = map(api.get_object, brains)
+        analyses = [analysis for analysis in objs if is_reportable(analysis)]
 
         # Add the first row (header)
         rows = [[
@@ -49,9 +53,7 @@ class AnalysesResults(CSVReport):
         ]]
 
         # Add the info per analysis in a row
-        for brain in brains:
-            analysis = api.get_object(brain)
-
+        for analysis in analyses:
             sample = analysis.getRequest()
             patient_name = get_field_value(
                 sample, "PatientFullName", default={}
