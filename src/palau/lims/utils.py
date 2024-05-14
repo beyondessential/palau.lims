@@ -11,6 +11,7 @@ import six
 from bika.lims import api
 from bika.lims.interfaces import IAnalysisRequest
 from bika.lims.interfaces import IClient
+from bika.lims.interfaces import IInternalUse
 from bika.lims.interfaces import ISampleType
 from bika.lims.utils import t as _t
 from palau.lims import messageFactory as _
@@ -287,8 +288,7 @@ def is_reportable(analysis):
     """Returns whether the analysis has to be displayed in results reports
     """
     # do not report hidden analyses
-    hidden = analysis.getHidden()
-    if hidden:
+    if analysis.getHidden():
         return False
 
     # do not report analyses for internal use
