@@ -11,14 +11,18 @@ import six
 from bika.lims import api
 from bika.lims.interfaces import IAnalysisRequest
 from bika.lims.interfaces import IClient
+from bika.lims.interfaces import IInternalUse
 from bika.lims.interfaces import ISampleType
 from bika.lims.utils import t as _t
 from palau.lims import messageFactory as _
 from palau.lims.config import UNKNOWN_DOCTOR_FULLNAME
+from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from Products.CMFPlone.i18nl10n import ulocalized_time
+from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import get_ast_analyses
 from senaite.ast.utils import get_ast_siblings
 from senaite.ast.utils import get_identified_microorganisms
+from senaite.ast.utils import is_ast_analysis
 from senaite.core.api import measure as mapi
 from senaite.core.interfaces import ISampleTemplate
 
@@ -278,3 +282,23 @@ def set_ast_panel_to_sample(value, sample):
     sample.panels = getattr(sample, "panels", []) or []
     if value not in sample.panels:
         sample.panels.append(value)
+
+
+def is_reportable(analysis):
+    """Returns whether the analysis has to be displayed in results reports
+    """
+    # do not report hidden analyses
+    if analysis.getHidden():
+        return False
+
+    # do not report analyses for internal use
+    if IInternalUse.providedBy(analysis):
+        return False
+
+    # do not report ast analyses, but resistance category only
+    if is_ast_analysis(analysis):
+        if analysis.getKeyword() != RESISTANCE_KEY:
+            return False
+
+    status = api.get_review_status(analysis)
+    return status in ANALYSIS_REPORTABLE_STATUSES

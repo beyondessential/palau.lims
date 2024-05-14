@@ -1,5 +1,5 @@
 <div class="form-group form-inline"
-     i18n:domain="png.lims">
+     i18n:domain="palau.lims">
 
   <!-- Year -->
   <label for="year" class="field mr-2" i18n:translate="">Year</label>

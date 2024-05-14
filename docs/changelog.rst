@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #136 Add an Analyses Result CSV reports at Statistic reports
 - #139 Compatibility with senaite.core#2521 (ARTemplate to DX)
 - #134 Fix sticker 'Code_39_40x20mm' fitting issue
 - #133 Compatibility with senaite.core#2509

@@ -18,6 +18,7 @@ from palau.lims import messageFactory as _
 from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from palau.lims.utils import get_field_value
 from palau.lims.utils import get_initials
+from palau.lims.utils import is_reportable
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import is_ast_analysis
@@ -135,23 +136,6 @@ class DefaultReportView(SingleReportView):
 
         sample_uid = api.get_uid(model_or_collection)
 
-        def is_reportable(analysis):
-            hidden = analysis.getHidden()
-            if hidden:
-                return False
-
-            if not parts:
-                # Skip partitions
-                if analysis.getRequestUID() != sample_uid:
-                    return False
-
-            if is_ast_analysis(analysis):
-                if analysis.getKeyword() != RESISTANCE_KEY:
-                    return False
-
-            status = api.get_review_status(analysis)
-            return status in ANALYSIS_REPORTABLE_STATUSES
-
         def get_growth_number(a, b):
             ast = [is_ast_analysis(a), is_ast_analysis(b)]
             if not all(ast):
@@ -165,7 +149,23 @@ class DefaultReportView(SingleReportView):
 
         # Sort AST analyses by growth number
         analyses = sorted(analyses, cmp=get_growth_number)
-        return filter(is_reportable, analyses)
+
+        # Remove non-reportable analyses
+        analyses = filter(is_reportable, analyses)
+
+        def is_from_primary(analysis):
+            # TODO Remove the filtering of analyses from partitions. This has
+            #  been commented to prevent inconsistencies with the analysis
+            #  results statistics report. See
+            #  https://github.com/beyondessential/palau.lims/pull/136
+            #return analysis.getRequestUID() == sample_uid
+            return True
+
+        if not parts:
+            # Remove analyses from partitions
+            analyses = filter(is_from_primary, analyses)
+
+        return analyses
 
     @returns_super_model
     def get_ancestry(self, model):
