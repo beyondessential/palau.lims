@@ -6,7 +6,7 @@
   </h2>
 
   <form method="post">
-    <p>Only analyses results that have been published on the final reports.</p>
+    <p>Only analyses that have been published on the results reports.</p>
 
     <!-- Date control -->
     <tal:date replace="structure python:view.date_control()"/>
