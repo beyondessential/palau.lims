@@ -33,11 +33,7 @@ class AnalysesResults(CSVReport):
 
         # Add the first row (header)
         rows = [[
-            _("Analysis Title"),
-            _("Analysis Request ID"),
-            _("Analysis ID"),
-            _("Analysis Category"),
-            _("Analysis Department"),
+            _("Sample ID"),
             _("Patient Name"),
             _("Patient Surname"),
             _("Patient Other Names"),
@@ -46,6 +42,9 @@ class AnalysesResults(CSVReport):
             _("Patient Gender"),
             _("Test Date Collected"),
             _("Test Date Tested"),
+            _("Test Category"),
+            _("Test Department"),
+            _("Test ID"),
             _("Test Type"),
             _("Test Result"),
             _("Site"),
@@ -75,11 +74,7 @@ class AnalysesResults(CSVReport):
             # add the info for each analysis in a row
             rows.append(
                 [
-                    analysis.Title(),
                     analysis.getRequestID(),
-                    analysis.getKeyword(),
-                    category,
-                    department,
                     patient_name.get("firstname", ""),
                     patient_name.get("lastname", ""),
                     patient_name.get("middlename", ""),
@@ -88,7 +83,10 @@ class AnalysesResults(CSVReport):
                     dict(SEXES).get(sample.getSex(), ""),
                     sampled,
                     result_captured,
-                    sample.getSampleTypeTitle() or "",
+                    category,
+                    department,
+                    analysis.getKeyword(),
+                    analysis.Title(),
                     resultText,
                     sample.getClientTitle() or "",
                     sample.getContactFullName() or "",
