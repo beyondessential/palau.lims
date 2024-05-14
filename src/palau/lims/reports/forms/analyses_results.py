@@ -4,8 +4,9 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
-from bika.lims import api
+import re
 
+from bika.lims import api
 from datetime import datetime
 from palau.lims import messageFactory as _
 from palau.lims.reports import get_analyses
@@ -64,9 +65,10 @@ class AnalysesResults(CSVReport):
             )
 
             # Only show results that appear on the final reports
-            resultText = ""
+            result = ""
             if analysis.getDatePublished():
-                resultText = analysis.getFormattedResult() or resultText
+                result = analysis.getFormattedResult(html=False) or result
+                result = self.replace_html_breaklines(result)
 
             department = analysis.getDepartmentTitle() or ""
             category = analysis.getCategoryTitle() or ""
@@ -87,13 +89,17 @@ class AnalysesResults(CSVReport):
                     department,
                     analysis.getKeyword(),
                     analysis.Title(),
-                    resultText,
+                    result,
                     sample.getClientTitle() or "",
                     sample.getContactFullName() or "",
                 ]
             )
 
         return rows
+
+    def replace_html_breaklines(self, text, replacement="; "):
+        regex = r'<br\s*\/?>|<BR\s*\/?>'
+        return re.sub(regex, replacement, text)
 
     def parse_date_for_query(self):
         # Get earliest possible date (first sample date)
