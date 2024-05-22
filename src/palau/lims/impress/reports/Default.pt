@@ -68,7 +68,21 @@
      .report table { border-color: #999; margin-bottom: 0.4rem; line-height: 1.2; }
      .report table td, .report table th { border-top: 0px solid black; border-bottom: 0px solid black; }
      .report table th { border-bottom: 1px solid black; font-size: 8pt }
-     .report .section-results { page-break-inside:auto; }
+     .report .section-results {
+                page-break-inside:auto;
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+              }
+     .report span .result {
+                    flex: 1 1 auto;
+                    max-width: 100%;
+                    box-sizing: border-box;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                    overflow: hidden;
+                    white-space: pre-wrap; 
+                  }
      .report table.range-table td { padding: 0 0.2rem 0 0; border: none; }
      .report .section-header h1 { font-size: 175%; }
      .report .section-header img.logo { height: 100px; margin: 20px 0; }
@@ -480,8 +494,8 @@
                       </tal:interim>
                     </td>
                     <!-- Result -->
-                    <td class="text-nowrap">
-                      <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)">23</span>
+                    <td class="text-wrap">
+                      <span class="result" tal:content="structure python:view.get_formatted_result(sample, analysis)"/>
 
                       <tal:result_unit condition="analysis/Unit">
                         &nbsp;<span class="units font-italic" tal:content="structure python:sample.get_formatted_unit(analysis)"/>
@@ -510,7 +524,7 @@
                   </tal:x>
                   <tal:x condition="out_of_stock">
                     <!-- Result -->
-                    <td class="text-nowrap"
+                    <td class="text-wrap"
                         tal:attributes="colspan python: len(vars_names)+2">
                       <span i18n:translate="" class="result">
                         Temporarily Unavailable
