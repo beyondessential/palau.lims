@@ -65,7 +65,7 @@ class SamplesListingAdapter(object):
         return self.senaite_theme.icon_tag(name, **kwargs)
 
     def is_unknown_doctor(self, contact_uid):
-        """Returns whether contat is an unknown Doctor
+        """Returns whether contact is an unknown Doctor
         """
         contact = self.listing.get_object_by_uid(contact_uid)
         if contact:
