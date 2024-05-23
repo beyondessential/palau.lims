@@ -8,12 +8,16 @@ from bika.lims import api
 from bika.lims.interfaces import IVerified
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
+from palau.lims.config import TAMANU_ROLES
+from palau.lims.config import TAMANU_USERNAME
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_roles_and_groups
 from palau.lims.setuphandlers import setup_workflows
 from palau.lims.workflow.analysis.events import after_set_out_of_stock
+from plone import api as papi
 from Products.Archetypes.BaseUnit import BaseUnit
+from Products.CMFCore.permissions import ModifyPortalContent as modify_perm
 from senaite.core.api.catalog import reindex_index
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
@@ -23,6 +27,7 @@ from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.core.workflow import ANALYSIS_WORKFLOW
+from senaite.patient.catalog import PATIENT_CATALOG
 
 version = "1.0.0"  # Remember version number in metadata.xml and setup.py
 profile = "profile-{0}:default".format(product)
@@ -267,3 +272,30 @@ def setup_sampletemplate_behavior(tool):
         obj._p_deactivate()
 
     logger.info("Setup SampleTemplate behavior [DONE]")
+
+
+def set_tamanu_patients_edit_restrictions(tool):
+    query = {
+        "portal_type": "Patient",
+        "Creator": "tamanu",
+    }
+    brains = api.search(query, PATIENT_CATALOG)
+    for brain in brains:
+        patient = api.get_object(brain)
+        papi.user.grant_roles(username=TAMANU_USERNAME, roles=TAMANU_ROLES, obj=patient)
+
+        # Grant Owner role to the Patient object
+        patient.manage_permission(modify_perm, roles=(TAMANU_ROLES), acquire=False)
+
+        patient.reindexObject()
+        patient.reindexObjectSecurity()
+        flush_object(patient)
+
+
+def flush_object(obj):
+    """Deactivate the object to save memory
+    """
+    try:
+        obj._p_deactivate()
+    except AttributeError:
+        pass

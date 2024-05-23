@@ -7,6 +7,10 @@
 from palau.lims import messageFactory as _
 from Products.Archetypes import DisplayList
 
+
+TAMANU_ROLES = ["Owner", ]
+TAMANU_USERNAME = 'tamanu'
+
 UNKNOWN_DOCTOR_FULLNAME = "Unknown doctor"
 
 CULTURE_INTERPRETATION_KEYWORD = "CINTER"
