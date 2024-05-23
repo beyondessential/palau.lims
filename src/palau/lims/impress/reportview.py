@@ -15,7 +15,6 @@ from bika.lims.workflow import getTransitionActor
 from bika.lims.workflow import getTransitionDate
 from collections import OrderedDict
 from palau.lims import messageFactory as _
-from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from palau.lims.utils import get_field_value
 from palau.lims.utils import get_initials
 from palau.lims.utils import is_reportable
@@ -134,7 +133,7 @@ class DefaultReportView(SingleReportView):
         analyses = super(SingleReportView, self).get_analyses(
             model_or_collection)
 
-        sample_uid = api.get_uid(model_or_collection)
+        sample_uid = api.get_uid(model_or_collection)  # noqa
 
         def get_growth_number(a, b):
             ast = [is_ast_analysis(a), is_ast_analysis(b)]
@@ -158,7 +157,7 @@ class DefaultReportView(SingleReportView):
             #  been commented to prevent inconsistencies with the analysis
             #  results statistics report. See
             #  https://github.com/beyondessential/palau.lims/pull/136
-            #return analysis.getRequestUID() == sample_uid
+            #  return analysis.getRequestUID() == sample_uid
             return True
 
         if not parts:
