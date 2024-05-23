@@ -51,6 +51,11 @@ def on_modified_patient_from_tamanu(instance, event):
 
     on_patient_event(instance)
 
+    # Revoke permission for creator user
+    papi.user.revoke_roles(
+        username=instance.Creator(), roles=TAMANU_ROLES, obj=instance
+    )
+
 
 def modified_by_tamanu(obj):
     """Retrieves True if the object was modified by the user with username
