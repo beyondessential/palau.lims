@@ -27,8 +27,9 @@ def get_user_by_username(portal_membership, username):
 
 
 def on_add_patient_from_tamanu(instance, event):
-    """Grant Owner role and revoke ModifyPortalContent permission
-    for Patient objects created by user 'tamanu'.
+    """Grant Owner for user 'tamanu' role and revoke ModifyPortalConten
+    permission for Patient objects created by user 'tamanu', for all
+    users but 'tamanu'.
     """
 
     # Check if the user is 'tamanu'
@@ -49,8 +50,9 @@ def on_add_patient_from_tamanu(instance, event):
 
 
 def on_modified_patient_from_tamanu(instance, event):
-    """Grant Owner role and revoke ModifyPortalContent permission
-    for Patient objects modified by user 'tamanu'.
+    """GGrant Owner for user 'tamanu' role and revoke ModifyPortalConten
+    permission for Patient objects modified by user 'tamanu', for all
+    users but 'tamanu'.
     """
 
     # Check if the user is 'tamanu'
