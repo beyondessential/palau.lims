@@ -4,12 +4,11 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
+from bika.lims.api.snapshot import get_object_metadata
 from palau.lims.config import TAMANU_ROLES
 from palau.lims.config import TAMANU_USERNAME
 from plone import api as papi
 from Products.CMFCore.permissions import ModifyPortalContent as modify_perm
-from zope.component import getSiteManager
-from zope.lifecycleevent import IObjectModifiedEvent
 
 
 def on_patient_event(instance):
@@ -47,7 +46,7 @@ def on_modified_patient_from_tamanu(instance, event):
     """
 
     # Check if the user is 'tamanu'
-    if get_latest_modifier_username(instance) != TAMANU_USERNAME:
+    if modified_by_tamanu(instance):
         return
 
     # Change creator to 'tamanu' if different
@@ -57,16 +56,12 @@ def on_modified_patient_from_tamanu(instance, event):
     on_patient_event(instance)
 
 
-def get_latest_modifier_username(obj):
-    """Retrieves the username of the last person who modified the given object.
+def modified_by_tamanu(obj):
+    """Retrieves True if the object was modified by the user with username
+    'tamanu'.
     """
-    sm = getSiteManager()
-    events = sm.adapters.subscribers((obj,), IObjectModifiedEvent)
+    metadata = get_object_metadata(obj)
+    if metadata["actor"] == TAMANU_USERNAME:
+        return True
 
-    if events:
-        latest_event = events[-1]
-        modifier_user = latest_event.user
-        if modifier_user:
-            return modifier_user.getUserName()
-
-    return None
+    return False
