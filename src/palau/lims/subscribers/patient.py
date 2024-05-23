@@ -46,12 +46,8 @@ def on_modified_patient_from_tamanu(instance, event):
     """
 
     # Check if the user is 'tamanu'
-    if modified_by_tamanu(instance):
+    if not modified_by_tamanu(instance):
         return
-
-    # Change creator to 'tamanu' if different
-    if instance.Creator() != TAMANU_USERNAME:
-        instance.setCreator(TAMANU_USERNAME)
 
     on_patient_event(instance)
 
