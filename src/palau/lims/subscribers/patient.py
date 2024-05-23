@@ -6,6 +6,7 @@
 
 from palau.lims.config import TAMANU_ROLES
 from palau.lims.config import TAMANU_USERNAME
+from plone import api as papi
 from Products.CMFCore.permissions import ModifyPortalContent as modify_perm
 from zope.component import getSiteManager
 from zope.lifecycleevent import IObjectModifiedEvent
@@ -13,10 +14,14 @@ from zope.lifecycleevent import IObjectModifiedEvent
 
 def on_patient_event(instance):
     # Ensure creator has Owner role (assuming at least one role)
-    papi.user.grant_roles(username=TAMANU_USERNAME, roles=TAMANU_ROLES, obj=instance)
+    papi.user.grant_roles(
+        username=TAMANU_USERNAME, roles=TAMANU_ROLES, obj=instance
+    )
 
     # Grant Owner role to the Patient object
-    instance.manage_permission(modify_perm, roles=(TAMANU_ROLES), acquire=False)
+    instance.manage_permission(
+        modify_perm, roles=(TAMANU_ROLES), acquire=False
+    )
 
     instance.reindexObject()
     instance.reindexObjectSecurity()

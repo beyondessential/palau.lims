@@ -282,10 +282,14 @@ def set_tamanu_patients_edit_restrictions(tool):
     brains = api.search(query, PATIENT_CATALOG)
     for brain in brains:
         patient = api.get_object(brain)
-        papi.user.grant_roles(username=TAMANU_USERNAME, roles=TAMANU_ROLES, obj=patient)
+        papi.user.grant_roles(
+            username=TAMANU_USERNAME, roles=TAMANU_ROLES, obj=patient
+        )
 
         # Grant Owner role to the Patient object
-        patient.manage_permission(modify_perm, roles=(TAMANU_ROLES), acquire=False)
+        patient.manage_permission(
+            modify_perm, roles=(TAMANU_ROLES), acquire=False
+        )
 
         patient.reindexObject()
         patient.reindexObjectSecurity()
