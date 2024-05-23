@@ -10,7 +10,6 @@ from Products.CMFCore.permissions import ModifyPortalContent as modify_perm
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.RegistrationTool import get_member_by_login_name
 from Products.PlonePAS.tools.memberdata import MemberData
-from zope.lifecycleevent import Attributes
 
 
 def get_user_by_username(portal_membership, username):
