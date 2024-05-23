@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #145 Patient created or modified in Tamanu only editable by user 'tamanu'
 - #146 Compatibility with senaite.core#2549
 - #136 Add an Analyses Result CSV reports at Statistic reports
 - #139 Compatibility with senaite.core#2521 (ARTemplate to DX)
