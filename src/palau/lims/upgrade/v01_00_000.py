@@ -275,6 +275,8 @@ def setup_sampletemplate_behavior(tool):
 
 
 def set_tamanu_patients_edit_restrictions(tool):
+    logger.info("Set Tamanu patients edit restrictions [DONE]")
+
     query = {
         "portal_type": "Patient",
         "Creator": "tamanu",
@@ -294,6 +296,8 @@ def set_tamanu_patients_edit_restrictions(tool):
         patient.reindexObject()
         patient.reindexObjectSecurity()
         flush_object(patient)
+
+    logger.info("Set Tamanu patients edit restrictions [DONE]")
 
 
 def flush_object(obj):
