@@ -6,17 +6,17 @@
 
 import csv
 import os
+
 import six
 from bika.lims import api
 from bika.lims.interfaces import IAnalysisRequest
 from bika.lims.interfaces import IClient
 from bika.lims.interfaces import IInternalUse
 from bika.lims.interfaces import ISampleType
-from bika.lims.interfaces.analysis import IRequestAnalysis
 from bika.lims.utils import t as _t
 from palau.lims import messageFactory as _
-from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from palau.lims.config import UNKNOWN_DOCTOR_FULLNAME
+from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from Products.CMFPlone.i18nl10n import ulocalized_time
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import get_ast_analyses
@@ -285,30 +285,20 @@ def set_ast_panel_to_sample(value, sample):
 
 
 def is_reportable(analysis):
-    """Returns whether the given analysis is reportable or not
+    """Returns whether the analysis has to be displayed in results reports
     """
-    analysis = api.get_object(analysis, default=None)
-    if not analysis:
+    # do not report hidden analyses
+    if analysis.getHidden():
         return False
 
-    # do not report if used for internal use
+    # do not report analyses for internal use
     if IInternalUse.providedBy(analysis):
         return False
 
-    # do not report if is not an analysis bound to a sample
-    if not IRequestAnalysis.providedBy(analysis):
-        return False
-
-    # do not report if hidden
-    hidden = analysis.getHidden()
-    if hidden:
-        return False
-
-    # do not report AST "intermediate" analyses by sensitivity category
+    # do not report ast analyses, but resistance category only
     if is_ast_analysis(analysis):
         if analysis.getKeyword() != RESISTANCE_KEY:
             return False
 
-    # check if the status of the analysis is allowed for reporting
     status = api.get_review_status(analysis)
     return status in ANALYSIS_REPORTABLE_STATUSES

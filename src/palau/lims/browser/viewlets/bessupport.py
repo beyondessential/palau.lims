@@ -17,4 +17,6 @@ class BESSupportViewlet(ViewletBase):
     def is_visible(self):
         """Returns whether the viewlet is visible or not
         """
+        if self.request.get("SERVER_NAME") == "localhost":
+            return False
         return not ploneapi.user.is_anonymous()

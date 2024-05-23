@@ -130,21 +130,10 @@ class DefaultReportView(SingleReportView):
         collection, but only those in a "reportable" status are returned.
         If "parts" is False, analyses from partitions won't be included
         """
-        # get the analyses to be reported "by default"
-        base = super(SingleReportView, self)
-        all_analyses = base.get_analyses(model_or_collection)
+        analyses = super(SingleReportView, self).get_analyses(
+            model_or_collection)
 
-        # remove non-reportable analyses
-        analyses = []
-        sample_uid = api.get_uid(model_or_collection)
-        for analysis in all_analyses:
-            if not is_reportable(analysis):
-                continue
-            if not parts:
-                # skip analyses from partitions
-                if analysis.getRequestUID() != sample_uid:
-                    continue
-            analyses.append(analysis)
+        sample_uid = api.get_uid(model_or_collection)  # noqa
 
         def get_growth_number(a, b):
             ast = [is_ast_analysis(a), is_ast_analysis(b)]
@@ -159,7 +148,23 @@ class DefaultReportView(SingleReportView):
 
         # Sort AST analyses by growth number
         analyses = sorted(analyses, cmp=get_growth_number)
-        return filter(is_reportable, analyses)
+
+        # Remove non-reportable analyses
+        analyses = filter(is_reportable, analyses)
+
+        def is_from_primary(analysis):
+            # TODO Remove the filtering of analyses from partitions. This has
+            #  been commented to prevent inconsistencies with the analysis
+            #  results statistics report. See
+            #  https://github.com/beyondessential/palau.lims/pull/136
+            # return analysis.getRequestUID() == sample_uid
+            return True
+
+        if not parts:
+            # Remove analyses from partitions
+            analyses = filter(is_from_primary, analyses)
+
+        return analyses
 
     @returns_super_model
     def get_ancestry(self, model):

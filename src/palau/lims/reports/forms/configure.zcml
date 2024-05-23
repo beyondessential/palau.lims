@@ -51,4 +51,12 @@
       permission="zope.Public"
       layer="palau.lims.interfaces.IPalauLimsLayer"/>
 
+  <!-- Analyses Results  -->
+  <browser:page
+      for="*"
+      name="analyses_results"
+      class=".analyses_results.AnalysesResults"
+      permission="zope.Public"
+      layer="palau.lims.interfaces.IPalauLimsLayer"/>
+
 </configure>
