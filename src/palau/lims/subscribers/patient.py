@@ -6,10 +6,14 @@
 
 import six
 
+from plone import api as papi
 from Products.CMFCore.permissions import ModifyPortalContent as modify_perm
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.RegistrationTool import get_member_by_login_name
 from Products.PlonePAS.tools.memberdata import MemberData
+
+ROLES = ["Owner", ]
+TAMANU_USERNAME = 'tamanu'
 
 
 def get_user_by_username(portal_membership, username):
@@ -35,46 +39,45 @@ def on_add_patient_from_tamanu(instance, event):
     username = instance.Creator()
     portal_membership = getToolByName(instance, 'portal_membership')
     user = get_user_by_username(portal_membership, username)
-    if user.getUserName() != 'tamanu':
+
+    if user.getUserName() != TAMANU_USERNAME:
         return
 
     # Ensure creator has Owner role (assuming at least one role)
-    owner_role = portal_membership.getAuthenticatedMember().getRoles()[0]
-    if owner_role not in user.getRoles():
-        user.setRoles(owner_role)
+    papi.user.grant_roles(username=TAMANU_USERNAME, roles=ROLES, obj=instance)
 
     # Grant Owner role to the Patient object
-    instance.manage_permission(modify_perm, roles=(owner_role), acquire=False)
+    instance.manage_permission(modify_perm, roles=(ROLES), acquire=False)
+
     instance.reindexObject()
+    instance.reindexObjectSecurity()
 
 
 def on_modified_patient_from_tamanu(instance, event):
-    """GGrant Owner for user 'tamanu' role and revoke ModifyPortalConten
+    """Grant Owner for user 'tamanu' role and revoke ModifyPortalConten
     permission for Patient objects modified by user 'tamanu', for all
     users but 'tamanu'.
     """
 
     # Check if the user is 'tamanu'
     user = instance.modified_by
-    if user.getUserName() != 'tamanu':
+    if user.getUserName() != TAMANU_USERNAME:
         return
 
     # Get portal tools
     portal_membership = getToolByName(instance, 'portal_membership')
-    tamanu_user = get_user_by_username(portal_membership, 'tamanu')
+    tamanu_user = get_user_by_username(portal_membership, TAMANU_USERNAME)
 
     # Change creator to 'tamanu' if different
     creator_user = instance.Creator()
     if creator_user != tamanu_user:
-        instance.manage_permission(
-            'Creator', roles=[tamanu_user.getId()], acquire=False
-        )
+        instance.setCreator(TAMANU_USERNAME)
 
     # Ensure creator has Owner role (assuming at least one role)
-    owner_role = portal_membership.getAuthenticatedMember().getRoles()[0]
-    if owner_role not in creator_user.getRoles():
-        creator_user.serRoles(owner_role)
+    papi.user.grant_roles(username=TAMANU_USERNAME, roles=ROLES, obj=instance)
 
     # Grant Owner role
-    instance.manage_permission(modify_perm, roles=(owner_role), acquire=False)
+    instance.manage_permission(modify_perm, roles=(ROLES), acquire=False)
+
     instance.reindexObject()
+    instance.reindexObjectSecurity()
