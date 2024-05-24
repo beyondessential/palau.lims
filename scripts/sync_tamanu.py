@@ -18,6 +18,7 @@ from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.catalog import SETUP_CATALOG
+from senaite.patient import api as papi
 from senaite.patient.interfaces import IPatient
 
 __doc__ = """
@@ -88,10 +89,25 @@ def get_patient(service_request):
     resource = service_request.getPatientResource()
     patient = resource.getObject()
     if not patient:
+
+        # TODO QA patient not linked to this resource but same MRN exists
+        mrn = resource.get_mrn()
+        if not mrn:
+            raise ValueError("Patient without MRN (ID): %s" % repr(resource))
+
+        patient = papi.get_patient_by_mrn(mrn, include_inactive=True)
+        if patient:
+            # link the resource to this Patient object
+            tapi.link_tamanu_resource(patient, resource)
+            return patient
+
+        # Create a new patient
         container = api.get_portal().patients
         return tapi.create_object(container, resource, portal_type="Patient")
+
     if IPatient.providedBy(patient):
         return patient
+
     raise TypeError("Object %s is not from Patient type" % repr(patient))
 
 

@@ -272,6 +272,8 @@ def setup_sampletemplate_behavior(tool):
 def setup_tamanu_catalogs(tool):
     """Setup the catalogs for the integration with Tamanu to work properly
     """
+    logger.info("Setup Tamanu integration ...")
     from palau.lims.tamanu.setuphandlers import setup_catalogs
     portal = tool.aq_inner.aq_parent
     setup_catalogs(portal)
+    logger.info("Setup Tamanu integration [DONE]")
