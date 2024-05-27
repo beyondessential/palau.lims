@@ -157,7 +157,7 @@ class DefaultReportView(SingleReportView):
             #  been commented to prevent inconsistencies with the analysis
             #  results statistics report. See
             #  https://github.com/beyondessential/palau.lims/pull/136
-            #  return analysis.getRequestUID() == sample_uid
+            # return analysis.getRequestUID() == sample_uid
             return True
 
         if not parts:
