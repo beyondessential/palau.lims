@@ -11,13 +11,14 @@ from datetime import timedelta
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from senaite.core.api import dtime
+from senaite.patient import api as patient_api
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import SEXES
 from time import time
 
 COLUMNS_TO_FIELDS = (
     # List of tuples of (column_title, patient_field_name)
-    ("Hospital ID", "mrn"),
+    ("Code", "mrn"),
     ("Last name", "lastname"),
     ("First name", "firstname"),
     ("Date of birth", "birthdate"),
@@ -40,10 +41,12 @@ def sniff_csv_dialect(infile, default=None):
     try:
         with open(infile, 'rb') as f:
             dialect = csv.Sniffer().sniff(f.readline())
+
         return dialect
     except:  # noqa
         if default:
             return csv.register_dialect("dummy", **default)
+
         return None
 
 
@@ -68,10 +71,12 @@ def read_csv(infile):
     the column name and the value as the value of the column
     """
     rows = read_raw_rows_from_csv(infile)
+
     if len(rows) < 2:
         return []
 
     header = rows[0]
+
     return map(lambda row: dict(zip(header, row)), rows[1:])
 
 
@@ -79,11 +84,13 @@ def get_sex_id(value):
     """returns a valid sex id
     """
     target = value.strip().lower() if value else ""
+
     for key, val in SEXES:
         if key.lower() == target:
             return key
         if val.lower() == target:
             return key
+
     return ""
 
 
@@ -92,6 +99,7 @@ def get_patient_values(row):
     """
     mapping = dict(COLUMNS_TO_FIELDS)
     info = dict.fromkeys(mapping.values(), "")
+
     for column, value in row.items():
         field_name = mapping.get(column)
         if not field_name:
@@ -111,6 +119,7 @@ def get_patient_values(row):
             continue
 
         info[field_name] = value
+
     return info
 
 
@@ -126,6 +135,7 @@ def import_patients(infile):
     patient_folder = api.get_portal().patients
     records = read_csv(infile)
     total = len(records)
+
     for num, record in enumerate(records):
         if num and num % 100 == 0:
             logger.info("Patients imported {}/{}".format(num, total))
@@ -140,15 +150,31 @@ def import_patients(infile):
             logger.error("MRN not defined for {}. [SKIP]".format(repr(record)))
             continue
 
-        if mrns.get(mrn):
-            # patient exists, skip
+        if mrns.get(mrn) == 'done':
             continue
 
-        # create the patient
-        patient = api.create(patient_folder, "Patient", **values)
+        if mrns.get(mrn):
+            # Update patient
+            patient = patient_api.get_patient_by_mrn(mrn)
 
-        # Keep track of the imported ones
-        mrns[mrn] = True
+            for key, value in values.items():
+                if not value:
+                    continue
+
+                mutator = patient.mutator(key)
+                if not mutator:
+                    continue
+
+                mutator(patient, api.safe_unicode(value))
+
+            patient.reindexObject()
+
+        else:
+            # create the patient
+            patient = api.create(patient_folder, "Patient", **values)
+
+        # Keep track of the imported/updated ones
+        mrns[mrn] = 'done'
 
         # flush the object from memory
         patient._p_deactivate()
@@ -160,6 +186,7 @@ def main(app):
         print("")
         parser.print_help()
         parser.exit()
+
         return
 
     # Setup environment
@@ -172,6 +199,7 @@ def main(app):
     file_in = args.file
     if not file_in or not os.path.isfile(file_in):
         logger.error("Not a valid file: {}".format(repr(file_in)))
+
         return
 
     # do the work
