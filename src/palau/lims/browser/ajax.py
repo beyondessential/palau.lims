@@ -45,7 +45,9 @@ class Bottles(BrowserView):
             with the setting BACTECBottle set to True
             """
             c_type = container.getContainerType()
-            return get_field_value(c_type, "BACTECBottle", default=False)
+            if c_type:
+                return c_type.getBactecBottle()
+            return False
 
         # Remove those keys with a non-valid value
         query = dict(filter(has_value, base_query.items()))

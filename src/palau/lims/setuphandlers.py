@@ -90,6 +90,9 @@ SETUP_FOLDERS = [
 
 # Tuples of (portal_type, list of behaviors)
 BEHAVIORS = [
+    ("ContainerType", [
+        "palau.lims.behaviors.containertype.IExtendedContainerTypeBehavior",  # noqa
+    ]),
     ("SampleContainer", [
         "palau.lims.behaviors.samplecontainer.IExtendedSampleContainerBehavior",  # noqa
     ]),

@@ -30,8 +30,10 @@ class SampleTypeContainerController
 
     # Trigger the "select" event for SampleType to show/Hide Container/Bottles
     if "template-ar_add" in document.body.classList
-      $(el).trigger "select" for el in document.querySelectorAll @sample_type_selector
-
+      for el in document.querySelectorAll @sample_type_selector
+        uid = $("##{ el.id }").attr "uid"
+        @trigger_event el, "SampleType:after_change",
+          uids: [uid]
     else
       bottles = document.querySelector("div[data-fieldname='Bottles']")
       if bottles
@@ -61,6 +63,16 @@ class SampleTypeContainerController
     $("body").on "selected", @template_selector, @on_template_selected
     $("body").on "blur", @bottle_containers_selector, @on_bottle_container_blur
     $("body").on "change", @bottle_weights_selector, @on_bottle_weight_change
+
+  ###
+  Trigger a named event
+  ###
+  trigger_event: (el, event_name, event_data) ->
+    # Trigger a custom event
+    event = new CustomEvent event_name,
+      detail: event_data
+      bubbles: yes
+    el.dispatchEvent event
 
   ###
   Event triggered when the value for Sample Template field changes
