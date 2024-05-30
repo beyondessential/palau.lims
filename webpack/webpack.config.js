@@ -3,14 +3,10 @@ const webpack = require("webpack");
 const childProcess = require("child_process");
 
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const CleanCSS = require("clean-css");
-const CopyPlugin = require("copy-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const uglifyJS = require("uglify-js");
+const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const gitCmd = "git rev-list -1 HEAD -- `pwd`";
@@ -30,14 +26,14 @@ module.exports = {
   mode: mode,
   entry: {
     "palau.lims": [
-      "./palau.lims.js",
+      "./palau.lims.coffee",
       "./scss/palau.lims.scss"
     ],
   },
   output: {
     filename: "[name].js",
     path: path.resolve(staticPath, "bundles"),
-    publicPath: "/++plone++palau.lims.static/bundles"
+    publicPath: "++plone++palau.lims.static/bundles"
   },
   module: {
     rules: [
@@ -45,27 +41,13 @@ module.exports = {
         // Coffee
         test: /\.(coffee)$/,
         exclude: [/node_modules/],
-        use: [
-          {
-            // https://webpack.js.org/loaders/babel-loader/
-            loader: "babel-loader"
-          },
-          {
-            // https://webpack.js.org/loaders/coffee-loader/
-            loader: "coffee-loader"
-          }
-        ]
+        use: ["babel-loader", "coffee-loader"]
       },
       {
         // JS
         test: /\.(js|jsx)$/,
         exclude: [/node_modules/],
-        use: [
-          {
-            // https://webpack.js.org/loaders/babel-loader/
-            loader: "babel-loader"
-          }
-        ]
+        use: ["babel-loader"]
       },
       {
         // SCSS
@@ -160,11 +142,8 @@ module.exports = {
   ],
   externals: {
     // https://webpack.js.org/configuration/externals
-    react: "React",
-    "react-dom": "ReactDOM",
     $: "jQuery",
     jquery: "jQuery",
-    bootstrap: "bootstrap",
-    tinyMCE: "tinymce"
+    bootstrap: "bootstrap"
   }
 };

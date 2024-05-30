@@ -267,3 +267,26 @@ def setup_sampletemplate_behavior(tool):
         obj._p_deactivate()
 
     logger.info("Setup SampleTemplate behavior [DONE]")
+
+
+def setup_containertype_behavior(tool):
+    logger.info("Setup ContainerType behavior ...")
+    portal = tool.aq_inner.aq_parent
+
+    # register the new behavior
+    setup_behaviors(portal)
+
+    # walk-through all container types and update the field value
+    sc = api.get_tool(SETUP_CATALOG)
+    for brain in sc(portal_type="ContainerType"):
+        obj = api.get_object(brain)
+        storage = get_attribute_storage(obj)
+        bactec = storage.get("BACTECBottle")
+        if not bactec:
+            continue
+
+        obj.setBactecBottle(bactec)
+        obj.reindexObject()
+        obj._p_deactivate()
+
+    logger.info("Setup ContainerType behavior [DONE]")
