@@ -1,18 +1,17 @@
+const product = "palau.lims"
+const src_path = "../src/palau/lims/browser/static"
+
 const path = require("path");
 const webpack = require("webpack");
 const childProcess = require("child_process");
 
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-const gitCmd = "git rev-list -1 HEAD -- `pwd`";
-let gitHash = childProcess.execSync(gitCmd).toString().substring(0, 7);
-
-const staticPath = path.resolve(__dirname, "../src/palau/lims/browser/static");
+const staticPath = path.resolve(__dirname, src_path);
 
 const devMode = process.env.mode == "development";
 const prodMode = process.env.mode == "production";
@@ -25,15 +24,15 @@ module.exports = {
   // https://webpack.js.org/configuration/mode/#usage
   mode: mode,
   entry: {
-    "palau.lims": [
-      "./palau.lims.coffee",
-      "./scss/palau.lims.scss"
+    [product]: [
+      `./${product}.coffee`,
+      `./scss/${product}.scss`
     ],
   },
   output: {
-    filename: "[name].js",
+    filename: devMode ? "[name].js" : "[name].[chunkhash].js",
     path: path.resolve(staticPath, "bundles"),
-    publicPath: "++plone++palau.lims.static/bundles"
+    publicPath: `++plone++${product}.static/bundles`
   },
   module: {
     rules: [
@@ -42,44 +41,15 @@ module.exports = {
         test: /\.(coffee)$/,
         exclude: [/node_modules/],
         use: ["babel-loader", "coffee-loader"]
-      },
-      {
+      }, {
         // JS
         test: /\.(js|jsx)$/,
         exclude: [/node_modules/],
         use: ["babel-loader"]
-      },
-      {
+      }, {
         // SCSS
         test: /\.s[ac]ss$/i,
-        use: [
-          {
-            // https://webpack.js.org/plugins/mini-css-extract-plugin/
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            // https://webpack.js.org/loaders/css-loader/
-            loader: "css-loader"
-          },
-          {
-            // https://webpack.js.org/loaders/sass-loader/
-            loader: "sass-loader"
-          }
-        ]
-      },
-      {
-        test: /\.(png|jpg)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            // https://webpack.js.org/loaders/file-loader/
-            loader: "file-loader",
-            options: {
-              name: "[name].[ext]",
-              outputPath: "../assets/img",
-              publicPath: "/++plone++palau.lims.static/assets/img",
-            }
-          }
-        ]
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
       }
     ]
   },
@@ -116,24 +86,23 @@ module.exports = {
     ],
   },
   plugins: [
+    // https://webpack.js.org/plugins/mini-css-extract-plugin/
+    new MiniCssExtractPlugin({
+      filename: devMode ? "[name].css" : "[name].[chunkhash].css",
+    }),
     // https://github.com/johnagan/clean-webpack-plugin
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      verbose: false,
+      // Workaround in `watch` mode when trying to remove the `resources.pt` in the parent folder:
+      // Error: clean-webpack-plugin: Cannot delete files/folders outside the current working directory.
+      cleanAfterEveryBuildPatterns: ["!../*"],
+    }),
     // https://webpack.js.org/plugins/html-webpack-plugin/
     new HtmlWebpackPlugin({
       inject: false,
       filename:  path.resolve(staticPath, "resources.pt"),
       template: "resources.pt",
     }),
-    // https://webpack.js.org/plugins/mini-css-extract-plugin/
-    new MiniCssExtractPlugin({
-      filename: devMode ? "[name].css" : "[name].[hash].css",
-      chunkFilename: devMode ? "[id].css" : "[id].[hash].css",
-    }),
-    // https://webpack.js.org/plugins/copy-webpack-plugin/
-    // new CopyPlugin({
-    //   patterns: [
-    //   ]
-    // }),
     // https://webpack.js.org/plugins/provide-plugin/
     new webpack.ProvidePlugin({
       $: "jquery",
@@ -143,7 +112,6 @@ module.exports = {
   externals: {
     // https://webpack.js.org/configuration/externals
     $: "jQuery",
-    jquery: "jQuery",
-    bootstrap: "bootstrap"
+    jquery: "jQuery"
   }
 };

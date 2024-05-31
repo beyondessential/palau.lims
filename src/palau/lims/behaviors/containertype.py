@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
-# -*- coding: utf-8 -*-
-#
-# This file is part of PALAU.LIMS
-#
-# Copyright 2023 Beyond Essential Systems Pty Ltd
-
 from AccessControl import ClassSecurityInfo
 from palau.lims import messageFactory as _
 from plone.autoform.interfaces import IFormFieldProvider
