@@ -8,6 +8,7 @@ from bika.lims.api import get_portal
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME
 from palau.lims.setuphandlers import hide_actions
+from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_workflows
 
@@ -28,6 +29,9 @@ def afterUpgradeStepHandler(event):  # noqa CamelCase
 
     # Setup catalogs
     setup_catalogs(portal)
+
+    # Add behaviors
+    setup_behaviors(portal)
 
     # Setup workflows
     setup_workflows(portal)

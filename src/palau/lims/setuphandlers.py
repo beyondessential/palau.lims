@@ -823,6 +823,8 @@ def setup_behaviors(portal):
     for portal_type, behavior_ids in BEHAVIORS:
         fti = pt.get(portal_type)
         if not hasattr(fti, "behaviors"):
+            # Skip, type is not registered yet probably (AT2DX migration)
+            logger.warn("Behaviors is missing: {} [SKIP]".format(portal_type))
             continue
         fti_behaviors = fti.behaviors
         additional = filter(lambda b: b not in fti_behaviors, behavior_ids)
