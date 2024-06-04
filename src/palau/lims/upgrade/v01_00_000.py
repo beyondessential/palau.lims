@@ -9,7 +9,7 @@ from bika.lims.interfaces import IVerified
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
 from palau.lims.config import TAMANU_ROLES
-from palau.lims.config import TAMANU_USERNAME
+from palau.lims.config import TAMANU_ID
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_roles_and_groups
@@ -306,7 +306,7 @@ def set_tamanu_patients_edit_restrictions(tool):
     brains = api.search(query, PATIENT_CATALOG)
     for brain in brains:
         patient = api.get_object(brain)
-        tamanu_user = api.get_user(TAMANU_USERNAME)
+        tamanu_user = api.get_user(TAMANU_ID)
         api.security.grant_local_roles(
             patient, TAMANU_ROLES, user=tamanu_user
         )

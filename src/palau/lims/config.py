@@ -9,7 +9,7 @@ from Products.Archetypes import DisplayList
 
 
 TAMANU_ROLES = ["Owner", ]
-TAMANU_USERNAME = 'tamanu'
+TAMANU_ID = 'tamanu'
 
 UNKNOWN_DOCTOR_FULLNAME = "Unknown doctor"
 

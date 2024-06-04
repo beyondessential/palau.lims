@@ -7,7 +7,7 @@
 from bika.lims import api
 from bika.lims.api import security as sapi
 from palau.lims.config import TAMANU_ROLES
-from palau.lims.config import TAMANU_USERNAME
+from palau.lims.config import TAMANU_ID
 from Products.CMFCore.permissions import ModifyPortalContent as modify_perm
 
 
@@ -19,14 +19,14 @@ def on_patient_added(instance, event):
 
     # Check if the user is 'tamanu'
     creator = instance.Creator()
-    if creator != TAMANU_USERNAME:
+    if creator != TAMANU_ID:
         return
 
     # revoke 'Owner' roles to the creator to prevent further edits
     sapi.revoke_local_roles_for(instance, roles=["Owner"], user=creator)
 
     # grant 'Owner' role to the user who is modifying the object
-    tamanu_user = api.get_user(TAMANU_USERNAME)
+    tamanu_user = api.get_user(TAMANU_ID)
     tamanu_user_id = api.user.get_user_id(tamanu_user)
     sapi.grant_local_roles_for(instance, roles=["Owner"], user=tamanu_user_id)
 
@@ -49,11 +49,11 @@ def on_modified_patient_from_tamanu(instance, event):
 
     # revoke 'Owner' roles to the creator to prevent further edits
     creator = instance.Creator()
-    if creator != TAMANU_USERNAME:
+    if creator != TAMANU_ID:
         sapi.revoke_local_roles_for(instance, roles=TAMANU_ROLES, user=creator)
 
     # grant 'Owner' role to the user who is modifying the object
-    tamanu_user = api.get_user(TAMANU_USERNAME)
+    tamanu_user = api.get_user(TAMANU_ID)
     tamanu_user_id = api.user.get_user_id(tamanu_user)
     sapi.grant_local_roles_for(instance, roles=TAMANU_ROLES, user=tamanu_user_id)
 
@@ -65,12 +65,12 @@ def on_modified_patient_from_tamanu(instance, event):
 
 
 def modified_by_tamanu(obj):
-    """Retrieves True if the object was modified by the user with username
+    """Retrieves True if the object was modified by the user with id
     'tamanu'.
     """
     user = api.get_current_user()
-    username = user.getUsername()
-    if username == TAMANU_USERNAME:
+    id = user.getId()
+    if id == TAMANU_ID:
         return True
 
     return False
