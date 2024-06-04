@@ -7,8 +7,8 @@
       description="
         Patient created/edited in Tamanu only editable by user 'tamanu'
       "
-      source="1010"
-      destination="1011"
+      source="1011"
+      destination="1012"
       handler=".v01_00_000.set_tamanu_patients_edit_restrictions"
       profile="palau.lims:default"/>
 

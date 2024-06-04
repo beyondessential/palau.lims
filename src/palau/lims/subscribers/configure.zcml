@@ -10,7 +10,7 @@
   <subscriber
       for="senaite.patient.interfaces.IPatient
            zope.lifecycleevent.interfaces.IObjectAddedEvent"
-      handler=".patient.on_add_patient_from_tamanu"
+      handler=".patient.on_patient_added"
       />
 
   <subscriber

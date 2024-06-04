@@ -15,7 +15,6 @@ from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_roles_and_groups
 from palau.lims.setuphandlers import setup_workflows
 from palau.lims.workflow.analysis.events import after_set_out_of_stock
-from plone import api as papi
 from Products.Archetypes.BaseUnit import BaseUnit
 from Products.CMFCore.permissions import ModifyPortalContent as modify_perm
 from senaite.core.api.catalog import reindex_index
@@ -296,7 +295,8 @@ def setup_containertype_behavior(tool):
 
     logger.info("Setup ContainerType behavior [DONE]")
 
-    def set_tamanu_patients_edit_restrictions(tool):
+
+def set_tamanu_patients_edit_restrictions(tool):
     logger.info("Set Tamanu patients edit restrictions [DONE]")
 
     query = {
@@ -306,13 +306,14 @@ def setup_containertype_behavior(tool):
     brains = api.search(query, PATIENT_CATALOG)
     for brain in brains:
         patient = api.get_object(brain)
-        papi.user.grant_roles(
-            username=TAMANU_USERNAME, roles=TAMANU_ROLES, obj=patient
+        tamanu_user = api.get_user(TAMANU_USERNAME)
+        api.security.grant_local_roles(
+            patient, TAMANU_ROLES, user=tamanu_user
         )
 
         # Grant Owner role to the Patient object
-        patient.manage_permission(
-            modify_perm, roles=(TAMANU_ROLES), acquire=False
+        api.security.manage_permission_for(
+            patient, modify_perm, TAMANU_ROLES, acquire=False
         )
 
         patient.reindexObject()
