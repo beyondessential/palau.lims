@@ -11,6 +11,7 @@ from datetime import timedelta
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from senaite.core.api import dtime
+from senaite.patient import api as patient_api
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import SEXES
 from time import time
@@ -151,11 +152,11 @@ def import_patients(infile):
             continue
 
         if updated_mrns.get(mrn):
-            # patient already updated, skip
+            # patient already imported, skip
             continue
 
         # get the patient
-        patient = api.get_patient_by_mrn(mrn)
+        patient = patient_api.get_patient_by_mrn(mrn)
         if patient:
             # update the patient
             for key, value in values.items():
@@ -166,12 +167,12 @@ def import_patients(infile):
                 if not mutator:
                     continue
 
-                mutator(patient, api.edit(value))
-                patient.reindexObject()
+                mutator(patient, api.safe_unicode(value))
         else:
             # create the patient
             patient = api.create(patient_folder, "Patient", **values)
 
+        # Keep track of the imported/updated ones
         updated_mrns[mrn] = True
 
         # flush the object from memory
