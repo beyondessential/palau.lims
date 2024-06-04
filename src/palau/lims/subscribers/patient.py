@@ -27,8 +27,8 @@ def on_patient_added(instance, event):
 
     # grant 'Owner' role to the user who is modifying the object
     tamanu_user = api.get_user(TAMANU_ID)
-    tamanu_user_id = api.user.get_user_id(tamanu_user)
-    sapi.grant_local_roles_for(instance, roles=["Owner"], user=tamanu_user_id)
+    tamanu_id = api.user.get_user_id(tamanu_user)
+    sapi.grant_local_roles_for(instance, roles=["Owner"], user=tamanu_id)
 
     # don't allow the edition of this object, but Owner only
     sapi.manage_permission_for(instance, modify_perm, ["Owner"], acquire=0)
@@ -54,8 +54,8 @@ def on_modified_patient_from_tamanu(instance, event):
 
     # grant 'Owner' role to the user who is modifying the object
     tamanu_user = api.get_user(TAMANU_ID)
-    tamanu_user_id = api.user.get_user_id(tamanu_user)
-    sapi.grant_local_roles_for(instance, roles=TAMANU_ROLES, user=tamanu_user_id)
+    tamanu_id = api.user.get_user_id(tamanu_user)
+    sapi.grant_local_roles_for(instance, roles=TAMANU_ROLES, user=tamanu_id)
 
     # don't allow the edition of this object, but Owner only
     sapi.manage_permission_for(instance, modify_perm, TAMANU_ROLES, acquire=0)
