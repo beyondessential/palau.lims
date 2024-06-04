@@ -137,7 +137,6 @@ def import_patients(infile):
     total = len(records)
 
     for num, record in enumerate(records):
-        updated_mrns = {}
         if num and num % 100 == 0:
             logger.info("Patients imported {}/{}".format(num, total))
             transaction.commit()
@@ -151,10 +150,6 @@ def import_patients(infile):
             logger.error("MRN not defined for {}. [SKIP]".format(repr(record)))
             continue
 
-        if updated_mrns.get(mrn):
-            # patient already imported, skip
-            continue
-
         # get the patient
         patient = patient_api.get_patient_by_mrn(mrn)
         if patient:
@@ -163,9 +158,6 @@ def import_patients(infile):
         else:
             # create the patient
             patient = api.create(patient_folder, "Patient", **values)
-
-        # Keep track of the imported/updated ones
-        updated_mrns[mrn] = True
 
         # flush the object from memory
         patient._p_deactivate()
