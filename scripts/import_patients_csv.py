@@ -159,15 +159,7 @@ def import_patients(infile):
         patient = patient_api.get_patient_by_mrn(mrn)
         if patient:
             # update the patient
-            for key, value in values.items():
-                if not value:
-                    continue
-
-                mutator = patient.mutator(key)
-                if not mutator:
-                    continue
-
-                mutator(patient, api.safe_unicode(value))
+            patient_api.update_patient(patient, **values)
         else:
             # create the patient
             patient = api.create(patient_folder, "Patient", **values)
