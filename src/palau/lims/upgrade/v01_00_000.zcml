@@ -13,6 +13,14 @@
       profile="palau.lims:default"/>
 
   <genericsetup:upgradeStep
+      title="Compatibility with core#2540"
+      description="Replaces the ContainerType extender by a behavior"
+      source="1010"
+      destination="1011"
+      handler=".v01_00_000.setup_containertype_behavior"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Compatibility with core#2521"
       description="Replaces the ARTemplate extender by a behavior"
       source="1009"

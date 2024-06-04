@@ -1,0 +1,26 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:monkey="http://namespaces.plone.org/monkey">
+
+  <plone:behavior
+      name="palau.lims.behavior.containertype"
+      title="ExtendedContainerTypeBehavior"
+      description="Extends ContainerType with additional fields"
+      provides=".containertype.IExtendedContainerTypeBehavior"
+      factory=".containertype.ExtendedContainerType"
+      for="senaite.core.interfaces.IContainerType" />
+
+  <monkey:patch
+      class="senaite.core.content.containertype.ContainerType"
+      original="getBactecBottle"
+      ignoreOriginal="True"
+      replacement=".containertype.getBactecBottle"/>
+
+  <monkey:patch
+      class="senaite.core.content.containertype.ContainerType"
+      original="setBactecBottle"
+      ignoreOriginal="True"
+      replacement=".containertype.setBactecBottle"/>
+
+</configure>
