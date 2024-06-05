@@ -144,8 +144,7 @@ def import_patients(infile):
             etd = get_etd(started, num, total)
             etd = to_localized_time(etd, long_format=True)
             logger.info("Importing patients {}/{}. c:{}, u:{}, ETD: {}".format(
-                num, total, counts["created"], counts["updated"], etd)
-            )
+                num, total, counts["created"], counts["updated"], etd))
             transaction.commit()
 
         # get the dict representation of the patient
@@ -204,7 +203,6 @@ def main(app):
     import_patients(file_in)
 
     # Commit transaction
-    logger.info("Commit transaction ...")
     transaction.commit()
     logger.info("Importing patients from {} [DONE]".format(file_in))
     logger.info("Elapsed: {}".format(timedelta(seconds=(time()-start))))
