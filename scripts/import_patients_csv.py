@@ -158,15 +158,14 @@ def import_patients(infile):
 
         # get the patient
         patient = patient_api.get_patient_by_mrn(mrn, include_inactive=True)
-        if patient:
-            # update the patient
-            if patient.modified() < modified:
-                patient_api.update_patient(patient, **values)
-                counts["updated"] += 1
-        else:
+        if not patient:
             # create the patient
             patient = api.create(patient_folder, "Patient", **values)
             counts["created"] += 1
+        elif patient.modified() < modified:
+            # update the patient
+            patient_api.update_patient(patient, **values)
+            counts["updated"] += 1
 
         # flush the object from memory
         patient._p_deactivate()
