@@ -14,7 +14,6 @@ from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from senaite.core.api import dtime
 from senaite.patient import api as patient_api
-from senaite.patient.config import SEXES
 
 COLUMNS_TO_FIELDS = (
     # List of tuples of (column_title, patient_field_name)
@@ -84,13 +83,10 @@ def get_sex_id(value):
     """returns a valid sex id
     """
     target = value.strip().lower() if value else ""
-
-    for key, val in SEXES:
-        if key.lower() == target:
-            return key
-        if val.lower() == target:
-            return key
-
+    mapping = {"true": "f", "false": "m"}
+    target = mapping.get(target, target)
+    if target in "fm":
+        return target
     return ""
 
 
