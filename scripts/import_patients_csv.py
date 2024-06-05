@@ -13,6 +13,7 @@ from bika.lims import api
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from senaite.core.api import dtime
+from senaite.core.api.dtime import to_localized_time
 from senaite.patient import api as patient_api
 
 COLUMNS_TO_FIELDS = (
@@ -117,16 +118,32 @@ def get_patient_values(row):
     return info
 
 
+def get_etd(started, processed, total):
+    """Returns the Estimated Time of Delivery datetime
+    """
+    now = datetime.now()
+    delta = now - started
+    seconds = (total-processed)*delta.seconds/processed
+    etd = now + timedelta(seconds=seconds)
+    return etd
+
+
 def import_patients(infile):
     """Reads a CSV file and import the patients
     """
     patient_folder = api.get_portal().patients
     records = read_csv(infile)
     total = len(records)
-
+    step = 100
+    counts = {"updated": 0, "created": 0}
+    started = datetime.now()
     for num, record in enumerate(records):
-        if num and num % 100 == 0:
-            logger.info("Patients imported {}/{}".format(num, total))
+        if num and num % step == 0:
+            etd = get_etd(started, num, total)
+            etd = to_localized_time(etd, long_format=True)
+            logger.info("Patients imported {}/{}. c:{}, u:{}, ETD: {}".format(
+                num, total, counts["created"], counts["updated"], etd)
+            )
             transaction.commit()
 
         # get the dict representation of the patient
@@ -143,9 +160,11 @@ def import_patients(infile):
         if patient:
             # update the patient
             patient_api.update_patient(patient, **values)
+            counts["updated"] += 1
         else:
             # create the patient
             patient = api.create(patient_folder, "Patient", **values)
+            counts["created"] += 1
 
         # flush the object from memory
         patient._p_deactivate()
