@@ -141,7 +141,7 @@ def import_patients(infile):
         if num and num % step == 0:
             etd = get_etd(started, num, total)
             etd = to_localized_time(etd, long_format=True)
-            logger.info("Patients imported {}/{}. c:{}, u:{}, ETD: {}".format(
+            logger.info("Importing patients {}/{}. c:{}, u:{}, ETD: {}".format(
                 num, total, counts["created"], counts["updated"], etd)
             )
             transaction.commit()
@@ -156,7 +156,7 @@ def import_patients(infile):
             continue
 
         # get the patient
-        patient = patient_api.get_patient_by_mrn(mrn)
+        patient = patient_api.get_patient_by_mrn(mrn, include_inactive=True)
         if patient:
             # update the patient
             patient_api.update_patient(patient, **values)
