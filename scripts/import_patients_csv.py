@@ -4,17 +4,17 @@ import argparse
 import csv
 import logging
 import os
-import transaction
-from bika.lims import api
 from datetime import datetime
 from datetime import timedelta
+from time import time
+
+import transaction
+from bika.lims import api
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from senaite.core.api import dtime
 from senaite.patient import api as patient_api
-from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import SEXES
-from time import time
 
 COLUMNS_TO_FIELDS = (
     # List of tuples of (column_title, patient_field_name)
@@ -126,12 +126,6 @@ def get_patient_values(row):
 def import_patients(infile):
     """Reads a CSV file and import the patients
     """
-    # get all registered mrns
-    cat = api.get_tool(PATIENT_CATALOG)
-    mrns = cat.uniqueValuesFor("patient_mrn")
-    mrns = filter(None, [mrn.strip() for mrn in mrns])
-    mrns = dict.fromkeys(mrns, True)
-
     patient_folder = api.get_portal().patients
     records = read_csv(infile)
     total = len(records)
