@@ -124,13 +124,15 @@ def get_etd(started, processed, total):
     now = datetime.now()
     delta = now - started
     seconds = (total-processed)*delta.seconds/processed
-    etd = now + timedelta(seconds=seconds)
-    return etd
+    return now + timedelta(seconds=seconds)
 
 
 def import_patients(infile):
     """Reads a CSV file and import the patients
     """
+    # get the file modification time
+    modified = os.path.getmtime(infile)
+    modified = dtime.to_DT(datetime.fromtimestamp(modified))
     patient_folder = api.get_portal().patients
     records = read_csv(infile)
     total = len(records)
@@ -159,8 +161,9 @@ def import_patients(infile):
         patient = patient_api.get_patient_by_mrn(mrn, include_inactive=True)
         if patient:
             # update the patient
-            patient_api.update_patient(patient, **values)
-            counts["updated"] += 1
+            if patient.modified() < modified:
+                patient_api.update_patient(patient, **values)
+                counts["updated"] += 1
         else:
             # create the patient
             patient = api.create(patient_folder, "Patient", **values)
