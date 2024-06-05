@@ -14,6 +14,7 @@ from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from senaite.core.api import dtime
 from senaite.core.api.dtime import to_localized_time
+from senaite.core.schema.addressfield import PHYSICAL_ADDRESS
 from senaite.patient import api as patient_api
 
 COLUMNS_TO_FIELDS = (
@@ -23,6 +24,7 @@ COLUMNS_TO_FIELDS = (
     ("First name", "firstname"),
     ("Date of birth", "birthdate"),
     ("Gender", "sex"),
+    ("Email", "email"),
 )
 
 
@@ -91,13 +93,33 @@ def get_sex_id(value):
     return ""
 
 
+def get_empty_address(address_type):
+    """Returns a dict that represents an empty address for the given type
+    """
+    return {
+        "type": address_type,
+        "address": "",
+        "zip": "",
+        "city": "",
+        "subdivision2": "",
+        "subdivision1": "",
+        "country": "",
+    }
+
+
 def get_patient_values(row):
     """Returns a dict representing a patient from the row passed-in
     """
     mapping = dict(COLUMNS_TO_FIELDS)
     info = dict.fromkeys(mapping.values(), "")
+    address_columns = ["Country", "address"]
+    address = get_empty_address(PHYSICAL_ADDRESS)
 
     for column, value in row.items():
+        if column in address_columns and value:
+            address[column.lower()] = value
+            continue
+
         field_name = mapping.get(column)
         if not field_name:
             continue
@@ -115,6 +137,7 @@ def get_patient_values(row):
 
         info[field_name] = value
 
+    info["address"] = [address]
     return info
 
 
@@ -164,7 +187,7 @@ def import_patients(infile):
             counts["created"] += 1
         elif patient.modified() < modified:
             # update the patient
-            patient_api.update_patient(patient, **values)
+            api.edit(patient, check_permissions=False, **values)
             counts["updated"] += 1
 
         # flush the object from memory
