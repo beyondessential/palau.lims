@@ -103,8 +103,7 @@ def get_patient_values(row):
     for column, value in row.items():
         field_name = mapping.get(column)
         if not field_name:
-            logger.warn("No field name declared for column {}".format(column))
-            field_name = column
+            continue
 
         value = value.strip() if value else ""
         if field_name == "birthdate":
@@ -115,7 +114,6 @@ def get_patient_values(row):
             value = get_sex_id(value)
 
         if not value:
-            logger.error("Wrong or empty {}: {}".format(column, repr(row)))
             continue
 
         info[field_name] = value
@@ -167,7 +165,7 @@ def main(app):
         return
 
     # Setup environment
-    setup_script_environment(app)
+    setup_script_environment(app, stream_out=False)
 
     # verbose logging
     if args.verbose:
