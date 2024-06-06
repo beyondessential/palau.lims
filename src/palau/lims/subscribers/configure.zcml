@@ -1,22 +1,18 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    i18n_domain="palau.lims">
+<configure xmlns="http://namespaces.zope.org/zope">
 
   <!-- After upgrade step event handler -->
   <subscriber
     for="senaite.core.events.upgrade.IAfterUpgradeStepEvent"
-    handler=".upgrade.afterUpgradeStepHandler" />
+    handler=".upgrade.afterUpgradeStepHandler"/>
 
   <subscriber
-      for="senaite.patient.interfaces.IPatient
-           zope.lifecycleevent.interfaces.IObjectAddedEvent"
-      handler=".patient.on_patient_added"
-      />
+    for="senaite.patient.interfaces.IPatient
+         zope.lifecycleevent.interfaces.IObjectAddedEvent"
+    handler=".patient.on_patient_added"/>
 
   <subscriber
-      for="senaite.patient.interfaces.IPatient
-           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
-      handler=".patient.on_modified_patient_from_tamanu"
-      />
+    for="senaite.patient.interfaces.IPatient
+         zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+    handler=".patient.on_modified_patient_from_tamanu"/>
 
 </configure>
