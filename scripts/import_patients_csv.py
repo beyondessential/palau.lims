@@ -10,8 +10,11 @@ from time import time
 
 import transaction
 from bika.lims import api
+from bika.lims.api import security as sapi
 from palau.lims import logger
+from palau.lims.config import TAMANU_ID
 from palau.lims.scripts import setup_script_environment
+from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.api import dtime
 from senaite.core.api.dtime import to_localized_time
 from senaite.core.schema.addressfield import PHYSICAL_ADDRESS
@@ -185,10 +188,25 @@ def import_patients(infile):
             # create the patient
             patient = api.create(patient_folder, "Patient", **values)
             counts["created"] += 1
+
         elif patient.modified() < modified:
             # update the patient
             api.edit(patient, check_permissions=False, **values)
             counts["updated"] += 1
+
+        # assign ownership to 'tamanu' user
+        creator = patient.Creator()
+        if creator != TAMANU_ID:
+            sapi.revoke_local_roles_for(patient, roles=["Owner"], user=creator)
+
+        # grant 'Owner' role to the user who is modifying the object
+        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_ID)
+
+        # don't allow the edition, but to tamanu (Owner) only
+        sapi.manage_permission_for(patient, ModifyPortalContent, ["Owner"])
+
+        # re-index object security indexes (e.g. allowedRolesAndUsers)
+        patient.reindexObjectSecurity()
 
         # flush the object from memory
         patient._p_deactivate()
