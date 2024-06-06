@@ -5,6 +5,7 @@
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
 from bika.lims import api
+from bika.lims.api import user as uapi
 from bika.lims.api import security as sapi
 from palau.lims.config import TAMANU_ROLES
 from palau.lims.config import TAMANU_ID
@@ -16,8 +17,8 @@ def on_patient_added(instance, event):
     permission for Patient objects created by user 'tamanu', for all
     users but 'tamanu'.
     """
-    creator = instance.Creator()
-    if creator != TAMANU_ID:
+    if uapi.get_user_id() != TAMANU_ID:
+        # user creating the patient is not tamanu's, do nothing
         return
 
     # don't allow the edition, but to tamanu (Owner) only
@@ -32,9 +33,8 @@ def on_patient_modified(instance, event):
     permission for Patient objects modified by user 'tamanu', for all
     users but 'tamanu'.
     """
-
-    # Check if the user is 'tamanu'
-    if not modified_by_tamanu(instance):
+    if uapi.get_user_id() != TAMANU_ID:
+        # user modifying the patient is not tamanu's, do nothing
         return
 
     # revoke 'Owner' roles to the creator to prevent further edits
@@ -52,15 +52,3 @@ def on_patient_modified(instance, event):
 
     instance.reindexObject()
     instance.reindexObjectSecurity()
-
-
-def modified_by_tamanu(obj):
-    """Retrieves True if the object was modified by the user with id
-    'tamanu'.
-    """
-    user = api.get_current_user()
-    id = user.getId()
-    if id == TAMANU_ID:
-        return True
-
-    return False
