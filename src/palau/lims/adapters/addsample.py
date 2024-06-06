@@ -8,7 +8,6 @@ from bika.lims import api
 from bika.lims import senaiteMessageFactory as _s
 from bika.lims.adapters.addsample import AddSampleObjectInfoAdapter
 from bika.lims.catalog import SETUP_CATALOG
-from bika.lims.interfaces import IAddSampleFieldsFlush
 from bika.lims.interfaces import IAddSampleRecordsValidator
 from bika.lims.interfaces import IGetDefaultFieldValueARAddHook
 from bika.lims.utils import get_client
@@ -268,11 +267,6 @@ class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
     def get_object_info(self):
         object_info = self.get_base_info()
         uid = api.get_uid(self.context)
-        object_info["filter_queries"] = {
-            "Profiles": {
-                "sampletype_uid": [uid, None],
-            }
-        }
 
         # If there is only one specification assigned to this sample type,
         # auto-choose that specification
@@ -293,21 +287,3 @@ class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
             }
 
         return object_info
-
-
-@adapter(IAddSampleFieldsFlush)
-class AddSampleFieldsFlush(object):
-    """Health-specific flush of fields for Sample Add form. When the value for
-    SampleType changes, flush the fields "AnalysisProfile"
-    """
-
-    def __init__(self, context):
-        self.context = context
-
-    def get_flush_settings(self):
-        return {
-            "SampleType": [
-                "Profiles",
-                "Specification",
-            ],
-        }

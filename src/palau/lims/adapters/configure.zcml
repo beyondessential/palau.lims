@@ -1,6 +1,4 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    i18n_domain="palau.lims">
+<configure xmlns="http://namespaces.zope.org/zope">
 
   <!-- Package includes -->
   <include package=".listing" />
@@ -33,11 +31,11 @@
       for="bika.lims.interfaces.IAnalysisRequest"
       name="palau.lims.adapter.widgetvisibility.analysisrequest.primaryanalysisrequest" />
 
-  <!-- Edit form handler for ARTemplate -->
+  <!-- Edit form handler for SampleTemplate -->
   <adapter
-      for="bika.lims.interfaces.IARTemplate
+      for="senaite.core.interfaces.ISampleTemplate
            palau.lims.interfaces.IPalauLimsLayer"
-      factory=".form.ARTemplateEditForm"/>
+      factory=".form.SampleTemplateEditForm"/>
 
   <!-- Edit form handler for Container -->
   <adapter
@@ -94,12 +92,5 @@
       factory=".addsample.AddSampleTypeInfo"
       provides="bika.lims.interfaces.IAddSampleObjectInfo"
       name="palau.lims.addsample_sampletype_info" />
-
-  <!-- Flush additional fields for Add Sample form -->
-  <adapter
-      for="*"
-      factory=".addsample.AddSampleFieldsFlush"
-      provides="bika.lims.interfaces.IAddSampleFieldsFlush"
-      name="palau.lims.addsample_fields_flush" />
 
 </configure>

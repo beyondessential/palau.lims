@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 BASE=${buildout:directory}
 I18N=$BASE/bin/i18ndude

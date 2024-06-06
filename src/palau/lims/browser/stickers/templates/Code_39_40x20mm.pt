@@ -8,7 +8,7 @@
   <div class="barcode"
        tal:attributes="data-id item_id;"
        data-code="code39"
-       data-barHeight="14"
+       data-barHeight="11"
        data-addQuietZone="false"
        data-showHRI="false">
   </div>
@@ -22,23 +22,25 @@
             <img tal:condition="hazardous"
                  tal:attributes="src string:${portal_url}/++resource++bika.lims.images/hazardous_big.png"/>
           </span>
-          <strong tal:content="item_id">Item ID</strong>
+          <strong class="large-info" tal:content="item_id">Item ID</strong>
         </td>
       </tr>
       <tr>
-        <td colspan="2" class="patient_name"
-            tal:define="patient python:item.PatientFullName or {};
-                   firstname python:patient.get('firstname','');
-                   lastname python:patient.get('lastname', '');
-                   fullname python:filter(None, [firstname, lastname]);
-                   fullname python: ' '.join(fullname);"
-            tal:content="fullname">Patient name</td>
+          <td colspan="2">
+              <span class="large-info" tal:content="python:item.PatientFullName"></span>
+          </td>
       </tr>
       <tr>
-        <td colspan="2" class="date_received"
+        <td colspan="2">
+            <span class="large-info" tal:content="item/MedicalRecordNumber/value|nothing"></span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"
             tal:define="received python:item.DateReceived;
-                   received python:view.short_date(received) if received else '-- due --'"
-            tal:content="received">Date received</td>
+                   received python:view.long_date(received) if received else '-- due --'">
+            <span class="large-info" tal:content="received"></span>
+        </td>
       </tr>
     </table>
   </div>

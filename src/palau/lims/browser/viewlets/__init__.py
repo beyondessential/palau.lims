@@ -93,12 +93,14 @@ class OverSampleViewlet(ViewletBase):
 
 
 class ErrorDateOfAdmissionViewlet(ViewletBase):
-    """Print a viewlet to display an error message if the Date of Admission (date and time)
-    is after the Sampled Date (date and time).
+    """Print a viewlet to display an error message if the Date of Admission
+    (date and time) is after the Sampled Date (date and time).
     (An error occurs when Date of Admission is after Sampled Date.
     It is accepted when Date of Admission is before or equal Sampled Date.)
     """
-    index = ViewPageTemplateFile("templates/error_date_of_admission_viewlet.pt")
+    index = ViewPageTemplateFile(
+        "templates/error_date_of_admission_viewlet.pt"
+    )
 
     def __init__(self, context, request, view, manager=None):
         super(ErrorDateOfAdmissionViewlet, self).__init__(

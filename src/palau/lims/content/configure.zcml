@@ -28,24 +28,6 @@
       provides="archetypes.schemaextender.interfaces.ISchemaModifier"
       factory=".sampletype.SampleTypeSchemaModifier" />
 
-  <!-- Schema extender for AR Template -->
-  <adapter
-      name="palau.lims.artemplate.schemaextender"
-      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
-      factory=".artemplate.ARTemplateSchemaExtender" />
-
-  <!-- Schema modifier for AR Template -->
-  <adapter
-      name="palau.lims.artemplate.schemamodifier"
-      provides="archetypes.schemaextender.interfaces.ISchemaModifier"
-      factory=".artemplate.ARTemplateSchemaModifier" />
-
-  <!-- Schema extender for Analysis Profile -->
-  <adapter
-      name="palau.lims.analysisprofile.schemaextender"
-      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
-      factory=".analysisprofile.AnalysisProfileSchemaExtender" />
-
   <!-- Schema extender for LIMS Setup -->
   <adapter
       name="palau.lims.setup.schemaextender"
@@ -57,12 +39,6 @@
       name="palau.lims.client.schemaextender"
       provides="archetypes.schemaextender.interfaces.ISchemaExtender"
       factory=".client.ClientSchemaExtender" />
-
-  <!-- Schema extender for ContainerType -->
-  <adapter
-      name="palau.lims.container.schemaextender"
-      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
-      factory=".containertype.ContainerTypeSchemaExtender" />
 
   <!-- Schema extender for LabContact -->
   <adapter

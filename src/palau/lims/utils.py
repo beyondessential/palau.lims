@@ -10,17 +10,21 @@ import os
 import six
 from bika.lims import api
 from bika.lims.interfaces import IAnalysisRequest
-from bika.lims.interfaces import IARTemplate
 from bika.lims.interfaces import IClient
+from bika.lims.interfaces import IInternalUse
 from bika.lims.interfaces import ISampleType
 from bika.lims.utils import t as _t
 from palau.lims import messageFactory as _
 from palau.lims.config import UNKNOWN_DOCTOR_FULLNAME
+from palau.lims.config import ANALYSIS_REPORTABLE_STATUSES
 from Products.CMFPlone.i18nl10n import ulocalized_time
+from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import get_ast_analyses
 from senaite.ast.utils import get_ast_siblings
 from senaite.ast.utils import get_identified_microorganisms
+from senaite.ast.utils import is_ast_analysis
 from senaite.core.api import measure as mapi
+from senaite.core.interfaces import ISampleTemplate
 
 
 def set_field_value(instance, field_name, value):
@@ -86,8 +90,8 @@ def get_minimum_volume(obj, default="0 ml"):
     if ISampleType.providedBy(obj):
         min_volume = get_field_value(obj, "MinimumVolume")
 
-    elif IARTemplate.providedBy(obj):
-        min_volume = get_field_value(obj, "MinimumVolume")
+    elif ISampleTemplate.providedBy(obj):
+        min_volume = obj.getMinimumVolume()
 
     elif IAnalysisRequest.providedBy(obj):
         min_volume = get_minimum_volume(obj.getTemplate())
@@ -214,7 +218,7 @@ def sniff_csv_dialect(infile, default=None):
         with open(infile, 'rb') as f:
             dialect = csv.Sniffer().sniff(f.readline())
         return dialect
-    except:
+    except:  # noqa
         if default:
             return csv.register_dialect("dummy", **default)
         return None
@@ -224,9 +228,6 @@ def get_maximum_volume(obj, default=0):
     """Returns the maximum volume required for the given object
     """
     if ISampleType.providedBy(obj):
-        return get_field_value(obj, "MaximumVolume")
-
-    if IARTemplate.providedBy(obj):
         return get_field_value(obj, "MaximumVolume")
 
     if IAnalysisRequest.providedBy(obj):
@@ -265,9 +266,39 @@ def get_fullname(userid):
     return fullname
 
 
+def get_initials(userid):
+    """Return the initials of name of the user passed-in
+    """
+    fullname = get_fullname(userid)
+    parts = filter(None, fullname.split())
+    parts = [part[0] for part in parts]
+    initials = "".join(parts) if len(parts) > 1 else fullname
+    return initials
+
+
 def set_ast_panel_to_sample(value, sample):
     """Set the panel to current sample
     """
     sample.panels = getattr(sample, "panels", []) or []
     if value not in sample.panels:
         sample.panels.append(value)
+
+
+def is_reportable(analysis):
+    """Returns whether the analysis has to be displayed in results reports
+    """
+    # do not report hidden analyses
+    if analysis.getHidden():
+        return False
+
+    # do not report analyses for internal use
+    if IInternalUse.providedBy(analysis):
+        return False
+
+    # do not report ast analyses, but resistance category only
+    if is_ast_analysis(analysis):
+        if analysis.getKeyword() != RESISTANCE_KEY:
+            return False
+
+    status = api.get_review_status(analysis)
+    return status in ANALYSIS_REPORTABLE_STATUSES

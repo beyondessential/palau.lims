@@ -2,10 +2,10 @@
 
 import transaction
 from bika.lims import api
-from senaite.core.interfaces import INumberGenerator
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.scripts.utils import clear_and_rebuild
+from senaite.core.interfaces import INumberGenerator
 from senaite.core.upgrade.utils import delete_object
 from zope.component import getUtility
 

@@ -4,24 +4,30 @@ import argparse
 import csv
 import logging
 import os
-import transaction
-from bika.lims import api
 from datetime import datetime
 from datetime import timedelta
-from palau.lims import logger
-from palau.lims.scripts import setup_script_environment
-from senaite.core.api import dtime
-from senaite.patient.catalog import PATIENT_CATALOG
-from senaite.patient.config import SEXES
 from time import time
+
+import transaction
+from bika.lims import api
+from bika.lims.api import security as sapi
+from palau.lims import logger
+from palau.lims.config import TAMANU_ID
+from palau.lims.scripts import setup_script_environment
+from Products.CMFCore.permissions import ModifyPortalContent
+from senaite.core.api import dtime
+from senaite.core.api.dtime import to_localized_time
+from senaite.core.schema.addressfield import PHYSICAL_ADDRESS
+from senaite.patient import api as patient_api
 
 COLUMNS_TO_FIELDS = (
     # List of tuples of (column_title, patient_field_name)
-    ("Hospital ID", "mrn"),
+    ("Code", "mrn"),
     ("Last name", "lastname"),
     ("First name", "firstname"),
     ("Date of birth", "birthdate"),
     ("Gender", "sex"),
+    ("Email", "email"),
 )
 
 
@@ -40,10 +46,12 @@ def sniff_csv_dialect(infile, default=None):
     try:
         with open(infile, 'rb') as f:
             dialect = csv.Sniffer().sniff(f.readline())
+
         return dialect
-    except:
+    except:  # noqa
         if default:
             return csv.register_dialect("dummy", **default)
+
         return None
 
 
@@ -68,10 +76,12 @@ def read_csv(infile):
     the column name and the value as the value of the column
     """
     rows = read_raw_rows_from_csv(infile)
+
     if len(rows) < 2:
         return []
 
     header = rows[0]
+
     return map(lambda row: dict(zip(header, row)), rows[1:])
 
 
@@ -79,12 +89,25 @@ def get_sex_id(value):
     """returns a valid sex id
     """
     target = value.strip().lower() if value else ""
-    for key, val in SEXES:
-        if key.lower() == target:
-            return key
-        if val.lower() == target:
-            return key
+    mapping = {"true": "f", "false": "m"}
+    target = mapping.get(target, target)
+    if target in "fm":
+        return target
     return ""
+
+
+def get_empty_address(address_type):
+    """Returns a dict that represents an empty address for the given type
+    """
+    return {
+        "type": address_type,
+        "address": "",
+        "zip": "",
+        "city": "",
+        "subdivision2": "",
+        "subdivision1": "",
+        "country": "",
+    }
 
 
 def get_patient_values(row):
@@ -92,11 +115,17 @@ def get_patient_values(row):
     """
     mapping = dict(COLUMNS_TO_FIELDS)
     info = dict.fromkeys(mapping.values(), "")
+    address_columns = ["Country", "address"]
+    address = get_empty_address(PHYSICAL_ADDRESS)
+
     for column, value in row.items():
+        if column in address_columns and value:
+            address[column.lower()] = value
+            continue
+
         field_name = mapping.get(column)
         if not field_name:
-            logger.warn("No field name declared for column {}".format(column))
-            field_name = column
+            continue
 
         value = value.strip() if value else ""
         if field_name == "birthdate":
@@ -107,28 +136,41 @@ def get_patient_values(row):
             value = get_sex_id(value)
 
         if not value:
-            logger.error("Wrong or empty {}: {}".format(column, repr(row)))
             continue
 
         info[field_name] = value
+
+    info["address"] = [address]
     return info
+
+
+def get_etd(started, processed, total):
+    """Returns the Estimated Time of Delivery datetime
+    """
+    now = datetime.now()
+    delta = now - started
+    seconds = (total-processed)*delta.seconds/processed
+    return now + timedelta(seconds=seconds)
 
 
 def import_patients(infile):
     """Reads a CSV file and import the patients
     """
-    # get all registered mrns
-    cat = api.get_tool(PATIENT_CATALOG)
-    mrns = cat.uniqueValuesFor("patient_mrn")
-    mrns = filter(None, [mrn.strip() for mrn in mrns])
-    mrns = dict.fromkeys(mrns, True)
-
+    # get the file modification time
+    modified = os.path.getmtime(infile)
+    modified = dtime.to_DT(datetime.fromtimestamp(modified))
     patient_folder = api.get_portal().patients
     records = read_csv(infile)
     total = len(records)
+    step = 100
+    counts = {"updated": 0, "created": 0}
+    started = datetime.now()
     for num, record in enumerate(records):
-        if num and num % 100 == 0:
-            logger.info("Patients imported {}/{}".format(num, total))
+        if num and num % step == 0:
+            etd = get_etd(started, num, total)
+            etd = to_localized_time(etd, long_format=True)
+            logger.info("Importing patients {}/{}. c:{}, u:{}, ETD: {}".format(
+                num, total, counts["created"], counts["updated"], etd))
             transaction.commit()
 
         # get the dict representation of the patient
@@ -140,15 +182,31 @@ def import_patients(infile):
             logger.error("MRN not defined for {}. [SKIP]".format(repr(record)))
             continue
 
-        if mrns.get(mrn):
-            # patient exists, skip
-            continue
+        # get the patient
+        patient = patient_api.get_patient_by_mrn(mrn, include_inactive=True)
+        if not patient:
+            # create the patient
+            patient = api.create(patient_folder, "Patient", **values)
+            counts["created"] += 1
 
-        # create the patient
-        patient = api.create(patient_folder, "Patient", **values)
+        elif patient.modified() < modified:
+            # update the patient
+            api.edit(patient, check_permissions=False, **values)
+            counts["updated"] += 1
 
-        # Keep track of the imported ones
-        mrns[mrn] = True
+        # assign ownership to 'tamanu' user
+        creator = patient.Creator()
+        if creator != TAMANU_ID:
+            sapi.revoke_local_roles_for(patient, roles=["Owner"], user=creator)
+
+        # grant 'Owner' role to the user who is modifying the object
+        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_ID)
+
+        # don't allow the edition, but to tamanu (Owner) only
+        sapi.manage_permission_for(patient, ModifyPortalContent, ["Owner"])
+
+        # re-index object security indexes (e.g. allowedRolesAndUsers)
+        patient.reindexObjectSecurity()
 
         # flush the object from memory
         patient._p_deactivate()
@@ -160,10 +218,11 @@ def main(app):
         print("")
         parser.print_help()
         parser.exit()
+
         return
 
     # Setup environment
-    setup_script_environment(app)
+    setup_script_environment(app, stream_out=False)
 
     # verbose logging
     if args.verbose:
@@ -172,6 +231,7 @@ def main(app):
     file_in = args.file
     if not file_in or not os.path.isfile(file_in):
         logger.error("Not a valid file: {}".format(repr(file_in)))
+
         return
 
     # do the work
@@ -183,7 +243,6 @@ def main(app):
     import_patients(file_in)
 
     # Commit transaction
-    logger.info("Commit transaction ...")
     transaction.commit()
     logger.info("Importing patients from {} [DONE]".format(file_in))
     logger.info("Elapsed: {}".format(timedelta(seconds=(time()-start))))

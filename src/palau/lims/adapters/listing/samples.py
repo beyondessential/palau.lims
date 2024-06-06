@@ -4,15 +4,13 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-from bika.lims import api
-from plone.memoize.instance import memoize
 from palau.lims import messageFactory as _
 from palau.lims import utils
 from palau.lims.config import UNKNOWN_DOCTOR_FULLNAME
+from plone.memoize.instance import memoize
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
 from senaite.app.listing.utils import add_review_state
-from senaite.core.api import measure as mapi
 from zope.component import adapts
 from zope.component import getMultiAdapter
 from zope.interface import implements
@@ -66,8 +64,16 @@ class SamplesListingAdapter(object):
     def icon_tag(self, name, **kwargs):
         return self.senaite_theme.icon_tag(name, **kwargs)
 
+    def is_unknown_doctor(self, contact_uid):
+        """Returns whether contact is an unknown Doctor
+        """
+        contact = self.listing.get_object_by_uid(contact_uid)
+        if contact:
+            return contact.getFullname() == UNKNOWN_DOCTOR_FULLNAME
+        return False
+
     def folder_item(self, obj, item, index):
-        if obj.getContactFullName == UNKNOWN_DOCTOR_FULLNAME:
+        if self.is_unknown_doctor(obj.getContactUID):
             # Add an icon after the sample ID
             kwargs = {"width": 16, "title": _("Unknown doctor")}
             self.add_icon(item, "getId", "doctor-red", **kwargs)

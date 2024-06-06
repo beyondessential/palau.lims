@@ -5,6 +5,37 @@ Changelog
 ------------------
 
 - #84 Store Primary and Secondary Contact Number from Tamanu's API
+- #153 Set Tamanu user as the owner on patients import from CSV
+- #152 Include other rejection reasons in rejection summary stats report
+- #145 Patient created or modified in Tamanu only editable by user 'tamanu'
+- #147 Update patients info from Tamanu in Senaite
+- #149 Compatibility with senaite.core#2540 (ContainerTypes to DX)
+- #148 Compatibility with senaite.core#2564 (autoflush reference fields)
+- #144 Split text results in more than one line in reports
+- #146 Compatibility with senaite.core#2549 (contact fullname in samples)
+- #136 Add an Analyses Result CSV reports at Statistic reports
+- #139 Compatibility with senaite.core#2521 (ARTemplate to DX)
+- #134 Fix sticker 'Code_39_40x20mm' fitting issue
+- #133 Compatibility with senaite.core#2509
+- #130 Add more details to stickers
+- #132 Compatibility with senaite.core#2492
+- #129 Consider specification ranges with max=='0' to be within normal values
+- #127 Add a Rejector user defined role and group
+- #125 Compatibility with senaite.app.supermodel#19
+- #123 Add Zendesk's BES Support Centre Icon
+- #122 Show "Temporarily Unavailable" in report instead of "Out of Stock"
+- #116 Display out-of-stock analyses in results report
+- #112 Add Reagent Out of Stock Analysis transition
+- #107 Statistics report for analyses by department and month
+- #109 Change Statistic report names
+- #104 Add statistic reports
+- #101 Fix Sex is not properly translated in final report
+- #98 Show only interpreter initials not fullname after comments in final report
+- #96 Show out of range flag next to Results
+- #94 Modify Signatures with datetime for Tested by and Verified by in final report
+- #92 List result variables on final report as order in sample view
+- #89 Show patient name in analysis reports dashboard
+- #88 Result interpretation comment showing twice
 - #87 Remove preliminary comment
 - #85 Add Result Variable's unit in final report
 - #75 Make Department field required based on Client in Sample View

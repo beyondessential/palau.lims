@@ -1,9 +1,11 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:plone="http://namespaces.plone.org/plone"
-    i18n_domain="palau.lims">
+    xmlns:plone="http://namespaces.plone.org/plone">
 
   <include package="plone.behavior" file="meta.zcml"/>
+
+  <!-- includes -->
+  <include file="containertype.zcml"/>
 
   <plone:behavior
       name="palau.lims.behavior.samplecontainer"
@@ -12,6 +14,14 @@
       provides=".samplecontainer.IExtendedSampleContainerBehavior"
       factory=".samplecontainer.ExtendedSampleContainer"
       for="senaite.core.interfaces.ISampleContainer" />
+
+  <plone:behavior
+      name="palau.lims.behavior.sampletemplate"
+      title="ExtendedSampleTemplate"
+      description="Extends SampleTemplate with additional fields"
+      provides=".sampletemplate.IExtendedSampleTemplateBehavior"
+      factory=".sampletemplate.ExtendedSampleTemplate"
+      for="senaite.core.interfaces.ISampleTemplate" />
 
   <plone:behavior
       name="palau.lims.behavior.patient"

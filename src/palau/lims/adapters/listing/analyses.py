@@ -9,9 +9,25 @@ import collections
 from bika.lims import api
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
+from senaite.app.listing.utils import add_review_state
 from zope.component import adapter
 from zope.interface import implementer
 from palau.lims import messageFactory as _
+
+
+# Statuses to add. List of dicts
+ADD_STATUSES = [
+    {
+        "id": "out_of_stock",
+        "title": _("Out of stock"),
+        "contentFilter": {
+            "review_state": "out_of_stock",
+            "sort_on": "sortable_title",
+            "sort_order": "ascending",
+        },
+        "after": "invalid",
+    },
+]
 
 
 @adapter(IListingView)
@@ -36,11 +52,10 @@ class SampleAnalysesListingAdapter(object):
         """
         analysis = self.listing.get_object(obj)
 
-        # use listing's default if value for min or max or both
+        # use listing's default if value for max is above 0
         specs = analysis.getResultsRange()
-        range_min = api.to_float(specs.get("min"), default=0)
         range_max = api.to_float(specs.get("max"), default=0)
-        if any([range_min, range_max]):
+        if range_max > 0:
             return
 
         # no value set for neither min nor max, show the range comment
@@ -52,6 +67,14 @@ class SampleAnalysesListingAdapter(object):
         # Move "Analyst" and "Status" columns to the end, before "Due date"
         self.move_column("Analyst", before="DueDate")
         self.move_column("state_title", after="Analyst")
+
+        # Add review_states
+        for status in ADD_STATUSES:
+            after = status.get("after", None)
+            before = status.get("before", None)
+            if not status.get("columns"):
+                status.update({"columns": self.listing.columns.keys()})
+            add_review_state(self.listing, status, after=after, before=before)
 
         # Rename the column "Specification" to "Normal values"
         for key, value in self.listing.columns.items():

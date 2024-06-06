@@ -20,5 +20,6 @@ class BottlesWidget(RecordsWidget):
         "helper_js": ("senaite_widgets/recordswidget.js",),
     })
 
+
 # Register widgets
 registerWidget(BottlesWidget, title="BottlesWidget")

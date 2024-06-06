@@ -7,6 +7,7 @@
 import os
 
 from bika.lims import api
+from bika.lims.api import security
 from bika.lims.browser.analysisrequest.add2 import AR_CONFIGURATION_STORAGE
 from BTrees.OOBTree import OOBTree
 from palau.lims import logger
@@ -32,6 +33,7 @@ from senaite.ast.config import AST_CALCULATION_TITLE
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import SERVICE_CATEGORY
 from senaite.ast.config import SERVICES_SETTINGS
+from senaite.core import permissions as permissionsCore
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
@@ -39,6 +41,7 @@ from senaite.core.permissions import FieldEditRemarks
 from senaite.core.setuphandlers import setup_core_catalogs
 from senaite.core.setuphandlers import setup_other_catalogs
 from senaite.core.upgrade.utils import delete_object
+from senaite.core.workflow import ANALYSIS_WORKFLOW
 from senaite.core.workflow import SAMPLE_WORKFLOW
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
@@ -69,6 +72,7 @@ INDEXES = [
 # Tuples of (catalog, column_name)
 COLUMNS = [
     (SAMPLE_CATALOG, "isMedicalRecordTemporary"),
+    (ANALYSIS_CATALOG, "getDepartmentTitle"),
 ]
 
 # Skin layers that have priority over others, sorted from more to less priority
@@ -86,12 +90,18 @@ SETUP_FOLDERS = [
 
 # Tuples of (portal_type, list of behaviors)
 BEHAVIORS = [
+    ("ContainerType", [
+        "palau.lims.behaviors.containertype.IExtendedContainerTypeBehavior",  # noqa
+    ]),
     ("SampleContainer", [
-        "palau.lims.behaviors.samplecontainer.IExtendedSampleContainerBehavior",
+        "palau.lims.behaviors.samplecontainer.IExtendedSampleContainerBehavior",  # noqa
+    ]),
+    ("SampleTemplate", [
+        "palau.lims.behaviors.sampletemplate.IExtendedSampleTemplateBehavior",
     ]),
     ("Patient", [
         "palau.lims.behaviors.patient.IExtendedPatientBehavior"
-    ])
+    ]),
 ]
 
 # Workflow updates
@@ -176,14 +186,59 @@ WORKFLOWS_TO_UPDATE = {
                 "new_state": "",
                 "action": "Create supplementary test",
                 "guard": {
-                    "guard_permissions": permissions.TransitionCreateSupplementary,
+                    "guard_permissions": permissions.TransitionCreateSupplementary,  # noqa
                     "guard_roles": "",
-                    "guard_expr": "python:here.guard_handler('create_supplementary')",
+                    "guard_expr": "python:here.guard_handler('create_supplementary')",  # noqa
                 }
             }
         }
-    }
+    },
+    ANALYSIS_WORKFLOW: {
+        "states": {
+            "assigned": {
+                "preserve_transitions": True,
+                "transitions": ("set_out_of_stock",),
+            },
+            "unassigned": {
+                "preserve_transitions": True,
+                "transitions": ("set_out_of_stock",),
+            },
+            "out_of_stock": {
+                "title": "Out of Stock",
+                "permissions_copy_from": "rejected",
+            },
+        },
+        "transitions": {
+            "set_out_of_stock": {
+                "title": "Set Out of Stock",
+                "new_state": "out_of_stock",
+                "action": "Set Out of Stock",
+                "guard": {
+                    "guard_permissions": permissions.TransitionSetOutOfStock,
+                    "guard_roles": "",
+                    "guard_expr":
+                        "python:here.guard_handler('set_out_of_stock')",
+                }
+            }
+        }
+    },
 }
+
+
+# List of tuples of (role, path, [(permissions, acquire), ...])
+# When path is empty/None, the permissions are applied to portal object
+ROLES = [
+    ("Rejector", "", [
+        (permissionsCore.TransitionRejectAnalysis, 0),
+    ]),
+]
+
+# List of tuples of (id, title, roles)
+GROUPS = [
+    ("Rejectors", "Rejectors", [
+        "Member", "Rejector", "Analyst"
+    ]),
+]
 
 
 def setup_handler(context):
@@ -200,6 +255,9 @@ def setup_handler(context):
 
     # Setup catalogs
     setup_catalogs(portal)
+
+    # Setup roles and groups
+    setup_roles_and_groups(portal)
 
     # Setup folders
     add_setup_folders(portal)
@@ -468,7 +526,7 @@ def hide_action(folder, action_id):
                 return n
         return -1
 
-    logger.info("Hide {} from control_panel".format(action_id, item.Title()))
+    logger.info("Hide {} from control_panel".format(action_id, item.Title()))  # noqa
     cp = api.get_tool("portal_controlpanel")
     action_index = get_action_index(action_id)
     if action_index == -1:
@@ -666,7 +724,9 @@ def update_workflow_state(workflow, status_id, settings):
 
     # Set basic info (title, description, etc.)
     new_status.title = settings.get("title", new_status.title)
-    new_status.description = settings.get("description", new_status.description)
+    new_status.description = settings.get(
+        "description", new_status.description
+    )
 
     # Set transitions
     trans = settings.get("transitions", ())
@@ -762,6 +822,10 @@ def setup_behaviors(portal):
     pt = api.get_tool("portal_types")
     for portal_type, behavior_ids in BEHAVIORS:
         fti = pt.get(portal_type)
+        if not hasattr(fti, "behaviors"):
+            # Skip, type is not registered yet probably (AT2DX migration)
+            logger.warn("Behaviors is missing: {} [SKIP]".format(portal_type))
+            continue
         fti_behaviors = fti.behaviors
         additional = filter(lambda b: b not in fti_behaviors, behavior_ids)
         if additional:
@@ -839,3 +903,47 @@ def setup_languages(portal):
     for key, val in LANG_SETTINGS:
         ploneapi.portal.set_registry_record("plone.{}".format(key), val)
     logger.info("Setup languages settings [DONE]")
+
+
+def setup_roles(portal):
+    """Setup roles
+    """
+    logger.info("Setup roles ...")
+    for role, path, perms in ROLES:
+        folder_path = path or api.get_path(portal)
+        folder = api.get_object_by_path(folder_path)
+        for permission, acquire in perms:
+            logger.info("{} {} {} (acquire={})".format(role, folder_path,
+                                                       permission, acquire))
+            security.grant_permission_for(folder, permission, role,
+                                          acquire=acquire)
+    logger.info("Setup roles [DONE]")
+
+
+def setup_groups(portal):
+    """Setup roles and groups
+    """
+    logger.info("Setup groups ...")
+    portal_groups = api.get_tool("portal_groups")
+    for group_id, title, roles in GROUPS:
+
+        # create the group and grant the roles
+        if group_id not in portal_groups.listGroupIds():
+            logger.info("Adding group {} ({}): {}".format(
+                title, group_id, ", ".join(roles)))
+            portal_groups.addGroup(group_id, title=title, roles=roles)
+
+        # grant the roles to the existing group
+        else:
+            ploneapi.group.grant_roles(groupname=group_id, roles=roles)
+            logger.info("Granting roles for group {} ({}): {}".format(
+                title, group_id, ", ".join(roles)))
+
+    logger.info("Setup groups [DONE]")
+
+
+def setup_roles_and_groups(portal):
+    """Setup roles and groups
+    """
+    setup_roles(portal)
+    setup_groups(portal)
