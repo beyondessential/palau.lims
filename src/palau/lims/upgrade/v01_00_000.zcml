@@ -5,7 +5,8 @@
   <genericsetup:upgradeStep
       title="Set Tamanu patients edit restrictions"
       description="
-        Patient created/edited in Tamanu only editable by user 'tamanu'
+        Revoke ModifyPortalContent permission to non-Owner roles for
+        Patients that were created by Tamanu user
       "
       source="1011"
       destination="1012"
