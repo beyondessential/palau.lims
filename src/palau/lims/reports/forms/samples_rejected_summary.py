@@ -42,6 +42,13 @@ class SamplesRejectedSummary(CSVReport):
         """Returns a row representing the sample passed-in
         """
         sample = api.get_object(sample)
+
+        # Reasons for rejection
+        reasons = ", ".join(sample.getSelectedRejectionReasons())
+        other = sample.getOtherRejectionReasons()
+        if other:
+            reasons = reasons + ", " + other if reasons else other
+
         return [
             sample.getId(),
             sample.getClientTitle(),
@@ -53,6 +60,5 @@ class SamplesRejectedSummary(CSVReport):
                 time_only=False, context=sample
             ),
             getTransitionDate(sample, 'reject'),
-            ", ".join(sample.getSelectedRejectionReasons())
-            or sample.getOtherRejectionReasons()
+            reasons,
         ]
