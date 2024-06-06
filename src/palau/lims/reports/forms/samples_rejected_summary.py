@@ -54,4 +54,5 @@ class SamplesRejectedSummary(CSVReport):
             ),
             getTransitionDate(sample, 'reject'),
             ", ".join(sample.getSelectedRejectionReasons())
+            or sample.getOtherRejectionReasons()
         ]
