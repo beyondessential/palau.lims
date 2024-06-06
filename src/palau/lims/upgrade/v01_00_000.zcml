@@ -3,6 +3,17 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Set Tamanu patients edit restrictions"
+      description="
+        Revoke ModifyPortalContent permission to non-Owner roles for
+        Patients that were created by Tamanu user
+      "
+      source="1011"
+      destination="1012"
+      handler=".v01_00_000.set_tamanu_patients_edit_restrictions"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Compatibility with core#2540"
       description="Replaces the ContainerType extender by a behavior"
       source="1010"

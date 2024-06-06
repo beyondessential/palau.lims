@@ -5,15 +5,18 @@
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
 from bika.lims import api
+from bika.lims.api import security as sapi
 from bika.lims.interfaces import IVerified
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
+from palau.lims.config import TAMANU_ID
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_roles_and_groups
 from palau.lims.setuphandlers import setup_workflows
 from palau.lims.workflow.analysis.events import after_set_out_of_stock
 from Products.Archetypes.BaseUnit import BaseUnit
+from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.api.catalog import reindex_index
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
@@ -23,6 +26,7 @@ from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.core.workflow import ANALYSIS_WORKFLOW
+from senaite.patient.catalog import PATIENT_CATALOG
 
 version = "1.0.0"  # Remember version number in metadata.xml and setup.py
 profile = "profile-{0}:default".format(product)
@@ -290,3 +294,29 @@ def setup_containertype_behavior(tool):
         obj._p_deactivate()
 
     logger.info("Setup ContainerType behavior [DONE]")
+
+
+def set_tamanu_patients_edit_restrictions(tool):
+    logger.info("Set Tamanu patients edit restrictions [DONE]")
+
+    query = {
+        "portal_type": "Patient",
+        "Creator": "tamanu",
+    }
+    brains = api.search(query, PATIENT_CATALOG)
+    for brain in brains:
+        patient = api.get_object(brain)
+
+        # grant 'Owner' role to the user who is modifying the object
+        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_ID)
+
+        # don't allow the edition, but to tamanu (Owner) only
+        sapi.manage_permission_for(patient, ModifyPortalContent, ["Owner"])
+
+        # re-index object security indexes (e.g. allowedRolesAndUsers)
+        patient.reindexObjectSecurity()
+
+        # flush patient from memory
+        patient._p_deactivate()
+
+    logger.info("Set Tamanu patients edit restrictions [DONE]")
