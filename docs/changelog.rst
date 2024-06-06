@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - #145 Patient created or modified in Tamanu only editable by user 'tamanu'
+- #147 Update patients info from Tamanu in Senaite
 - #149 Compatibility with senaite.core#2540 (ContainerTypes to DX)
 - #148 Compatibility with senaite.core#2564 (autoflush reference fields)
 - #144 Split text results in more than one line in reports
