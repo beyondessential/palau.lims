@@ -12,7 +12,7 @@ from Products.CMFCore.permissions import ModifyPortalContent as modify_perm
 
 
 def on_patient_added(instance, event):
-    """Grant Owner for user 'tamanu' role and revoke ModifyPortalConten
+    """Grant Owner for user 'tamanu' role and revoke ModifyPortalContent
     permission for Patient objects created by user 'tamanu', for all
     users but 'tamanu'.
     """
@@ -37,7 +37,7 @@ def on_patient_added(instance, event):
     instance.reindexObjectSecurity()
 
 
-def on_modified_patient_from_tamanu(instance, event):
+def on_patient_modified(instance, event):
     """Grant Owner for user 'tamanu' role and revoke ModifyPortalConten
     permission for Patient objects modified by user 'tamanu', for all
     users but 'tamanu'.

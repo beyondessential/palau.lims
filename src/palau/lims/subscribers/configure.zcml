@@ -13,6 +13,6 @@
   <subscriber
     for="senaite.patient.interfaces.IPatient
          zope.lifecycleevent.interfaces.IObjectModifiedEvent"
-    handler=".patient.on_modified_patient_from_tamanu"/>
+    handler=".patient.on_patient_modified"/>
 
 </configure>
