@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #115 Fetch new and update service request from Tamanu
 - #153 Set Tamanu user as the owner on patients import from CSV
 - #152 Include other rejection reasons in rejection summary stats report
 - #145 Patient created or modified in Tamanu only editable by user 'tamanu'
