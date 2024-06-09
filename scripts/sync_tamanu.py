@@ -3,13 +3,14 @@
 import argparse
 import transaction
 from bika.lims import api
-from bika.lims.api.security import check_permission
+from bika.lims.api import security as sapi
 from bika.lims.interfaces import IClient
 from bika.lims.interfaces import IContact
 from bika.lims.utils.analysisrequest import \
     create_analysisrequest as create_sample
 from bika.lims.workflow import doActionFor
 from datetime import timedelta
+from palau.lims.config import TAMANU_ID
 from palau.lims.tamanu import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
@@ -261,6 +262,23 @@ def pull_patients(host, email, password, since=15, dry_mode=True):
         values = resource.to_object_info()
         api.edit(patient, **values)
 
+        # assign ownership to 'tamanu' user
+        creator = patient.Creator()
+        if creator != TAMANU_ID:
+            sapi.revoke_local_roles_for(patient, roles=["Owner"], user=creator)
+
+        # grant 'Owner' role to the user who is modifying the object
+        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_ID)
+
+        # don't allow the edition, but to tamanu (Owner) only
+        sapi.manage_permission_for(patient, ModifyPortalContent, ["Owner"])
+
+        # re-index object security indexes (e.g. allowedRolesAndUsers)
+        patient.reindexObjectSecurity()
+
+        # flush the object from memory
+        patient._p_deactivate()
+
     if dry_mode:
         # Dry mode. Do not do transaction
         return
@@ -422,7 +440,7 @@ def edit_sample(sample, **kwargs):
 
         # check field writable permission
         perm = getattr(field, "write_permission", ModifyPortalContent)
-        if perm and not check_permission(perm, sample):
+        if perm and not sapi.check_permission(perm, sample):
             kwargs.pop(field_name, None)
 
     # edit the sample
