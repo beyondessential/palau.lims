@@ -320,3 +320,13 @@ def set_tamanu_patients_edit_restrictions(tool):
         patient._p_deactivate()
 
     logger.info("Set Tamanu patients edit restrictions [DONE]")
+
+
+def setup_tamanu_catalogs(tool):
+    """Setup the catalogs for the integration with Tamanu to work properly
+    """
+    logger.info("Setup Tamanu integration ...")
+    from palau.lims.tamanu.setuphandlers import setup_catalogs
+    portal = tool.aq_inner.aq_parent
+    setup_catalogs(portal)
+    logger.info("Setup Tamanu integration [DONE]")

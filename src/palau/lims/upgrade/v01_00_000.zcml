@@ -3,6 +3,15 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Setup catalogs for integration with Tamanu"
+      description="Setup new catalogs and/or modify existing ones for the
+        integration with Tamanu to work properly"
+      source="1012"
+      destination="1013"
+      handler=".v01_00_000.setup_tamanu_catalogs"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Set Tamanu patients edit restrictions"
       description="
         Revoke ModifyPortalContent permission to non-Owner roles for

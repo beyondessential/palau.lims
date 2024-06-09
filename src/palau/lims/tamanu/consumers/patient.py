@@ -5,16 +5,11 @@
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
 from bika.lims import api
+from palau.lims.tamanu.config import TAMANU_SEXES
 from senaite.jsonapi.api import deactivate_object
 from senaite.jsonapi.interfaces import IPushConsumer
 from senaite.patient import api as patient_api
 from zope import interface
-
-TAMANU_SEXES = (
-    ("male", "m"),
-    ("female", "f"),
-    ("", ""),
-)
 
 
 class PatientPushConsumer(object):

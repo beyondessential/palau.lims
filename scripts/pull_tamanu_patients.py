@@ -5,8 +5,9 @@
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
 import argparse
+import base64
 import requests
-from base64 import b64encode
+import sys
 
 # the id of the consumer for patients creation and update
 PATIENT_CONSUMER = "tamanu.consumers.patient"
@@ -56,8 +57,13 @@ def pull_tamanu_patients(args):
 
 
 def basic_auth(username, password):
-    token = b64encode("{}:{}".format(username, password))
-    return "Basic {}".format(token)
+    value = username + ':' + password
+    if sys.version_info[0] == 3:
+        value = value.encode()
+    header = b'Basic ' + base64.b64encode(value)
+    if sys.version_info[0] == 3:
+        header = header.decode()
+    return header
 
 
 def push_tamanu_patients(args, patients):

@@ -1,0 +1,9 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <!-- ARReport created -->
+  <subscriber
+      for="bika.lims.interfaces.IARReport
+           Products.Archetypes.interfaces.IObjectInitializedEvent"
+      handler=".arreport.on_object_created" />
+
+</configure>
