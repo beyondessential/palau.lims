@@ -83,10 +83,9 @@ def get_contact(service_request):
     raise TypeError("Object %s is not from Contact type" % repr(contact))
 
 
-def get_patient(service_request):
+def get_patient(resource):
     """Returns a patient object counterpart for the given resource
     """
-    resource = service_request.getPatientResource()
     patient = resource.getObject()
     if not patient:
 
@@ -236,6 +235,42 @@ def get_remarks(service_request):
     return remarks
 
 
+def pull_patients(host, email, password, since=15, dry_mode=True):
+    session = TamanuSession(host)
+    logged = session.login(email, password)
+    if not logged:
+        raise ValueError("Cannot login, wrong credentials")
+
+    # get the patients created/modified since?
+    since = timedelta(days=-since)
+    resources = session.get_resources(
+        "Patient", _lastUpdated=since, active="true",
+    )
+    total = len(resources)
+    for num, resource in enumerate(resources):
+        if num and num % 100 == 0:
+            logger.info("Processing patients {}/{}".format(num, total))
+
+        mrn = resource.get_mrn() or "unk"
+        logger.info("Processing Patient '{}' ({})".format(mrn, resource.UID))
+
+        # get/create the patient
+        patient = get_patient(resource)
+
+        # update the patient
+        values = resource.to_object_info()
+        api.edit(patient, **values)
+
+    if dry_mode:
+        # Dry mode. Do not do transaction
+        return
+
+    # Commit transaction
+    logger.info("Commit transaction ...")
+    transaction.commit()
+    logger.info("Commit transaction [DONE]")
+
+
 def pull_and_sync(host, email, password, since=15, identifier=None,
                   dry_mode=True):
     # start a remote session with tamanu
@@ -304,7 +339,8 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
         contact = get_contact(sr)
 
         # get or create the patient via FHIR's subject
-        patient = get_patient(sr)
+        patient_resource = sr.getPatientResource()
+        patient = get_patient(patient_resource)
         patient_mrn = patient.getMRN()
         patient_dob = patient.getBirthdate()
         patient_sex = patient.getSex()
@@ -419,9 +455,11 @@ def main(app):
     # Setup environment
     setup_script_environment(app, stream_out=False)
 
-    pull_and_sync(
-        host, parts[0], parts[1], since=since, dry_mode=dry, identifier=identifier
-    )
+    #pull_and_sync(
+    #    host, parts[0], parts[1], since=since, dry_mode=dry, identifier=identifier
+    #)
+
+    pull_patients(host, parts[0], parts[1], since=since, dry_mode=dry)
 
 
 if __name__ == "__main__":
