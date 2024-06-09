@@ -4,6 +4,12 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #153 Set Tamanu user as the owner on patients import from CSV
+- #152 Include other rejection reasons in rejection summary stats report
+- #145 Patient created or modified in Tamanu only editable by user 'tamanu'
+- #147 Update patients info from Tamanu in Senaite
+- #149 Compatibility with senaite.core#2540 (ContainerTypes to DX)
+- #148 Compatibility with senaite.core#2564 (autoflush reference fields)
 - #144 Split text results in more than one line in reports
 - #146 Compatibility with senaite.core#2549 (contact fullname in samples)
 - #136 Add an Analyses Result CSV reports at Statistic reports
