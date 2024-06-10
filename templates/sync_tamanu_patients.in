@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+HOST=${buildout:tamanu-host}
+CREDS=${buildout:tamanu-user}
+
+BASE=${buildout:directory}
+BIN_DIR=${buildout:directory}/bin
+SRC=${buildout:src-dir}/scripts/sync_tamanu.py
+
+DAYS=1
+
+if [ -n "$1" ]; then
+  DAYS=$1
+fi
+
+$BIN_DIR/client_reserved run $SRC -th $HOST -tc $CREDS -s $DAYS
