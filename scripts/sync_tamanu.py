@@ -33,7 +33,6 @@ parser = argparse.ArgumentParser(description=__doc__,
 parser.add_argument("--tamanu_host", "-th", help="Tamanu host")
 parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
 parser.add_argument("--since", "-s", help="Last updated since (days)")
-parser.add_argument("--identifier", "-i", help="Identifier")
 parser.add_argument("--dry", "-d", help="Run in dry mode")
 
 # Service Request statuses to skip
@@ -290,8 +289,7 @@ def pull_patients(host, email, password, since=15, dry_mode=True):
     logger.info("Commit transaction [DONE]")
 
 
-def pull_and_sync(host, email, password, since=15, identifier=None,
-                  dry_mode=True):
+def pull_and_sync(host, email, password, since=15, dry_mode=True):
     # start a remote session with tamanu
     session = TamanuSession(host)
     logged = session.login(email, password)
@@ -301,8 +299,7 @@ def pull_and_sync(host, email, password, since=15, identifier=None,
     # get the service requests created/modified since?
     since = timedelta(days=-since)
     resources = session.get_resources(
-        "ServiceRequest", _lastUpdated=since, identifier=identifier
-    )
+        "ServiceRequest", _lastUpdated=since)
     for sr in resources:
 
         # get the Tamanu's test ID for this ServiceRequest
@@ -470,7 +467,7 @@ def main(app):
     # dry mode
     trues = ["True", "true", "1", "yes", "y"]
     dry = args.dry in trues
-    identifier = args.identifier or None
+
     # Setup environment
     setup_script_environment(app, stream_out=False)
 
