@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #156 Make sample priorities match Tamanu priorities
 - #115 Fetch new and update service request from Tamanu
 - #153 Set Tamanu user as the owner on patients import from CSV
 - #152 Include other rejection reasons in rejection summary stats report
