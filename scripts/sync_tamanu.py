@@ -18,6 +18,7 @@ from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from Products.CMFCore.permissions import ModifyPortalContent
+from senaite.core.api import dtime
 from senaite.core.catalog import SETUP_CATALOG
 from senaite.patient import api as papi
 from senaite.patient.interfaces import IPatient
@@ -260,7 +261,7 @@ def pull_patients(host, email, password, since=15, dry_mode=True):
 
         # update the patient
         values = resource.to_object_info()
-        api.edit(patient, **values)
+        api.edit(patient, check_permissions=False, **values)
 
         # assign ownership to 'tamanu' user
         creator = patient.Creator()
