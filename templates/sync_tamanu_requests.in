@@ -5,7 +5,8 @@ CREDS=${buildout:tamanu-user}
 
 BASE=${buildout:directory}
 BIN_DIR=${buildout:directory}/bin
-SRC=${buildout:src-dir}/scripts/sync_tamanu.py
+SRC_DIR=${buildout:directory}/src
+SRC=$SRC_DIR/palau.lims/scripts/sync_tamanu.py
 
 DAYS=1
 
