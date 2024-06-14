@@ -13,4 +13,4 @@ if [ -n "$1" ]; then
   DAYS=$1
 fi
 
-$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r Patient -s $DAYS
+$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r ServiceRequest -s $DAYS

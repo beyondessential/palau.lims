@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+from datetime import timedelta
+
 import transaction
 from bika.lims import api
 from bika.lims.api import security as sapi
@@ -9,34 +11,52 @@ from bika.lims.interfaces import IContact
 from bika.lims.utils.analysisrequest import \
     create_analysisrequest as create_sample
 from bika.lims.workflow import doActionFor
-from datetime import timedelta
 from palau.lims.config import TAMANU_ID
-from palau.lims.tamanu import logger
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
+from palau.lims.tamanu import logger
 from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from Products.CMFCore.permissions import ModifyPortalContent
-from senaite.core.api import dtime
 from senaite.core.catalog import SETUP_CATALOG
 from senaite.patient import api as papi
 from senaite.patient.interfaces import IPatient
 
 __doc__ = """
-Import remote data from Tamanu
+Import and sync Tamanu resources
+Imports existing resources from Tamanu server and creates them in SENAITE. They
+are updated accordingly if already exists in SENAITE.
 """
 
 parser = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawTextHelpFormatter)
 
-parser.add_argument("--tamanu_host", "-th", help="Tamanu host")
-parser.add_argument("--tamanu_credentials", "-tc", help="Tamanu user")
-parser.add_argument("--since", "-s", help="Last updated since (days)")
-parser.add_argument("--dry", "-d", help="Run in dry mode")
+parser.add_argument(
+    "-th", "--tamanu_host",
+    help="URL from the Tamanu instance to extract the data from"
+)
+parser.add_argument(
+    "-tu", "--tamanu_user",
+    help="User and password in the <username>:<password> form"
+)
+parser.add_argument(
+    "-r", "--resource",
+    help="Resource type to sync. Supported: Patient, ServiceRequest"
+)
+parser.add_argument(
+    "-s", "--since",
+    help="Last updated since (days)"
+)
+parser.add_argument(
+    "-d", "--dry",
+    help="Run in dry mode"
+)
 
-# Service Request statuses to skip
-SKIP_STATUSES = ["revoked", "draft", "entered-in-error"]
+SKIP_STATUSES = (
+    # Service Request statuses to skip
+    "revoked", "draft", "entered-in-error"
+)
 
 TRANSITIONS = (
     # Tuples of (tamanu status, transition)
@@ -236,16 +256,11 @@ def get_remarks(service_request):
     return remarks
 
 
-def pull_patients(host, email, password, since=15, dry_mode=True):
-    session = TamanuSession(host)
-    logged = session.login(email, password)
-    if not logged:
-        raise ValueError("Cannot login, wrong credentials")
-
+def sync_patients(session, since=15, dry_mode=True):
     # get the patients created/modified since?
     since = timedelta(days=-since)
     resources = session.get_resources(
-        "Patient", _lastUpdated=since, active="true",
+        "Patient", _lastUpdated=since, active="true"
     )
     total = len(resources)
     for num, resource in enumerate(resources):
@@ -279,27 +294,13 @@ def pull_patients(host, email, password, since=15, dry_mode=True):
         # flush the object from memory
         patient._p_deactivate()
 
-    if dry_mode:
-        # Dry mode. Do not do transaction
-        return
 
-    # Commit transaction
-    logger.info("Commit transaction ...")
-    transaction.commit()
-    logger.info("Commit transaction [DONE]")
-
-
-def pull_and_sync(host, email, password, since=15, dry_mode=True):
-    # start a remote session with tamanu
-    session = TamanuSession(host)
-    logged = session.login(email, password)
-    if not logged:
-        raise ValueError("Cannot login, wrong credentials")
-
+def sync_service_requests(session, since=15, dry_mode=True):
     # get the service requests created/modified since?
     since = timedelta(days=-since)
     resources = session.get_resources(
-        "ServiceRequest", _lastUpdated=since)
+        "ServiceRequest", _lastUpdated=since
+    )
     for sr in resources:
 
         # get the Tamanu's test ID for this ServiceRequest
@@ -417,15 +418,6 @@ def pull_and_sync(host, email, password, since=15, dry_mode=True):
             doActionFor(sample, action)
             logger.info("Action (%s): %s %s" % (action, tid, repr(sample)))
 
-    if dry_mode:
-        # Dry mode. Do not do transaction
-        return
-
-    # Commit transaction
-    logger.info("Commit transaction ...")
-    transaction.commit()
-    logger.info("Commit transaction [DONE]")
-
 
 def edit_sample(sample, **kwargs):
     # pop non-editable fields
@@ -445,20 +437,31 @@ def edit_sample(sample, **kwargs):
     api.edit(sample, **kwargs)
 
 
+def error(message):
+    """Exit with error
+    """
+    print("ERROR: %s" % message)
+    exit(1)
+
+
 def main(app):
     args, _ = parser.parse_known_args()
+    if hasattr(args, "help") and args.help:
+        print("")
+        parser.print_help()
+        parser.exit()
+        return
 
     # get the remote host
     host = args.tamanu_host
     if not host:
-        print("Remote URL is missing")
-        return
+        error("Remote URL is missing")
 
     # get the user and password
-    credentials = args.tamanu_credentials or ""
-    parts = credentials.split(":")
-    if len(parts) < 2:
-        print("User and/or password are missing")
+    try:
+        user, password = args.tamanu_user.split(":")
+    except (AttributeError, ValueError):
+        error("Credentials are missing or not valid format")
         return
 
     # get since days
@@ -468,14 +471,38 @@ def main(app):
     trues = ["True", "true", "1", "yes", "y"]
     dry = args.dry in trues
 
+    # mapping of supported resource types and sync functions
+    resources = {
+        "Patient": sync_patients,
+        "ServiceRequest": sync_service_requests
+    }
+
+    # get the resource type to synchronize
+    sync_func = resources.get(args.resource)
+    if not sync_func:
+        error("Resource type is missing or not valid")
+
     # Setup environment
     setup_script_environment(app, stream_out=False)
 
-    #pull_and_sync(
-    #    host, parts[0], parts[1], since=since, dry_mode=dry, identifier=identifier
-    #)
+    # Start a session with Tamanu server
+    session = TamanuSession(host)
+    logged = session.login(user, password)
+    if not logged:
+        error("Cannot login, wrong credentials")
 
-    pull_patients(host, parts[0], parts[1], since=since, dry_mode=dry)
+    # Call the sync function
+    sync_func(session, since=since, dry_mode=dry)
+
+    if dry:
+        # Dry mode. Do not do transaction
+        print("Dry mode. No changes done")
+        return
+
+    # Commit transaction
+    logger.info("Commit transaction ...")
+    transaction.commit()
+    logger.info("Commit transaction [DONE]")
 
 
 if __name__ == "__main__":
