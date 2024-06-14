@@ -229,8 +229,9 @@ LOCATIONS = DisplayList((
 
 PRIORITIES = DisplayList((
     ("1", _("Stat")),
-    ("3", _("Today")),
-    ("5", _("Routine AM")),
+    ("2", _("Urgent")),
+    ("3", _("Asap")),
+    ("5", _("Routine")),
 ))
 
 TARGET_PATIENTS = DisplayList((
