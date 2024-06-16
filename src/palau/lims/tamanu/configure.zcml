@@ -2,7 +2,6 @@
 
   <!-- Package includes -->
   <include package=".browser" />
-  <include package=".consumers" />
   <include package=".patches" />
   <include package=".resources" />
   <include package=".subscribers" />
