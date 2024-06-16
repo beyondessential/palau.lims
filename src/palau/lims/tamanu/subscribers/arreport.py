@@ -9,6 +9,21 @@ from palau.lims.utils import is_reportable
 from senaite.core.api import dtime
 
 
+SAMPLE_STATUSES = (
+    # mapping between sample status and tamanu statuses
+    ("to_be_verified", "partial"),
+    ("verified", "preliminary"),
+    ("published", "final"),
+)
+
+ANALYSIS_STATUSES = (
+    # mapping between analyses status and tamanu statuses
+    ("to_be_verified", "partial"),
+    ("verified", "preliminary"),
+    ("published", "final"),
+)
+
+
 def on_object_created(instance, event):
     """Event handler when a results report is created. Sends a POST back to
     the Tamanu instance for samples included in the report that have a Tamanu
@@ -44,7 +59,8 @@ def send_diagnostic_report(sample, report):
 
     # handle the status to report back to Tamanu
     # registered | partial | preliminary | final
-    status = tapi.get_tamanu_status(sample, default="partial")
+    status = api.get_review_status(sample)
+    status = dict(SAMPLE_STATUSES).get(status, "partial")
 
     payload = {
         # meta information about the DiagnosticReport (ARReport)
@@ -74,6 +90,28 @@ def send_diagnostic_report(sample, report):
             break
     payload["code"] = {"coding": coding}
 
+    # add the observations
+    #payload["results"] = get_observations(sample)
+
+    # attach the pdf encoded in base64
+    pdf = report.getPdf()
+    payload["presentedForm"] = [{
+        "data": pdf.data.encode("base64"),
+        "contentType": "application/pdf",
+        "title": api.get_id(sample),
+    }]
+
+    # notify back to Tamanu
+    session.post("DiagnosticReport", payload)
+
+
+def get_observations(sample):
+    """Returns a list of observation records suitable as a Tamanu payload
+    """
+    # get the original data
+    meta = tapi.get_tamanu_storage(sample)
+    data = meta.get("data") or {}
+
     # group the tests (orderDetails) requested by their original id
     ordered_tests_by_key = {}
     for order_detail in data.get("orderDetail", []):
@@ -83,6 +121,7 @@ def send_diagnostic_report(sample, report):
             ordered_tests_by_key[key] = order_detail
 
     # add the observations (analyses included in the results report)
+    observations = []
     for analysis in sample.getAnalyses(full_objects=True):
         if not is_reportable(analysis):
             # skip non-reportable samples
@@ -96,9 +135,11 @@ def send_diagnostic_report(sample, report):
             ordered_test = ordered_tests_by_key.get(name, {"coding": []})
 
         # E.g. https://hl7.org/fhir/R4B/observation-example-f001-glucose.json.html
+        status = api.get_review_status(analysis)
+        status = dict(ANALYSIS_STATUSES).get(status, "partial")
         observation = {
             "resourceType": "Observation",
-            "status": tapi.get_tamanu_status(analysis),
+            "status": status,
             "code": ordered_test,
         }
 
@@ -114,15 +155,6 @@ def send_diagnostic_report(sample, report):
             }
 
         # append the observations
-        #payload.setdefault("results", []).append(observation)
+        observations.append(observation)
 
-    # attach the pdf encoded in base64
-    pdf = report.getPdf()
-    payload["presentedForm"] = [{
-        "data": pdf.data.encode("base64"),
-        "contentType": "application/pdf",
-        "title": api.get_id(sample),
-    }]
-
-    # notify back to Tamanu
-    session.post("DiagnosticReport", payload)
+    return observations

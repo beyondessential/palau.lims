@@ -20,12 +20,3 @@ LOINC_GENERIC_DIAGNOSTIC = (
     ("code", "30954-2"),
     ("display", "Relevant Dx tests/lab data"),
 )
-
-TAMANU_STATUSES = (
-    # registered | partial | preliminary | final
-    ("published", "final"),
-    ("to_be_verified", "preliminary"),
-    ("verified", "preliminary"),
-)
-
-DEFAULT_TAMANU_STATE = "registered"

@@ -9,7 +9,8 @@ SAMPLE_TRANSITIONS = (
     # mapping between senaite actions and tamanu statuses
     ("cancel", "revoked"),
     ("reject", "revoked"),
-    ("invalidate", "entered-in-error")
+    ("publish", "final"),
+    ("invalidate", "entered-in-error"),
 )
 
 
