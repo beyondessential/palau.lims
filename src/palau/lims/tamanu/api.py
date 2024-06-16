@@ -6,8 +6,6 @@
 
 from bika.lims import api
 from palau.lims.tamanu import logger
-from palau.lims.tamanu.config import DEFAULT_TAMANU_STATE
-from palau.lims.tamanu.config import TAMANU_STATUSES
 from palau.lims.tamanu.config import TAMANU_STORAGE
 from palau.lims.tamanu.interfaces import ITamanuContent
 from palau.lims.tamanu.interfaces import ITamanuResource
@@ -180,14 +178,6 @@ def get_status(thing):
     if is_tamanu_resource(thing):
         return thing.get_raw("status")
     return api.get_review_status(thing)
-
-
-def get_tamanu_status(thing, default=DEFAULT_TAMANU_STATE):
-    """Gets the states of a tamanu resource or the counterpart state from a
-    SENAITE object
-    """
-    status = get_status(thing)
-    return dict(TAMANU_STATUSES).get(status, default)
 
 
 def create_object(container, resource, **kwargs):

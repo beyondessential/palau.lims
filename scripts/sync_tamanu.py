@@ -15,6 +15,7 @@ from palau.lims.config import TAMANU_ID
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu import logger
+from palau.lims.tamanu.config import SAMPLE_FINAL_STATUSES
 from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
@@ -322,7 +323,7 @@ def sync_service_requests(session, since=15, dry_mode=True):
             continue
 
         # skip if the sample cannot be edited
-        if sample and not api.is_active(sample):
+        if sample and api.get_review_status(sample) in SAMPLE_FINAL_STATUSES:
             logger.warn("Skip (non-active): %s %s" % (tid, repr(sample)))
             continue
 

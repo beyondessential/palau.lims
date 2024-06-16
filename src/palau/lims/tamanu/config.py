@@ -21,11 +21,11 @@ LOINC_GENERIC_DIAGNOSTIC = (
     ("display", "Relevant Dx tests/lab data"),
 )
 
-TAMANU_STATUSES = (
-    # registered | partial | preliminary | final
-    ("published", "final"),
-    ("to_be_verified", "preliminary"),
-    ("verified", "preliminary"),
+SAMPLE_FINAL_STATUSES = (
+    # sample statuses in SENAITE considered as "final", that are not editable
+    # through synchronization with Tamanu
+    "cancelled",
+    "rejected",
+    "published",
+    "invalid",
 )
-
-DEFAULT_TAMANU_STATE = "registered"
