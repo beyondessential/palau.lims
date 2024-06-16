@@ -20,3 +20,12 @@ LOINC_GENERIC_DIAGNOSTIC = (
     ("code", "30954-2"),
     ("display", "Relevant Dx tests/lab data"),
 )
+
+SAMPLE_FINAL_STATUSES = (
+    # sample statuses in SENAITE considered as "final", that are not editable
+    # through synchronization with Tamanu
+    "cancelled",
+    "rejected",
+    "published",
+    "invalid",
+)
