@@ -7,8 +7,8 @@ from palau.lims.tamanu import api as tapi
 
 SAMPLE_TRANSITIONS = (
     # mapping between senaite actions and tamanu statuses
-    ("cancel", "revoked"),
-    ("reject", "revoked"),
+    ("cancel", "cancelled"),
+    ("reject", "cancelled"),
     ("publish", "final"),
     ("invalidate", "entered-in-error"),
 )
@@ -35,12 +35,23 @@ def on_after_transition(sample, event):  # noqa camelcase
     modified = api.get_modification_date(sample)
     modified = dtime.to_iso_format(modified)
     payload = {
-        "resourceType": "ServiceRequest",
+        "resourceType": "DiagnosticReport",
         "id": tamanu_uid,
         "meta": {
             "lastUpdated": modified,
         },
         "status": status,
+        "basedOn": [{
+            "type": "ServiceRequest",
+            "reference": "ServiceRequest/{}".format(tamanu_uid)}
+        ],
+        "code": {
+            "coding": [{
+              "system": "http://loinc.org",
+              "code": "30954-2",
+              "display": "Relevant diagnostic tests/laboratory data Narrative"
+            }]
+        }
     }
 
     # notify tamanu
