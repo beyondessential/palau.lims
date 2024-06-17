@@ -15,6 +15,7 @@ from palau.lims.config import TAMANU_ID
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu import logger
+from senaite.core.catalog import CLIENT_CATALOG
 from palau.lims.tamanu.config import SAMPLE_FINAL_STATUSES
 from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
@@ -78,16 +79,47 @@ PRIORITIES = (
 )
 
 
+def get_by_title(portal_type, title, catalog):
+    if not title:
+        raise ValueError("No title")
+    query = {
+        "portal_type": portal_type,
+        "title": title,
+    }
+    brains = api.search(query, catalog)
+    if not brains:
+        return None
+    if len(brains) > 1:
+        raise ValueError("More than one object found for %s (%s)"
+                         % (title, portal_type))
+    return api.get_object(brains[0])
+
+
 def get_client(service_request):
     """Returns a client object counterpart for the given resource
     """
     resource = service_request.getServiceProvider()
     client = resource.getObject()
     if not client:
+
+        name = resource.get("name")
+        if not name:
+            raise ValueError("Client without name: %r" % resource)
+
+        # search by title
+        client = get_by_title("Client", name, CLIENT_CATALOG)
+        if client:
+            # link the resource to this Client object
+            tapi.link_tamanu_resource(client, resource)
+            return client
+
+        # create a new client
         container = api.get_portal().clients
         return tapi.create_object(container, resource, portal_type="Client")
+
     if IClient.providedBy(client):
         return client
+
     raise TypeError("Object %s is not from Client type" % repr(client))
 
 
@@ -332,18 +364,18 @@ def sync_service_requests(session, since=15, dry_mode=True):
         tamanu_modified = tapi.get_tamanu_modified(sr)
         sample_modified = tapi.get_tamanu_modified(sample)
         if sample and tamanu_modified <= sample_modified:
-            logger.info("Skip (up-to-date): %s %s" % (tid, repr(sample)))
+            logger.info("Skip (up-to-date): %s %r" % (tid, sample))
             continue
 
         # skip if the sample cannot be edited
         if sample and api.get_review_status(sample) in SAMPLE_FINAL_STATUSES:
-            logger.warn("Skip (non-active): %s %s" % (tid, repr(sample)))
+            logger.warn("Skip (non-active): %s %r" % (tid, sample))
             continue
 
         # get SampleType, Site and DateSampled via FHIR's specimen
         specimen = sr.getSpecimen()
         if not specimen:
-            logger.error("No specimen: %s" % repr(sr))
+            logger.error("No specimen: %s" % tid)
             continue
 
         # get the sample type
@@ -417,11 +449,11 @@ def sync_service_requests(session, since=15, dry_mode=True):
         if sample:
             # edit sample
             edit_sample(sample, **values)
-            logger.info("Object edited: %s %s" % (tid, repr(sample)))
+            logger.info("Object edited: %s %r" % (tid, sample))
         else:
             # create the sample
             sample = create_sample(client, request, values, services)
-            logger.info("Object created: %s %s" % (tid, repr(sample)))
+            logger.info("Object created: %s %r" % (tid, sample))
 
         # link the tamanu resource to this sample
         tapi.link_tamanu_resource(sample, sr)
@@ -430,7 +462,7 @@ def sync_service_requests(session, since=15, dry_mode=True):
         action = dict(TRANSITIONS).get(sr.status)
         if action:
             doActionFor(sample, action)
-            logger.info("Action (%s): %s %s" % (action, tid, repr(sample)))
+            logger.info("Action (%s): %s %r" % (action, tid, sample))
 
 
 def edit_sample(sample, **kwargs):

@@ -61,6 +61,8 @@ class SpecimenResource(TamanuResource):
         information provided in the current resource
         """
         specimen_type = self.get("type")
+        if not specimen_type:
+            raise ValueError("Specimen without type: %r" % self)
         coding = specimen_type.get("coding")
         if not coding:
             return {}
