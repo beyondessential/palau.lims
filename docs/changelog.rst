@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #161 Fallback to searches by name/title for Client and Contact w/o tamanu_uid
 - #160 Skip requests with a SNOMED CT different from 108252007
 - #159 Display Tamanu ID in listings and include in searches
 - #158 Remove sample's Urgent priority

@@ -6,8 +6,6 @@ from datetime import timedelta
 import transaction
 from bika.lims import api
 from bika.lims.api import security as sapi
-from bika.lims.interfaces import IClient
-from bika.lims.interfaces import IContact
 from bika.lims.utils.analysisrequest import \
     create_analysisrequest as create_sample
 from bika.lims.workflow import doActionFor
@@ -21,9 +19,10 @@ from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.config import SNOMED_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from Products.CMFCore.permissions import ModifyPortalContent
+from senaite.core.catalog import CLIENT_CATALOG
+from senaite.core.catalog import CONTACT_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
 from senaite.patient import api as papi
-from senaite.patient.interfaces import IPatient
 
 __doc__ = """
 Import and sync Tamanu resources
@@ -83,12 +82,29 @@ def get_client(service_request):
     """
     resource = service_request.getServiceProvider()
     client = resource.getObject()
-    if not client:
-        container = api.get_portal().clients
-        return tapi.create_object(container, resource, portal_type="Client")
-    if IClient.providedBy(client):
+    if client:
         return client
-    raise TypeError("Object %s is not from Client type" % repr(client))
+
+    name = resource.get("name")
+    if not name:
+        raise ValueError("Client without name: %r" % resource)
+
+    # search by name/title
+    query = {
+        "portal_type": "Client",
+        "title":  name,
+        "sort_on": "created",
+        "sort_order": "descending",
+    }
+    brains = api.search(query, CLIENT_CATALOG)
+    if not brains:
+        container = api.get_portal().clients
+        return tapi.create_object(container, resource, "Client")
+
+    # link the resource to this Client object
+    client = api.get_object(brains[0])
+    tapi.link_tamanu_resource(client, resource)
+    return client
 
 
 def get_contact(service_request):
@@ -96,44 +112,60 @@ def get_contact(service_request):
     """
     # get the client
     client = get_client(service_request)
+    client_uid = api.get_uid(client)
+
     # get the contact
     resource = service_request.getRequester()
     contact = resource.getObject()
-    if not contact:
-        return tapi.create_object(client, resource, portal_type="Contact")
-    if IContact.providedBy(contact):
-        if api.get_parent(contact) == client:
-            return contact
-        raise TypeError("Contact %s does not belong to client %s" % (
-            repr(contact), repr(client)))
-    raise TypeError("Object %s is not from Contact type" % repr(contact))
+    if contact:
+        return contact
+
+    keys = ["Firstname", "Middleinitial", "Middlename", "Surname"]
+    name_info = resource.get_name_info()
+    full_name = filter(None, [name_info.get(key) for key in keys])
+    full_name = " ".join(full_name).strip()
+    if not full_name:
+        raise ValueError("Contact without name: %r" % resource)
+
+    # search by fullname
+    query = {
+        "portal_type": "Contact",
+        "getFullname": full_name,
+        "getParentUID": client_uid,
+        "sort_on": "created",
+        "sort_order": "descending"
+    }
+    brains = api.search(query, CONTACT_CATALOG)
+    if not brains:
+        return tapi.create_object(client, resource, "Contact")
+
+    # link the resource to this Contact object
+    contact = api.get_object(brains[0])
+    tapi.link_tamanu_resource(contact, resource)
+    return contact
 
 
 def get_patient(resource):
     """Returns a patient object counterpart for the given resource
     """
     patient = resource.getObject()
-    if not patient:
-
-        # TODO QA patient not linked to this resource but same MRN exists
-        mrn = resource.get_mrn()
-        if not mrn:
-            raise ValueError("Patient without MRN (ID): %s" % repr(resource))
-
-        patient = papi.get_patient_by_mrn(mrn, include_inactive=True)
-        if patient:
-            # link the resource to this Patient object
-            tapi.link_tamanu_resource(patient, resource)
-            return patient
-
-        # Create a new patient
-        container = api.get_portal().patients
-        return tapi.create_object(container, resource, portal_type="Patient")
-
-    if IPatient.providedBy(patient):
+    if patient:
         return patient
 
-    raise TypeError("Object %s is not from Patient type" % repr(patient))
+    mrn = resource.get_mrn()
+    if not mrn:
+        raise ValueError("Patient without MRN (ID): %r" % resource)
+
+    # search by mrn
+    patient = papi.get_patient_by_mrn(mrn, include_inactive=True)
+    if not patient:
+        # Create a new patient
+        container = api.get_portal().patients
+        return tapi.create_object(container, resource, "Patient")
+
+    # link the resource to this Patient object
+    tapi.link_tamanu_resource(patient, resource)
+    return patient
 
 
 def get_sample_type(service_request):
@@ -332,18 +364,18 @@ def sync_service_requests(session, since=15, dry_mode=True):
         tamanu_modified = tapi.get_tamanu_modified(sr)
         sample_modified = tapi.get_tamanu_modified(sample)
         if sample and tamanu_modified <= sample_modified:
-            logger.info("Skip (up-to-date): %s %s" % (tid, repr(sample)))
+            logger.info("Skip (up-to-date): %s %r" % (tid, sample))
             continue
 
         # skip if the sample cannot be edited
         if sample and api.get_review_status(sample) in SAMPLE_FINAL_STATUSES:
-            logger.warn("Skip (non-active): %s %s" % (tid, repr(sample)))
+            logger.warn("Skip (non-active): %s %r" % (tid, sample))
             continue
 
         # get SampleType, Site and DateSampled via FHIR's specimen
         specimen = sr.getSpecimen()
         if not specimen:
-            logger.error("No specimen: %s" % repr(sr))
+            logger.error("No specimen: %s" % tid)
             continue
 
         # get the sample type
@@ -417,11 +449,11 @@ def sync_service_requests(session, since=15, dry_mode=True):
         if sample:
             # edit sample
             edit_sample(sample, **values)
-            logger.info("Object edited: %s %s" % (tid, repr(sample)))
+            logger.info("Object edited: %s %r" % (tid, sample))
         else:
             # create the sample
             sample = create_sample(client, request, values, services)
-            logger.info("Object created: %s %s" % (tid, repr(sample)))
+            logger.info("Object created: %s %r" % (tid, sample))
 
         # link the tamanu resource to this sample
         tapi.link_tamanu_resource(sample, sr)
@@ -430,7 +462,7 @@ def sync_service_requests(session, since=15, dry_mode=True):
         action = dict(TRANSITIONS).get(sr.status)
         if action:
             doActionFor(sample, action)
-            logger.info("Action (%s): %s %s" % (action, tid, repr(sample)))
+            logger.info("Action (%s): %s %r" % (action, tid, sample))
 
 
 def edit_sample(sample, **kwargs):
