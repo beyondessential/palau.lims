@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Purge sample priorities"
+      description="Purge sample priorities that do no longer exist"
+      source="1013"
+      destination="1014"
+      handler=".v01_00_000.purge_sample_priorities"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Setup catalogs for integration with Tamanu"
       description="Setup new catalogs and/or modify existing ones for the
         integration with Tamanu to work properly"
