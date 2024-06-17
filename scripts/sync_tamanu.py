@@ -54,6 +54,9 @@ parser.add_argument(
     help="Run in dry mode"
 )
 
+# category of non-image requests
+SERVICE_REQUEST_CATEGORY = "http://snomed.info/sct|108252007"
+
 SKIP_STATUSES = (
     # Service Request statuses to skip
     "revoked", "draft", "entered-in-error"
@@ -299,7 +302,7 @@ def sync_service_requests(session, since=15, dry_mode=True):
     # get the service requests created/modified since?
     since = timedelta(days=-since)
     resources = session.get_resources(
-        "ServiceRequest", _lastUpdated=since
+        "ServiceRequest", _lastUpdated=since, category=SERVICE_REQUEST_CATEGORY
     )
     for sr in resources:
 
