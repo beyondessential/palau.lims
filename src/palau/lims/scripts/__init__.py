@@ -31,7 +31,7 @@ def get_zope_conf():
     raise Exception("Could not find zope.conf in {}".format(lookup_paths))
 
 
-def setup_script_environment(app, stream_out=True):
+def setup_script_environment(app, stream_out=True, username="admin"):
     """Setup the suitable environment for running scripts from terminal
     """
     # Load zope configuration
@@ -48,5 +48,9 @@ def setup_script_environment(app, stream_out=True):
     setup_site(site)
 
     # Login as superuser
-    user = app.acl_users.getUser("admin")
+    user = app.acl_users.getUser(username)
+    if not user:
+        # try with users from site
+        user = site.acl_users.getUser(username)
+
     newSecurityManager(None, user.__of__(app.acl_users))

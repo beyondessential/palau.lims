@@ -54,6 +54,9 @@ parser.add_argument(
     help="Run in dry mode"
 )
 
+# Username at SENAITE
+USERNAME = "tamanu"
+
 # SNOMED category for "Laboratory procedure (procedure)"
 # https://browser.ihtsdotools.org/?perspective=full&conceptId1=108252007
 SNOMED_REQUEST_CATEGORY = "108252007"
@@ -536,7 +539,7 @@ def main(app):
         error("Resource type is missing or not valid")
 
     # Setup environment
-    setup_script_environment(app, stream_out=False)
+    setup_script_environment(app, stream_out=False, username=USERNAME)
 
     # Start a session with Tamanu server
     session = TamanuSession(host)
