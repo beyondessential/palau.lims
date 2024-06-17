@@ -268,3 +268,10 @@ def get_codings(items, system):
                 continue
             codings.append(code)
     return codings
+
+
+def get_codes(items, system):
+    """Return the codes from a list of dicts for the system specified
+    """
+    codings = get_codings(items, system)
+    return [coding.get("code") for coding in codings]

@@ -18,6 +18,7 @@ from palau.lims.tamanu import logger
 from palau.lims.tamanu.config import SAMPLE_FINAL_STATUSES
 from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
+from palau.lims.tamanu.config import SNOMED_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.catalog import SETUP_CATALOG
@@ -54,8 +55,9 @@ parser.add_argument(
     help="Run in dry mode"
 )
 
-# category of non-image requests
-SERVICE_REQUEST_CATEGORY = "http://snomed.info/sct|108252007"
+# SNOMED category for "Laboratory procedure (procedure)"
+# https://browser.ihtsdotools.org/?perspective=full&conceptId1=108252007
+SNOMED_REQUEST_CATEGORY = "108252007"
 
 SKIP_STATUSES = (
     # Service Request statuses to skip
@@ -301,13 +303,22 @@ def sync_patients(session, since=15, dry_mode=True):
 def sync_service_requests(session, since=15, dry_mode=True):
     # get the service requests created/modified since?
     since = timedelta(days=-since)
+    # only interested on non-image request categories
+    category = "%s|%s" % (SNOMED_CODING_SYSTEM, SNOMED_REQUEST_CATEGORY)
     resources = session.get_resources(
-        "ServiceRequest", _lastUpdated=since, category=SERVICE_REQUEST_CATEGORY
+        "ServiceRequest", _lastUpdated=since, category=category
     )
     for sr in resources:
 
         # get the Tamanu's test ID for this ServiceRequest
         tid = sr.getLabTestID()
+
+        # skip if the category is not supported
+        category = sr.get("category")
+        codes = tapi.get_codes(category, SNOMED_CODING_SYSTEM)
+        if SNOMED_REQUEST_CATEGORY not in codes:
+            logger.info("Skip (category not supported): %s" % tid)
+            continue
 
         # get the sample for this ServiceRequest, if any
         sample = sr.getObject()

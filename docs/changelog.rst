@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #160 Skip requests with a SNOMED CT different from 108252007
 - #159 Display Tamanu ID in listings and include in searches
 - #158 Remove sample's Urgent priority
 - #157 Skip update of samples on tamanu sync on final sample state
