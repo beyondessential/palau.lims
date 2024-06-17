@@ -23,7 +23,6 @@ from senaite.core.catalog import CLIENT_CATALOG
 from senaite.core.catalog import CONTACT_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
 from senaite.patient import api as papi
-from senaite.patient.interfaces import IPatient
 
 __doc__ = """
 Import and sync Tamanu resources
@@ -76,20 +75,6 @@ PRIORITIES = (
     ("asap", "3"),
     ("routine", "5"),
 )
-
-
-def get_by_title(portal_type, title, catalog):
-    query = {
-        "portal_type": portal_type,
-        "title": title,
-    }
-    brains = api.search(query, catalog)
-    if not brains:
-        return None
-    if len(brains) > 1:
-        raise ValueError("More than one object found for %s (%s)"
-                         % (title, portal_type))
-    return api.get_object(brains[0])
 
 
 def get_client(service_request):
