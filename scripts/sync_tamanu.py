@@ -99,27 +99,29 @@ def get_client(service_request):
     """
     resource = service_request.getServiceProvider()
     client = resource.getObject()
-    if not client:
+    if client:
+        return client
 
-        name = resource.get("name")
-        if not name:
-            raise ValueError("Client without name: %r" % resource)
+    name = resource.get("name")
+    if not name:
+        raise ValueError("Client without name: %r" % resource)
 
-        # search by title
-        client = get_by_title("Client", name, CLIENT_CATALOG)
-        if client:
-            # link the resource to this Client object
-            tapi.link_tamanu_resource(client, resource)
-            return client
-
-        # create a new client
+    # search by name/title
+    query = {
+        "portal_type": "Client",
+        "title":  name,
+        "sort_on": "created",
+        "sort_order": "descending",
+    }
+    brains = api.search(query, CLIENT_CATALOG)
+    if not brains:
         container = api.get_portal().clients
         return tapi.create_object(container, resource, "Client")
 
-    if IClient.providedBy(client):
-        return client
-
-    raise TypeError("Object %s is not from Client type" % repr(client))
+    # link the resource to this Client object
+    client = api.get_object(brains[0])
+    tapi.link_tamanu_resource(client, resource)
+    return client
 
 
 def get_contact(service_request):
@@ -132,35 +134,32 @@ def get_contact(service_request):
     # get the contact
     resource = service_request.getRequester()
     contact = resource.getObject()
-    if not contact:
-        keys = ["Firstname", "Middleinitial", "Middlename", "Surname"]
-        name_info = resource.get_name_info()
-        full_name = filter(None, [name_info.get(key) for key in keys])
-        full_name = " ".join(full_name).strip()
-        if not full_name:
-            raise ValueError("Contact without name: %r" % resource)
-
-        # search by fullname
-        query = {
-            "portal_type": "Contact",
-            "getFullname": full_name,
-            "getParentUID": client_uid,
-            "sort_on": "created",
-            "sort_order": "descending"
-        }
-        brains = api.search(query, CONTACT_CATALOG)
-        if not brains:
-            return tapi.create_object(client, resource, "Contact")
-
-        # link the resource to this Contact object
-        contact = api.get_object(brains[0])
-        tapi.link_tamanu_resource(contact, resource)
+    if contact:
         return contact
 
-    if IContact.providedBy(contact):
-        return contact
+    keys = ["Firstname", "Middleinitial", "Middlename", "Surname"]
+    name_info = resource.get_name_info()
+    full_name = filter(None, [name_info.get(key) for key in keys])
+    full_name = " ".join(full_name).strip()
+    if not full_name:
+        raise ValueError("Contact without name: %r" % resource)
 
-    raise TypeError("Object %s is not from Contact type" % repr(contact))
+    # search by fullname
+    query = {
+        "portal_type": "Contact",
+        "getFullname": full_name,
+        "getParentUID": client_uid,
+        "sort_on": "created",
+        "sort_order": "descending"
+    }
+    brains = api.search(query, CONTACT_CATALOG)
+    if not brains:
+        return tapi.create_object(client, resource, "Contact")
+
+    # link the resource to this Contact object
+    contact = api.get_object(brains[0])
+    tapi.link_tamanu_resource(contact, resource)
+    return contact
 
 
 def get_patient(resource):
