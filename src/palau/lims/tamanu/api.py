@@ -180,7 +180,7 @@ def get_status(thing):
     return api.get_review_status(thing)
 
 
-def create_object(container, resource, **kwargs):
+def create_object(container, resource, portal_type, **kwargs):
     """Creates an object for the given Tamanu resource
     """
     if not is_tamanu_resource(resource):
@@ -197,9 +197,8 @@ def create_object(container, resource, **kwargs):
     info = resource.to_object_info()
     info.update(kwargs)
 
-    # get the container and portal_type
+    # get the container
     container = api.get_object(container)
-    portal_type = info.pop("portal_type")
 
     # create the object
     obj = api.create(container, portal_type, **info)

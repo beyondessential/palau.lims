@@ -15,13 +15,14 @@ from palau.lims.config import TAMANU_ID
 from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu import logger
-from senaite.core.catalog import CLIENT_CATALOG
 from palau.lims.tamanu.config import SAMPLE_FINAL_STATUSES
 from palau.lims.tamanu.config import SENAITE_PROFILES_CODING_SYSTEM
 from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.config import SNOMED_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from Products.CMFCore.permissions import ModifyPortalContent
+from senaite.core.catalog import CLIENT_CATALOG
+from senaite.core.catalog import CONTACT_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
 from senaite.patient import api as papi
 from senaite.patient.interfaces import IPatient
@@ -80,8 +81,6 @@ PRIORITIES = (
 
 
 def get_by_title(portal_type, title, catalog):
-    if not title:
-        raise ValueError("No title")
     query = {
         "portal_type": portal_type,
         "title": title,
@@ -115,7 +114,7 @@ def get_client(service_request):
 
         # create a new client
         container = api.get_portal().clients
-        return tapi.create_object(container, resource, portal_type="Client")
+        return tapi.create_object(container, resource, "Client")
 
     if IClient.providedBy(client):
         return client
@@ -128,16 +127,39 @@ def get_contact(service_request):
     """
     # get the client
     client = get_client(service_request)
+    client_uid = api.get_uid(client)
+
     # get the contact
     resource = service_request.getRequester()
     contact = resource.getObject()
     if not contact:
-        return tapi.create_object(client, resource, portal_type="Contact")
+        keys = ["Firstname", "Middleinitial", "Middlename", "Surname"]
+        name_info = resource.get_name_info()
+        full_name = filter(None, [name_info.get(key) for key in keys])
+        full_name = " ".join(full_name).strip()
+        if not full_name:
+            raise ValueError("Contact without name: %r" % resource)
+
+        # search by fullname
+        query = {
+            "portal_type": "Contact",
+            "getFullname": full_name,
+            "getParentUID": client_uid,
+            "sort_on": "created",
+            "sort_order": "descending"
+        }
+        brains = api.search(query, CONTACT_CATALOG)
+        if not brains:
+            return tapi.create_object(client, resource, "Contact")
+
+        # link the resource to this Contact object
+        contact = api.get_object(brains[0])
+        tapi.link_tamanu_resource(contact, resource)
+        return contact
+
     if IContact.providedBy(contact):
-        if api.get_parent(contact) == client:
-            return contact
-        raise TypeError("Contact %s does not belong to client %s" % (
-            repr(contact), repr(client)))
+        return contact
+
     raise TypeError("Object %s is not from Contact type" % repr(contact))
 
 
@@ -160,7 +182,7 @@ def get_patient(resource):
 
         # Create a new patient
         container = api.get_portal().patients
-        return tapi.create_object(container, resource, portal_type="Patient")
+        return tapi.create_object(container, resource, "Patient")
 
     if IPatient.providedBy(patient):
         return patient
