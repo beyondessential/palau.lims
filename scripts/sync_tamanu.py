@@ -172,13 +172,17 @@ def get_sample_type(service_request):
     """Returns a sample type counterpart for the given resource
     """
     specimen = service_request.getSpecimen()
+    specimen_type = specimen.get("type")
+    if not specimen_type:
+        return None
+
     sample_type = specimen.get_sample_type()
     if sample_type:
         return sample_type
 
     info = specimen.get_sample_type_info()
     if not info:
-        raise ValueError("Sample type is missing: %s" % repr(specimen))
+        return None
 
     # TODO QA We create the sample type if no matches are found!
     title = info.get("title")
@@ -380,6 +384,9 @@ def sync_service_requests(session, since=15, dry_mode=True):
 
         # get the sample type
         sample_type = get_sample_type(sr)
+        if not sample_type:
+            logger.error("No sample type: %s" % tid)
+            continue
 
         # get the sample point
         sample_point = get_sample_point(sr)
