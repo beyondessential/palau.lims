@@ -49,7 +49,6 @@ from zope.interface import implementer
 DISABLED_FIELDS = [
     "ClientOrderNumber",
     "ClientReference",
-    "ClientSampleID",
     "Composite",
     "Invoice",
     "InvoiceExclude",
@@ -124,7 +123,17 @@ UPDATED_FIELDS = [
     }),
     ("Priority", {
         "vocabulary": PRIORITIES,
-    })
+    }),
+    # Display Tamanu ID in readonly mode only
+    ("ClientSampleID", {
+        "widget": {
+            "visible": {
+                "add": "invisible",
+                "edit": "disabled",
+                "secondary": "disabled",
+            }
+        }
+    }),
 ]
 
 # Additional fields for Sample (aka AnalysisRequest)
