@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #158 Remove sample's Urgent priority
 - #157 Skip update of samples on tamanu sync on final sample state
 - #157 Remove unnecessary push consumers for Tamanu
 - #157 Notify sample transition back to Tamanu

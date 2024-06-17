@@ -229,7 +229,6 @@ LOCATIONS = DisplayList((
 
 PRIORITIES = DisplayList((
     ("1", _("Stat")),
-    ("2", _("Urgent")),
     ("3", _("Asap")),
     ("5", _("Routine")),
 ))

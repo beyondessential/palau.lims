@@ -68,7 +68,6 @@ TRANSITIONS = (
 # Priorities mapping
 PRIORITIES = (
     ("stat", "1"),
-    ("urgent", "2"),
     ("asap", "3"),
     ("routine", "5"),
 )

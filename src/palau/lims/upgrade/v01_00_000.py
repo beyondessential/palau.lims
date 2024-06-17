@@ -9,6 +9,7 @@ from bika.lims.api import security as sapi
 from bika.lims.interfaces import IVerified
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
+from palau.lims.config import PRIORITIES
 from palau.lims.config import TAMANU_ID
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
@@ -330,3 +331,37 @@ def setup_tamanu_catalogs(tool):
     portal = tool.aq_inner.aq_parent
     setup_catalogs(portal)
     logger.info("Setup Tamanu integration [DONE]")
+
+
+def purge_sample_priorities(tool):
+    """Purge sample priorities that no longer exist
+    """
+    logger.info("Purging sample priorities ...")
+    priorities = PRIORITIES.keys()
+
+    cat = api.get_tool(SAMPLE_CATALOG)
+    brains = cat(portal_type="AnalysisRequest")
+    total = len(brains)
+    for num, brain in enumerate(brains):
+        if num and num % 100 == 0:
+            logger.info("Processed objects: {0}/{1}".format(num, total))
+
+        obj = api.get_object(brain, default=None)
+        if not obj:
+            continue
+
+        # check if priority exists
+        priority = obj.getPriority()
+        if str(priority) in priorities:
+            continue
+
+        # set default priority
+        obj.setPriority('3')
+
+        # reindex object
+        obj.reindexObject()
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Purging sample priorities [DONE]")
