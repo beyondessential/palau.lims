@@ -49,7 +49,6 @@ from zope.interface import implementer
 DISABLED_FIELDS = [
     "ClientOrderNumber",
     "ClientReference",
-    "ClientSampleID",
     "Composite",
     "Invoice",
     "InvoiceExclude",

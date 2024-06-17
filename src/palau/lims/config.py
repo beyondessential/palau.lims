@@ -169,6 +169,7 @@ SAMPLE_ADD_FIELDS_TO_HIDE = [
     "Preservation",
     "SamplingDate",
     "SamplePoint",
+    "ClientSampleID",
 ]
 
 # Display order of Sample fields
