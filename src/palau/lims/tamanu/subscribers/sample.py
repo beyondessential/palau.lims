@@ -1,17 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from bika.lims import api
-from senaite.core.api import dtime
-from palau.lims.tamanu import api as tapi
-
-
-SAMPLE_TRANSITIONS = (
-    # mapping between senaite actions and tamanu statuses
-    ("cancel", "cancelled"),
-    ("reject", "cancelled"),
-    ("publish", "final"),
-    ("invalidate", "entered-in-error"),
-)
+from palau.lims.tamanu.subscribers.arreport import send_diagnostic_report
 
 
 def on_after_transition(sample, event):  # noqa camelcase
@@ -20,44 +9,17 @@ def on_after_transition(sample, event):  # noqa camelcase
     if not event.transition:
         return
 
-    action = event.transition.id
-    status = dict(SAMPLE_TRANSITIONS).get(action)
-    if not status:
-        return
+    # get the last report for this sample, if any
+    report = get_last_report(sample)
 
-    # get the tamanu session
-    session = tapi.get_tamanu_session_for(sample)
-    if not session:
-        return
+    # notify tamanu back about this report status
+    send_diagnostic_report(sample, report)
 
-    # report back to Tamanu
-    tamanu_uid = tapi.get_tamanu_uid(sample)
-    
-    # convert the uuid from hex to str
-    report_uid = tapi.get_uuid(sample)
-    report_uid = str(report_uid)
-    
-    modified = api.get_modification_date(sample)
-    modified = dtime.to_iso_format(modified)
-    payload = {
-        "resourceType": "DiagnosticReport",
-        "id": report_uid,
-        "meta": {
-            "lastUpdated": modified,
-        },
-        "status": status,
-        "basedOn": [{
-            "type": "ServiceRequest",
-            "reference": "ServiceRequest/{}".format(tamanu_uid)}
-        ],
-        "code": {
-            "coding": [{
-              "system": "http://loinc.org",
-              "code": "30954-2",
-              "display": "Relevant diagnostic tests/laboratory data Narrative"
-            }]
-        }
-    }
 
-    # notify tamanu
-    session.post("ServiceRequest", payload)
+def get_last_report(sample):
+    """Returns the last analysis report that was created for this sample
+    """
+    reports_ids = sample.objectIds("ARReport")
+    if not reports_ids:
+        return None
+    return sample.get(reports_ids[-1])
