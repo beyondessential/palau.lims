@@ -355,7 +355,6 @@ def purge_sample_priorities(tool):
         if str(priority) in priorities:
             continue
 
-        import pdb;pdb.set_trace()
         # set default priority
         obj.setPriority('3')
 
