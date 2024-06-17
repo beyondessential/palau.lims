@@ -32,11 +32,16 @@ def on_after_transition(sample, event):  # noqa camelcase
 
     # report back to Tamanu
     tamanu_uid = tapi.get_tamanu_uid(sample)
+    
+    # convert the uuid from hex to str
+    report_uid = tapi.get_uuid(sample)
+    report_uid = str(report_uid)
+    
     modified = api.get_modification_date(sample)
     modified = dtime.to_iso_format(modified)
     payload = {
         "resourceType": "DiagnosticReport",
-        "id": tamanu_uid,
+        "id": report_uid,
         "meta": {
             "lastUpdated": modified,
         },
