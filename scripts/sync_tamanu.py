@@ -6,8 +6,6 @@ from datetime import timedelta
 import transaction
 from bika.lims import api
 from bika.lims.api import security as sapi
-from bika.lims.interfaces import IClient
-from bika.lims.interfaces import IContact
 from bika.lims.utils.analysisrequest import \
     create_analysisrequest as create_sample
 from bika.lims.workflow import doActionFor
@@ -166,27 +164,23 @@ def get_patient(resource):
     """Returns a patient object counterpart for the given resource
     """
     patient = resource.getObject()
+    if patient:
+        return patient
+
+    mrn = resource.get_mrn()
+    if not mrn:
+        raise ValueError("Patient without MRN (ID): %r" % resource)
+
+    # search by mrn
+    patient = papi.get_patient_by_mrn(mrn, include_inactive=True)
     if not patient:
-
-        # TODO QA patient not linked to this resource but same MRN exists
-        mrn = resource.get_mrn()
-        if not mrn:
-            raise ValueError("Patient without MRN (ID): %s" % repr(resource))
-
-        patient = papi.get_patient_by_mrn(mrn, include_inactive=True)
-        if patient:
-            # link the resource to this Patient object
-            tapi.link_tamanu_resource(patient, resource)
-            return patient
-
         # Create a new patient
         container = api.get_portal().patients
         return tapi.create_object(container, resource, "Patient")
 
-    if IPatient.providedBy(patient):
-        return patient
-
-    raise TypeError("Object %s is not from Patient type" % repr(patient))
+    # link the resource to this Patient object
+    tapi.link_tamanu_resource(patient, resource)
+    return patient
 
 
 def get_sample_type(service_request):
