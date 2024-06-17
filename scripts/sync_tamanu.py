@@ -391,7 +391,7 @@ def sync_service_requests(session, since=15, dry_mode=True):
             "DateOfBirth": patient_dob,
             "Sex": patient_sex,
             "Priority": priority,
-            "ClientOrderNumber": tid,
+            "ClientSampleID": tid,
             "Remarks": remarks,
             #"Ward": api.get_uid(ward),
             #"ClinicalInformation": "",
