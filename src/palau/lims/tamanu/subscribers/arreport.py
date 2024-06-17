@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from bika.lims import api
+from bika.lims.utils import tmpID
 from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu.config import LOINC_CODING_SYSTEM
 from palau.lims.tamanu.config import LOINC_GENERIC_DIAGNOSTIC
@@ -14,6 +15,9 @@ SAMPLE_STATUSES = (
     ("to_be_verified", "partial"),
     ("verified", "preliminary"),
     ("published", "final"),
+    ("invalid", "entered-in-error"),
+    ("rejected", "cancelled"),
+    ("cancelled", "cancelled"),
 )
 
 ANALYSIS_STATUSES = (
@@ -43,9 +47,21 @@ def send_diagnostic_report(sample, report):
     if not session:
         return
 
+    # handle the status to report back to Tamanu
+    # registered | partial | preliminary | final
+    status = api.get_review_status(sample)
+    status = dict(SAMPLE_STATUSES).get(status)
+    if not status:
+        # any of the supported status, do nothing
+        return
+
+    # get or create the uuid of the report
+    report_uuid = tapi.get_uuid(tmpID())
+    if report:
+        report_uuid = tapi.get_uuid(report)
+
     # convert the uuid from hex to str
-    report_uid = tapi.get_uuid(report)
-    report_uid = str(report_uid)
+    report_uuid = str(report_uuid)
 
     # get the original data
     meta = tapi.get_tamanu_storage(sample)
@@ -57,20 +73,15 @@ def send_diagnostic_report(sample, report):
     modified = api.get_modification_date(sample)
     modified = dtime.to_iso_format(modified)
 
-    # handle the status to report back to Tamanu
-    # registered | partial | preliminary | final
-    status = api.get_review_status(sample)
-    status = dict(SAMPLE_STATUSES).get(status, "partial")
-
     payload = {
         # meta information about the DiagnosticReport (ARReport)
         "resourceType": "DiagnosticReport",
-        "id": report_uid,
+        "id": report_uuid,
         "meta": {
             "lastUpdated": modified,
         },
         # the status of the DiagnosticReport (ARReport)
-        # registered | partial | preliminary | final
+        # registered | partial | preliminary | final | entered-in-error
         "status": status,
         # the ServiceRequest(s) this ARReport is based on
         # TODO What about a DiagnosticReport with more than one basedOn
@@ -94,12 +105,13 @@ def send_diagnostic_report(sample, report):
     #payload["results"] = get_observations(sample)
 
     # attach the pdf encoded in base64
-    pdf = report.getPdf()
-    payload["presentedForm"] = [{
-        "data": pdf.data.encode("base64"),
-        "contentType": "application/pdf",
-        "title": api.get_id(sample),
-    }]
+    if report:
+        pdf = report.getPdf()
+        payload["presentedForm"] = [{
+            "data": pdf.data.encode("base64"),
+            "contentType": "application/pdf",
+            "title": api.get_id(sample),
+        }]
 
     # notify back to Tamanu
     session.post("DiagnosticReport", payload)
