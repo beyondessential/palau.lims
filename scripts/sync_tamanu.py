@@ -300,6 +300,17 @@ def get_remarks(service_request):
     return remarks
 
 
+def get_specifications(sample_type):
+    """Returns the list of specifications as brains assigned to the sample type
+    """
+    query = {
+        "portal_type": "AnalysisSpec",
+        "sampletype_uid": api.get_uid(sample_type),
+        "is_active": True,
+    }
+    return api.search(query, SETUP_CATALOG)
+
+
 def sync_patients(session, since=15, dry_mode=True):
     # get the patients created/modified since?
     since = timedelta(days=-since)
@@ -391,6 +402,10 @@ def sync_service_requests(session, since=15, dry_mode=True):
             logger.error("No sample type: %s" % tid)
             continue
 
+        # get the specification if only assigned to this sample type
+        specs = get_specifications(sample_type)
+        spec = api.get_object(specs[0]) if len(specs) == 1 else None
+
         # get the sample point
         sample_point = get_sample_point(sr)
         sample_point_uid = api.get_uid(sample_point) if sample_point else None
@@ -446,6 +461,7 @@ def sync_service_requests(session, since=15, dry_mode=True):
             "Priority": priority,
             "ClientSampleID": tid,
             "Remarks": remarks,
+            "Specification": spec,
             #"Ward": api.get_uid(ward),
             #"ClinicalInformation": "",
             #"DateOfAdmission": doa,
