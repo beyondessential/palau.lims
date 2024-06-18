@@ -200,6 +200,9 @@ def create_object(container, resource, portal_type, **kwargs):
     # get the container
     container = api.get_object(container)
 
+    # remove portal_type from info
+    info.pop("portal_type", None)
+
     # create the object
     obj = api.create(container, portal_type, **info)
     logger.info("Object created: %s" % repr(obj))
