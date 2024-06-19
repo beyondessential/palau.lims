@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #167 Fix Specification not being added for Tamanu requests
 - #163 Skip specimen w/o sample type defined on ServiceRequest sync from Tamanu
 - #162 Use send_diagnostic_report func to notify Tamanu on sample state changes
 - #161 Fallback to searches by name/title for Client and Contact w/o tamanu_uid
