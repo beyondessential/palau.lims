@@ -3,19 +3,16 @@
 HOST=${buildout:tamanu-host}
 CREDS=${buildout:tamanu-user}
 
+SINCE_SERVICE_REQUEST=5h
+SINCE_PATIENTS=1d
+
 BASE=${buildout:directory}
 BIN_DIR=${buildout:directory}/bin
 SRC_DIR=${buildout:directory}/src
 SRC=$SRC_DIR/palau.lims/scripts/sync_tamanu.py
 
-DAYS=1
-
-if [ -n "$1" ]; then
-  DAYS=$1
-fi
-
 # Synchronize service requests
-$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r ServiceRequest -s $DAYS
+$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r ServiceRequest -s $SINCE_SERVICE_REQUEST
 
 # Synchronize patients
-$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r Patient -s $DAYS
+$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r Patient -s $SINCE_PATIENTS
