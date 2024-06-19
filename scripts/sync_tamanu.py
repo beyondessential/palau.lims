@@ -426,13 +426,13 @@ def sync_service_requests(session, since):
         # get SampleType, Site and DateSampled via FHIR's specimen
         specimen = sr.getSpecimen()
         if not specimen:
-            logger.error("No specimen: %s" % tid)
+            logger.warn("No specimen: %s" % tid)
             continue
 
         # get the sample type
         sample_type = get_sample_type(sr)
         if not sample_type:
-            logger.error("No sample type: %s" % tid)
+            logger.warn("No sample type: %s" % tid)
             continue
 
         # get the specification if only assigned to this sample type
