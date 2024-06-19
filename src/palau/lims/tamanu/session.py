@@ -157,7 +157,7 @@ class TamanuSession(object):
             records.extend(entries)
 
             # no more pages needed
-            if not all_pages or len(entries) < payload.get("count"):
+            if not all_pages or len(entries) < payload.get("_count"):
                 break
 
             # increase in one page
