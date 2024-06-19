@@ -347,9 +347,15 @@ def to_timedelta(since):
 def sync_patients(session, since):
     # get the patients created/modified since?
     since = to_timedelta(since)
+
+    # get the resources from the remote server
     resources = session.get_resources(
-        "Patient", _lastUpdated=since, active="true"
+        "Patient",
+        all_pages=True,
+        _lastUpdated=since,
+        active=True,
     )
+
     total = len(resources)
     for num, resource in enumerate(resources):
         if num and num % 100 == 0:
@@ -388,9 +394,15 @@ def sync_service_requests(session, since):
     since = to_timedelta(since)
     # only interested on non-image request categories
     category = "%s|%s" % (SNOMED_CODING_SYSTEM, SNOMED_REQUEST_CATEGORY)
+
+    # get the resources from the remote server
     resources = session.get_resources(
-        "ServiceRequest", _lastUpdated=since, category=category
+        "ServiceRequest",
+        all_pages=True,
+        _lastUpdated=since,
+        category=category
     )
+
     total = len(resources)
     logger.info("Processing %s service requests ..." % total)
     for num, sr in enumerate(resources):
