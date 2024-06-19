@@ -130,22 +130,41 @@ class TamanuSession(object):
         # Fall-back to default
         return TamanuResource(self, data=item)
 
-    def get_resources(self, resource_type, **kwargs):
-        last_updated = kwargs.pop("_lastUpdated", None)
+    def get_resources(self, resource_type, all_pages=False, **kwargs):
+        # minimum criteria for the payload
+        payload = {
+            "_page": 1,
+            "_count": 1000,
+        }
+        payload.update(kwargs)
+
+        # calculates since time
+        last_updated = payload.pop("_lastUpdated", None)
         if isinstance(last_updated, timedelta):
             last_updated = datetime.now() - last_updated
+
         if isinstance(last_updated, datetime):
             last_updated = last_updated.strftime("%Y-%m-%dT%H:%M:%S")
-            kwargs["_lastUpdated"] = "gt{}".format(last_updated)
+            payload["_lastUpdated"] = "gt{}".format(last_updated)
 
         # get the raw data in json format
-        data = self.get(resource_type, params=kwargs)
+        records = []
+        while True:
+            data = self.get(resource_type, params=payload)
 
-        # entries are a list of dicts under 'entry'
-        entries = data.get("entry", [])
+            # entries are a list of dicts under 'entry'
+            entries = data.get("entry", [])
+            records.extend(entries)
+
+            # no more pages needed
+            if not all_pages or len(entries) < payload.get("count"):
+                break
+
+            # increase in one page
+            payload["_page"] += 1
 
         # each entry has the resource itself under 'resource'
-        items = map(lambda entry: entry.get("resource"), entries)
+        items = map(lambda record: record.get("resource"), records)
 
         # return the proper resource types
         resources = map(self.to_resource, items)
