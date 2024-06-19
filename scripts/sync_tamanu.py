@@ -391,16 +391,33 @@ def sync_service_requests(session, since):
     resources = session.get_resources(
         "ServiceRequest", _lastUpdated=since, category=category
     )
-    for sr in resources:
+    total = len(resources)
+    logger.info("Processing %s service requests ..." % total)
+    for num, sr in enumerate(resources):
+        if num and num % 10 == 0:
+            logger.info("Processing service requests %s/%s" % (num, total))
 
         # get the Tamanu's test ID for this ServiceRequest
         tid = sr.getLabTestID()
+        hash = "%s %s" % (tid, sr.UID)
 
         # skip if the category is not supported
         category = sr.get("category")
         codes = tapi.get_codes(category, SNOMED_CODING_SYSTEM)
         if SNOMED_REQUEST_CATEGORY not in codes:
-            logger.info("Skip (category not supported): %s" % tid)
+            logger.info("Skip %s Category is not supported" % hash)
+            continue
+
+        # get SampleType, Site and DateSampled via FHIR's specimen
+        specimen = sr.getSpecimen()
+        if not specimen:
+            logger.info("Skip %s. Specimen is missing" % hash)
+            continue
+
+        # get the sample type
+        sample_type = get_sample_type(sr)
+        if not sample_type:
+            logger.info("Skip %s. Sample type is missing" % hash)
             continue
 
         # get the sample for this ServiceRequest, if any
@@ -408,31 +425,20 @@ def sync_service_requests(session, since):
 
         # skip if sample does not exist yet and no valid status
         if not sample and sr.status in SKIP_STATUSES:
-            logger.info("Skip (%s): %s" % (sr.status, tid))
+            logger.info("Skip %s. Status is not valid: %s" % (hash, sr.status))
             continue
 
         # skip if sample is up-to-date
         tamanu_modified = tapi.get_tamanu_modified(sr)
         sample_modified = tapi.get_tamanu_modified(sample)
         if sample and tamanu_modified <= sample_modified:
-            logger.info("Skip (up-to-date): %s %r" % (tid, sample))
+            logger.info("Skip %s. Sample is up-to-date: %r" % (hash, sample))
             continue
 
         # skip if the sample cannot be edited
         if sample and api.get_review_status(sample) in SAMPLE_FINAL_STATUSES:
-            logger.warn("Skip (non-active): %s %r" % (tid, sample))
-            continue
-
-        # get SampleType, Site and DateSampled via FHIR's specimen
-        specimen = sr.getSpecimen()
-        if not specimen:
-            logger.warn("No specimen: %s" % tid)
-            continue
-
-        # get the sample type
-        sample_type = get_sample_type(sr)
-        if not sample_type:
-            logger.warn("No sample type: %s" % tid)
+            msg = "Skip %s. Sample cannot be edited: %r" % (hash, sample)
+            logger.info(msg)
             continue
 
         # get the specification if only assigned to this sample type
@@ -508,11 +514,11 @@ def sync_service_requests(session, since):
         if sample:
             # edit sample
             edit_sample(sample, **values)
-            logger.info("Object edited: %s %r" % (tid, sample))
+            logger.info("Edited: %s %r" % (hash, sample))
         else:
             # create the sample
             sample = create_sample(client, request, values, services)
-            logger.info("Object created: %s %r" % (tid, sample))
+            logger.info("Created: %s %r" % (hash, sample))
 
         # link the tamanu resource to this sample
         tapi.link_tamanu_resource(sample, sr)
@@ -521,7 +527,7 @@ def sync_service_requests(session, since):
         action = dict(TRANSITIONS).get(sr.status)
         if action:
             doActionFor(sample, action)
-            logger.info("Action (%s): %s %r" % (action, tid, sample))
+            logger.info("Action (%s): %s %r" % (action, hash, sample))
 
 
 def edit_sample(sample, **kwargs):
