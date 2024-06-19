@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import re
 from datetime import timedelta
 
 import transaction
@@ -47,12 +48,15 @@ parser.add_argument(
 )
 parser.add_argument(
     "-s", "--since",
-    help="Last updated since (days)"
+    help="Last updated since. Supports d (days), hours (hours), minutes (m)"
 )
 parser.add_argument(
-    "-d", "--dry",
+    "-d", "--dry", action="store_true",
     help="Run in dry mode"
 )
+
+# Default since in dhm format
+DEFAULT_SINCE = "1d"
 
 # Username at SENAITE
 USERNAME = "tamanu"
@@ -78,6 +82,11 @@ PRIORITIES = (
     ("asap", "3"),
     ("routine", "5"),
 )
+
+# Days/Hours/Minutes regex
+DHM_REGEX = r'^((?P<d>(\d+))d){0,1}\s*' \
+            r'((?P<h>(\d+))h){0,1}\s*' \
+            r'((?P<m>(\d+))m){0,1}\s*'
 
 
 def get_client(service_request):
@@ -311,9 +320,33 @@ def get_specifications(sample_type):
     return api.search(query, SETUP_CATALOG)
 
 
-def sync_patients(session, since=15, dry_mode=True):
+def to_timedelta(since):
+    """Returns a timedelta for the given
+    """
+    if api.is_floatable(since):
+        # days by default
+        return timedelta(days=api.to_int(since))
+
+    # to lowercase and remove leading and trailing spaces
+    since_dhm = since.lower().strip()
+
+    # extract the days, hours and minutes
+    matches = re.search(DHM_REGEX, since_dhm)
+    values = [matches.group(v) for v in "dhm"]
+
+    # if all values are None, assume the dhm format was not valid
+    nones = [value is None for value in values]
+    if all(nones):
+        raise ValueError("Not a valid dhm: {}".format(repr(since)))
+
+    # replace Nones with zeros and return timedelta
+    values = [api.to_int(value, 0) for value in values]
+    return timedelta(days=values[0], hours=values[1], minutes=values[2])
+
+
+def sync_patients(session, since):
     # get the patients created/modified since?
-    since = timedelta(days=-since)
+    since = to_timedelta(since)
     resources = session.get_resources(
         "Patient", _lastUpdated=since, active="true"
     )
@@ -350,9 +383,9 @@ def sync_patients(session, since=15, dry_mode=True):
         patient._p_deactivate()
 
 
-def sync_service_requests(session, since=15, dry_mode=True):
+def sync_service_requests(session, since):
     # get the service requests created/modified since?
-    since = timedelta(days=-since)
+    since = to_timedelta(since)
     # only interested on non-image request categories
     category = "%s|%s" % (SNOMED_CODING_SYSTEM, SNOMED_REQUEST_CATEGORY)
     resources = session.get_resources(
@@ -536,12 +569,8 @@ def main(app):
         error("Credentials are missing or not valid format")
         return
 
-    # get since days
-    since = api.to_int(args.since, default=5)
-
-    # dry mode
-    trues = ["True", "true", "1", "yes", "y"]
-    dry = args.dry in trues
+    # get since dhms
+    since = args.since or DEFAULT_SINCE
 
     # mapping of supported resource types and sync functions
     resources = {
@@ -564,9 +593,9 @@ def main(app):
         error("Cannot login, wrong credentials")
 
     # Call the sync function
-    sync_func(session, since=since, dry_mode=dry)
+    sync_func(session, since)
 
-    if dry:
+    if args.dry:
         # Dry mode. Do not do transaction
         print("Dry mode. No changes done")
         return
