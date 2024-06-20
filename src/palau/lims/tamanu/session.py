@@ -144,7 +144,7 @@ class TamanuSession(object):
             last_updated = datetime.now() - last_updated
 
         if isinstance(last_updated, datetime):
-            last_updated = last_updated.strftime("%Y-%m-%dT%H:%M:%S")
+            last_updated = last_updated.strftime("%Y-%m-%dT%H:%M:%SZ")
             payload["_lastUpdated"] = "gt{}".format(last_updated)
 
         # get the raw data in json format
