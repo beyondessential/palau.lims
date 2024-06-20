@@ -133,7 +133,7 @@ class TamanuSession(object):
     def get_resources(self, resource_type, all_pages=False, **kwargs):
         # minimum criteria for the payload
         payload = {
-            "_page": 1,
+            "_page": 0,
             "_count": 1000,
         }
         payload.update(kwargs)
