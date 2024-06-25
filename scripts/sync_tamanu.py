@@ -67,7 +67,7 @@ SNOMED_REQUEST_CATEGORY = "108252007"
 
 SKIP_STATUSES = (
     # Service Request statuses to skip
-    "revoked", "draft", "entered-in-error"
+    "revoked", "draft", "entered-in-error", "completed"
 )
 
 TRANSITIONS = (
