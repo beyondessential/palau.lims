@@ -365,3 +365,31 @@ def purge_sample_priorities(tool):
         obj._p_deactivate()
 
     logger.info("Purging sample priorities [DONE]")
+
+
+def setup_rollback_transition(tool):
+    """Setup the rollback transition to analysis workflow
+    """
+    logger.info("Setup rollback transition ...")
+
+    #  Update Analyses workflow
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "rolemap")
+    setup_workflows(api.get_portal())
+
+    # Update Analyses rolemap
+    query = {"portal_type": "Analysis", "review_state": "out_of_stock"}
+    brains = api.search(query, ANALYSIS_CATALOG)
+
+    wf_tool = api.get_tool("portal_workflow")
+    wf = wf_tool.getWorkflowById(ANALYSIS_WORKFLOW)
+
+    for brain in brains:
+        obj = api.get_object(brain)
+        wf.updateRoleMappingsFor(obj)
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Setup rollback transition ...")
