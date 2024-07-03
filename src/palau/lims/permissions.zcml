@@ -19,5 +19,6 @@
   <!-- Transition Permissions -->
   <permission id="palau.lims.permissions.TransitionCreateSupplementary" title="palau.lims: Transition: Create Supplementary"/>
   <permission id="palau.lims.permissions.TransitionSetOutOfStock" title="palau.lims: Transition: Set Out Of Stock"/>
+  <permission id="palau.lims.permissions.Rollback" title="palau.lims: Transition: Rollback"/>
 
 </configure>

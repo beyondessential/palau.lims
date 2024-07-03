@@ -206,6 +206,7 @@ WORKFLOWS_TO_UPDATE = {
             "out_of_stock": {
                 "title": "Out of Stock",
                 "permissions_copy_from": "rejected",
+                "transitions": ("rollback", ),
             },
         },
         "transitions": {
@@ -219,7 +220,17 @@ WORKFLOWS_TO_UPDATE = {
                     "guard_expr":
                         "python:here.guard_handler('set_out_of_stock')",
                 }
-            }
+            },
+            "rollback": {
+                "title": "Rollback",
+                "new_state": "",
+                "action": "Rollback to unassigned",
+                "guard": {
+                    "guard_permissions": permissions.TransitionRollback,
+                    "guard_roles": "",
+                    "guard_expr": "python:here.guard_handler('rollback')",
+                }
+            },
         }
     },
 }

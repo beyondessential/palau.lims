@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Add rollback transition for analyses"
+      description="Adds rollback transition for out-of-stock analyses"
+      source="1014"
+      destination="1015"
+      handler=".v01_00_000.setup_rollback_transition"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Purge sample priorities"
       description="Purge sample priorities that do no longer exist"
       source="1013"
