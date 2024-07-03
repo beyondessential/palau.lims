@@ -224,7 +224,7 @@ WORKFLOWS_TO_UPDATE = {
             "rollback": {
                 "title": "Rollback",
                 "new_state": "",
-                "action": "Rollback to unassigned",
+                "action": "Rollback to previous status",
                 "guard": {
                     "guard_permissions": permissions.TransitionRollback,
                     "guard_roles": "",
