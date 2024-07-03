@@ -153,12 +153,7 @@ class DefaultReportView(SingleReportView):
         analyses = filter(is_reportable, analyses)
 
         def is_from_primary(analysis):
-            # TODO Remove the filtering of analyses from partitions. This has
-            #  been commented to prevent inconsistencies with the analysis
-            #  results statistics report. See
-            #  https://github.com/beyondessential/palau.lims/pull/136
-            # return analysis.getRequestUID() == sample_uid
-            return True
+            return analysis.getRequestUID() == sample_uid
 
         if not parts:
             # Remove analyses from partitions
