@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #179 Add Rollback transition for analyses in out-of-stock status
 - #178 Add script to cancel dispatched samples
 - #168 Partition sample results showing twice on final report
 - #172 Properly handle pagination when retrieving results from Tamanu
