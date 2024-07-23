@@ -8,7 +8,6 @@ from AccessControl import ClassSecurityInfo
 from plone.autoform.interfaces import IFormFieldProvider
 from plone.supermodel import model
 from palau.lims import messageFactory as _
-from palau.lims.behaviors import get_behavior_schema
 from Products.CMFCore import permissions
 from senaite.core.interfaces import ISampleContainer
 from zope import schema
@@ -39,44 +38,25 @@ class ExtendedSampleContainer(object):
 
     def __init__(self, context):
         self.context = context
-        self._schema = None
-
-    @property
-    def schema(self):
-        """Return the schema provided by the underlying behavior
-        """
-        if self._schema is None:
-            behavior = IExtendedSampleContainerBehavior
-            behavior_schema = get_behavior_schema(self.context, behavior)
-            if not behavior_schema:
-                raise TypeError("Not a valid context")
-            self._schema = behavior_schema
-        return self._schema
-
-    @security.private
-    def accessor(self, fieldname):
-        """Return the field accessor for the fieldname
-        """
-        if fieldname not in self.schema:
-            return None
-        return self.schema[fieldname].get
-
-    @security.private
-    def mutator(self, fieldname):
-        """Return the field mutator for the fieldname
-        """
-        if fieldname not in self.schema:
-            return None
-        return self.schema[fieldname].set
 
     @security.protected(permissions.View)
     def getWeight(self):
-        accessor = self.accessor("weight")
+        accessor = self.context.accessor("weight")
         return accessor(self.context)
 
     @security.protected(permissions.ModifyPortalContent)
     def setWeight(self, value):
-        mutator = self.mutator("weight")
+        mutator = self.context.mutator("weight")
         mutator(self.context, value)
 
     weight = property(getWeight, setWeight)
+
+
+def getWeight(self):
+    behavior = IExtendedSampleContainerBehavior(self)
+    return behavior.getWeight()
+
+
+def setWeight(self, value):
+    behavior = IExtendedSampleContainerBehavior(self)
+    behavior.setWeight(value)

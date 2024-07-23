@@ -1,5 +1,5 @@
 ### Please use this command to compile this file into the proper folder:
-coffee --no-header -w -o ../ -c sampleview_layout.coffee
+coffee --no-header -w -o ../ -c sampletype_container.coffee
 ###
 
 ###
@@ -21,7 +21,7 @@ class SampleTypeContainerController
     @debug "load"
 
     @sample_type_selector = "div.uidreferencefield textarea[name^='SampleType']"
-    @template_selector = "input[id^='Template']"
+    @template_selector = "div.uidreferencefield textarea[name^='Template']"
     @bottle_weights_selector = "input[id^='Bottles-'][id*='-Weight-']"
     @bottle_containers_selector = "input[id^='Bottles-'][id*='-Container-']"
 
@@ -60,7 +60,7 @@ class SampleTypeContainerController
   bind_event_handler: =>
     @debug "bind_event_handler"
     $("body").on "SampleType:after_change", @sample_type_selector, @on_sample_type_selected
-    $("body").on "selected", @template_selector, @on_template_selected
+    $("body").on "select", @template_selector, @on_template_selected
     $("body").on "blur", @bottle_containers_selector, @on_bottle_container_blur
     $("body").on "change", @bottle_weights_selector, @on_bottle_weight_change
 
@@ -88,7 +88,7 @@ class SampleTypeContainerController
     idx = @get_sample_index el
 
     # UID of the Sample Template selected
-    uid = $("##{ el.id }").attr "uid"
+    uid = el.value
     if not uid
       # Do nothing. Rely on sample type value instead
       return
@@ -97,8 +97,11 @@ class SampleTypeContainerController
     @fetch uid, []
     .done (data) ->
       if data
+        # manually assign the sample type uid to SampleType field
+        field_id = "SampleType-#{ idx }"
+        sample_type_uid = data["sampletype_uid"]
+        window.senaite.core.widgets[field_id].set_values([sample_type_uid])
         # Update the sample container
-        sample_type_uid = data["SampleType_uid"]
         @update_container idx, sample_type_uid
 
   ###

@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #187 Fix no bottles are displayed for selection in bottles widget
 - #186 Do not notify back tamanu with diagnostic report on cancel
 - #179 Add Rollback transition for analyses in out-of-stock status
 - #178 Add script to cancel dispatched samples
