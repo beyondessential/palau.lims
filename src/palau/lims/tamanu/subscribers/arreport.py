@@ -17,7 +17,6 @@ SAMPLE_STATUSES = (
     ("published", "final"),
     ("invalid", "entered-in-error"),
     ("rejected", "cancelled"),
-    ("cancelled", "cancelled"),
 )
 
 ANALYSIS_STATUSES = (
