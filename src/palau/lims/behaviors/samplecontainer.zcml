@@ -1,0 +1,26 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:monkey="http://namespaces.plone.org/monkey">
+
+  <plone:behavior
+      name="palau.lims.behavior.samplecontainer"
+      title="ExtendedSampleContainer"
+      description="Extends SampleContainer with additional fields"
+      provides=".samplecontainer.IExtendedSampleContainerBehavior"
+      factory=".samplecontainer.ExtendedSampleContainer"
+      for="senaite.core.interfaces.ISampleContainer" />
+
+  <monkey:patch
+      class="senaite.core.content.samplecontainer.SampleContainer"
+      original="getWeight"
+      ignoreOriginal="True"
+      replacement=".samplecontainer.getWeight"/>
+
+  <monkey:patch
+      class="senaite.core.content.samplecontainer.SampleContainer"
+      original="setWeight"
+      ignoreOriginal="True"
+      replacement=".samplecontainer.setWeight"/>
+
+</configure>

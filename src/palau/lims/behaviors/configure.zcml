@@ -6,14 +6,7 @@
 
   <!-- includes -->
   <include file="containertype.zcml"/>
-
-  <plone:behavior
-      name="palau.lims.behavior.samplecontainer"
-      title="ExtendedSampleContainer"
-      description="Extends SampleContainer with additional fields"
-      provides=".samplecontainer.IExtendedSampleContainerBehavior"
-      factory=".samplecontainer.ExtendedSampleContainer"
-      for="senaite.core.interfaces.ISampleContainer" />
+  <include file="samplecontainer.zcml"/>
 
   <plone:behavior
       name="palau.lims.behavior.sampletemplate"

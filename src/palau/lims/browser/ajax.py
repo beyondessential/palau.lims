@@ -7,7 +7,6 @@
 import six
 from bika.lims import api
 from bika.lims.decorators import returns_json
-from palau.lims.utils import get_field_value
 from Products.Five.browser import BrowserView
 from senaite.core.api import measure as mapi
 from senaite.core.catalog import SETUP_CATALOG
@@ -74,7 +73,7 @@ class Bottles(BrowserView):
         }
 
     def get_item_info(self, obj):
-        weight = get_field_value(obj, "weight") or 0
+        weight = obj.getWeight() or 0
         if mapi.is_weight(weight):
             weight = mapi.get_quantity(weight, "g")
 
