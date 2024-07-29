@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #191 Display invalidated sample and results in results report
 - #190 Total number of each analysis performed
 - #187 Fix no bottles are displayed for selection in bottles widget
 - #186 Do not notify back tamanu with diagnostic report on cancel

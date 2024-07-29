@@ -386,8 +386,18 @@
                       repeat="sample samples">
 
           <h3 class="sample_ancestry_id"
-              tal:condition="python: len(samples) > 1"
-              tal:content="sample/id"/>
+              tal:condition="python: len(samples) > 1">
+            <span tal:content="sample/id"></span>
+
+            <tal:invalid condition="sample/isInvalid">
+              · <span i18n:translate="">Invalidated</span>
+            </tal:invalid>
+
+            <tal:retest condition="sample/getRawInvalidated">
+              · <span i18n:translate="">Amended results</span>
+            </tal:retest>
+
+          </h3>
 
           <!-- Analysis Category -->
           <tal:categories define="analyses_by_category python:view.get_analyses_by_category(sample)"

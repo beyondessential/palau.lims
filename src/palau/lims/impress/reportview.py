@@ -181,6 +181,11 @@ class DefaultReportView(SingleReportView):
         # Reverse them so the first primary is the oldest
         samples = list(reversed(samples))
 
+        # If a retest, append the original
+        invalidated = model.getInvalidated()
+        if invalidated:
+            samples.append(invalidated)
+
         # Extend with current
         samples.append(model)
 
