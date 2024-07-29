@@ -1,0 +1,13 @@
+<tal:control i18n:domain="palau.lims">
+
+  <!-- Department -->
+  <label for="year" class="field mr-2" i18n:translate="">Department</label>
+  <select name="department" class="form-control form-control-sm mr-2">
+    <tal:options repeat="department python:view.get_departments()">
+      <option tal:attributes="value department/uid"
+              tal:content="department/title">
+      </option>
+    </tal:options>
+  </select>
+
+</tal:control>
