@@ -7,8 +7,21 @@
 
   <form method="post">
 
-    <!-- Year control -->
-    <tal:year replace="structure python:view.year_control()"/>
+    <p i18n:translate="">
+      Number of analyses for a given department from samples received within a
+      year, grouped by month. Only analyses in any of the following statuses
+      are considered: 'To be verified', 'Verified' or 'Published'
+    </p>
+
+    <div class="form-group form-inline">
+
+      <!-- Year control -->
+      <tal:year replace="structure python:view.year_control()"/>
+
+      <!-- Department control -->
+      <tal:department replace="structure python:view.department_control()"/>
+
+    </div>
 
     <!-- Submit button -->
     <input tabindex=""

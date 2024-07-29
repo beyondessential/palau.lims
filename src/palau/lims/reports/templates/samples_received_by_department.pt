@@ -1,5 +1,5 @@
 <tal:r i18n:domain="palau.lims"
-  define="report_id string:samples_received_by_department">
+       define="report_id string:samples_received_by_department">
 
   <h2 i18n:translate="">
     1.2 Number of samples received and stratified by department
@@ -7,8 +7,12 @@
 
   <form method="post">
 
-    <!-- Date control -->
-    <tal:date replace="structure python:view.date_control()"/>
+    <div class="form-group form-inline">
+
+      <!-- Date control -->
+      <tal:date replace="structure python:view.date_control()"/>
+
+    </div>
 
     <!-- Submit button -->
     <input tabindex=""

@@ -10,11 +10,14 @@ from plone.memoize import view
 from palau.lims.config import TARGET_PATIENTS
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as PT
+from senaite.app.supermodel import SuperModel
 from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.core.catalog import SETUP_CATALOG
 
 YEAR_CONTROL = "controls/year.pt"
 DATE_CONTROL = "controls/date.pt"
 TARGET_PATIENT_CONTROL = "controls/target_patient.pt"
+DEPARTMENT_CONTROL = "controls/department.pt"
 
 
 class StatisticReportsView(BrowserView):
@@ -49,6 +52,11 @@ class StatisticReportsView(BrowserView):
         """
         return PT(TARGET_PATIENT_CONTROL)(self)
 
+    def department_control(self):
+        """Returns the control for department selection
+        """
+        return PT(DEPARTMENT_CONTROL)(self)
+
     @view.memoize
     def get_years(self):
         """Returns the list of years since the first sample was created
@@ -67,6 +75,18 @@ class StatisticReportsView(BrowserView):
 
         current = datetime.now().year
         return range(since, current+1)
+
+    @view.memoize
+    def get_departments(self):
+        """Returns the list of available departments
+        """
+        query = {
+            "portal_type": "Department",
+            "sort_on": "sortable_title",
+            "sort_order": "ascending",
+        }
+        brains = api.search(query, SETUP_CATALOG)
+        return [SuperModel(brain) for brain in brains]
 
     def get_target_patients(self):
         """Returns the list target patient
