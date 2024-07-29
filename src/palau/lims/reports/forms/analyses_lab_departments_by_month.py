@@ -30,9 +30,7 @@ class AnalysesLabDepartmentsByMonth(CSVReport):
         department_uid = self.request.form.get("department")
         brains = get_analyses_by_year(year, review_state=statuses,
                                       department_uid=department_uid,
-                                      getPointOfCapture=poc,
-                                      sort_on="sortable_title",
-                                      sort_order="ascending")
+                                      getPointOfCapture=poc)
 
         # add the first two rows (header)
         department = api.get_object_by_uid(department_uid, default=None)
@@ -46,7 +44,13 @@ class AnalysesLabDepartmentsByMonth(CSVReport):
         # group the analyses brains by title
         analyses_by_title = group_by(brains, "Title")
 
-        for title, analyses in analyses_by_title.items():
+        # get titles and sort them
+        titles = sorted(analyses_by_title.keys())
+
+        for title in titles:
+
+            # get the analyses for the test with the given title
+            analyses = analyses_by_title[title]
 
             # group and count the analyses by reception date
             counts = count_by(analyses, "getDateReceived")
