@@ -20,16 +20,24 @@ class AnalysesLabDepartmentsByMonth(CSVReport):
 
     def process_form(self):
         # verified and published samples that were received within a given year
-        statuses = ["verified", "published"]
+        statuses = ["to_be_verified", "verified", "published"]
         year = int(self.request.form.get("year"))
-        brains = get_analyses_by_year(year, review_state=statuses)
+        department_uid = self.request.form.get("department")
+        brains = get_analyses_by_year(year, review_state=statuses,
+                                      department_uid=department_uid)
 
         # add the first row (header)
         months = [MONTHS[num] for num in range(1, 13)]
         rows = [[_("Lab Department")] + months + [_("Total")]]
 
+
+
+        # search the  to those from the selected department only
+        analyses = analyses_by_lab_department.get(department_uid)
+
         # group the analyses brains by department
         analyses_by_lab_department = group_by(brains, "getDepartmentTitle")
+
 
         # sort departments alphabetically ascending
         lab_departments = sorted(analyses_by_lab_department.keys())
