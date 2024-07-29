@@ -22,10 +22,15 @@ class AnalysesLabDepartmentsByMonth(CSVReport):
     def process_form(self):
         # verified and published samples that were received within a given year
         statuses = ["to_be_verified", "verified", "published"]
+        # skip AST-like analyses
+        poc = ["lab", "field"]
+        # search by requested year
         year = int(self.request.form.get("year"))
+        # search by requested department
         department_uid = self.request.form.get("department")
         brains = get_analyses_by_year(year, review_state=statuses,
                                       department_uid=department_uid,
+                                      getPointOfCapture=poc,
                                       sort_on="sortable_title",
                                       sort_order="ascending")
 
