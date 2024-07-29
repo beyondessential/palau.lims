@@ -31,7 +31,7 @@ class AnalysesLabDepartmentsByMonth(CSVReport):
 
         # add the first two rows (header)
         department = api.get_object_by_uid(department_uid, default=None)
-        department_name = api.get_title(department)
+        department_name = api.get_title(department) if department else ""
         months = [MONTHS[num] for num in range(1, 13)]
         rows = [[department_name] + months + [_("Total")]]
 
