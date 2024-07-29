@@ -1,5 +1,5 @@
 <tal:r i18n:domain="palau.lims"
-  define="report_id string:samples_rejection_rate_by_specimen_type">
+       define="report_id string:samples_rejection_rate_by_specimen_type">
 
   <h2 i18n:translate="">
     5.2 Sample rejection rate by specimen type
@@ -7,8 +7,12 @@
 
   <form method="post">
 
-    <!-- Year control -->
-    <tal:year replace="structure python:view.year_control()"/>
+    <div class="form-group form-inline">
+
+      <!-- Year control -->
+      <tal:year replace="structure python:view.year_control()"/>
+
+    </div>
 
     <!-- Submit button -->
     <input tabindex=""

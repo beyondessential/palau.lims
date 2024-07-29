@@ -18,6 +18,7 @@ from palau.lims.setuphandlers import setup_workflows
 from palau.lims.workflow.analysis.events import after_set_out_of_stock
 from Products.Archetypes.BaseUnit import BaseUnit
 from Products.CMFCore.permissions import ModifyPortalContent
+from senaite.core.api.catalog import del_column
 from senaite.core.api.catalog import reindex_index
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
@@ -393,3 +394,19 @@ def setup_rollback_transition(tool):
         obj._p_deactivate()
 
     logger.info("Setup rollback transition ...")
+
+
+def setup_department_uid_index(tool):
+    """Setup the catalog index department_uid in analyses catalog
+    """
+    logger.info("Setup department_uid index in analysis catalog ...")
+    portal = tool.aq_inner.aq_parent
+
+    # remove the getDepartmentTitle from analysis catalog
+    cat = api.get_tool(ANALYSIS_CATALOG)
+    del_column(cat, "getDepartmentTitle")
+
+    # setup catalogs
+    setup_catalogs(portal)
+
+    logger.info("Setup department_uid index in analysis catalog [DONE]")

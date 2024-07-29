@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Setup index department_uid in analyses catalog"
+      description="Setup index department_uid in analyses catalog"
+      source="1015"
+      destination="1016"
+      handler=".v01_00_000.setup_department_uid_index"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Add rollback transition for analyses"
       description="Adds rollback transition for out-of-stock analyses"
       source="1014"

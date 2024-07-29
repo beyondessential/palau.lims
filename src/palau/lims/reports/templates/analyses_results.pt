@@ -11,8 +11,12 @@
       considered.
     </p>
 
-    <!-- Date control -->
-    <tal:date replace="structure python:view.date_control()"/>
+    <div class="form-group form-inline">
+
+      <!-- Date control -->
+      <tal:date replace="structure python:view.date_control()"/>
+
+    </div>
 
     <!-- Submit button -->
     <input tabindex=""

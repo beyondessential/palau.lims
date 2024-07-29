@@ -67,12 +67,12 @@ INDEXES = [
     (SAMPLE_CATALOG, "is_temporary_mrn", "", "BooleanIndex"),
     (SAMPLE_CATALOG, "medical_record_number", "", "KeywordIndex"),
     (ANALYSIS_CATALOG, "date_sampled", "", "DateIndex"),
+    (ANALYSIS_CATALOG, "department_uid", "", "FieldIndex"),
 ]
 
 # Tuples of (catalog, column_name)
 COLUMNS = [
     (SAMPLE_CATALOG, "isMedicalRecordTemporary"),
-    (ANALYSIS_CATALOG, "getDepartmentTitle"),
 ]
 
 # Skin layers that have priority over others, sorted from more to less priority
