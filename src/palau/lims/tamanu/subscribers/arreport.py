@@ -38,20 +38,30 @@ def on_object_created(instance, event):
         send_diagnostic_report(sample, instance)
 
 
-def send_diagnostic_report(sample, report):
+def send_diagnostic_report(sample, report, status=None):
     """Notifies Tamanu instance back for this sample and report
     """
+    if not status:
+        status = api.get_review_status(sample)
+        # handle the status to report back to Tamanu
+        # registered | partial | preliminary | final
+        status = dict(SAMPLE_STATUSES).get(status)
+        if not status:
+            # any of the supported status, do nothing
+            return
+
+    # notify about the invalidated if necessary. We can only have one object
+    # linked to a given tamanu resource because of the `tamanu_uid` index, for
+    # which we expect the system to always return a single result on searches
+    # Thus, we need to do this workaround here instead of directly copying
+    # the tamanu resource information to the retest on invalidation event
+    invalidated = sample.getInvalidated()
+    if invalidated:
+        send_diagnostic_report(invalidated, report, status=status)
+
     # get the tamanu session
     session = tapi.get_tamanu_session_for(sample)
     if not session:
-        return
-
-    # handle the status to report back to Tamanu
-    # registered | partial | preliminary | final
-    status = api.get_review_status(sample)
-    status = dict(SAMPLE_STATUSES).get(status)
-    if not status:
-        # any of the supported status, do nothing
         return
 
     # get or create the uuid of the report
@@ -66,12 +76,16 @@ def send_diagnostic_report(sample, report):
     meta = tapi.get_tamanu_storage(sample)
     data = meta.get("data") or {}
 
+    # modification date
+    modified = api.get_modification_date(sample)
+    if report:
+        created = api.get_creation_date(report)
+        modified = modified if modified > created else created
+    modified = dtime.to_iso_format(modified)
+
     # build the payload
     # TODO Add an adapter to build payloads for a given object (e.g ARReport)
     tamanu_uid = tapi.get_tamanu_uid(sample)
-    modified = api.get_modification_date(sample)
-    modified = dtime.to_iso_format(modified)
-
     payload = {
         # meta information about the DiagnosticReport (ARReport)
         "resourceType": "DiagnosticReport",
