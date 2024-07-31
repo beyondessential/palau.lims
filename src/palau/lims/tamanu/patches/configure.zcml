@@ -2,6 +2,9 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:monkey="http://namespaces.plone.org/monkey">
 
+  <!-- Package includes -->
+  <include package=".bika"/>
+
   <monkey:patch
       class="plone.dexterity.content.DexterityContent"
       original="tamanu_uid"
