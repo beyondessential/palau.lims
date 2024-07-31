@@ -16,6 +16,10 @@ SAMPLE_STATUSES = (
     ("verified", "preliminary"),
     ("published", "final"),
     ("invalid", "entered-in-error"),
+    # Tamanu is notified back with the rejection report (Attachment) instead of
+    # the results report (ARReport) on rejection.
+    # See patches.bika.utils.analysisrequest.do_rejection
+    # ("rejected", "cancelled"),
 )
 
 ANALYSIS_STATUSES = (
