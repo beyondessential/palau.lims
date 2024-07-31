@@ -36,7 +36,6 @@ def do_rejection(sample, notify=None):
     pdf_file = attachment.getAttachmentFile()
 
     # Notify Tamanu back about the rejection report
-    import pdb;pdb.set_trace()
     send_rejection_report(sample, attachment)
 
     # Do we need to send a notification email?
