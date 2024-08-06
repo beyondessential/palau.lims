@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #197 Report "partial" back to tamanu when not all results are submitted
 - #195 Notify Tamanu back with rejection report
 - #194 Notify with a DiagnosticReport back to Tamanu when publishing a retest
 - #191 Display invalidated sample and results in results report

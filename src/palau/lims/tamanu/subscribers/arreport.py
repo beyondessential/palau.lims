@@ -12,7 +12,8 @@ from senaite.core.api import dtime
 
 SAMPLE_STATUSES = (
     # mapping between sample status and tamanu statuses
-    ("to_be_verified", "partial"),
+    ("sample_received", "partial"),
+    ("to_be_verified", "preliminary"),
     ("verified", "preliminary"),
     ("published", "final"),
     ("invalid", "entered-in-error"),
@@ -47,7 +48,7 @@ def send_diagnostic_report(sample, report, status=None):
     if not status:
         status = api.get_review_status(sample)
         # handle the status to report back to Tamanu
-        # registered | partial | preliminary | final
+        # registered | partial | preliminary | final | entered-in-error
         status = dict(SAMPLE_STATUSES).get(status)
         if not status:
             # any of the supported status, do nothing
