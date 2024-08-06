@@ -47,6 +47,11 @@ def send_diagnostic_report(sample, report, status=None):
     """
     if not status:
         status = api.get_review_status(sample)
+        if status in ["sample_received"]:
+            # do not notify back unless a report was created
+            if not report:
+                return
+
         # handle the status to report back to Tamanu
         # registered | partial | preliminary | final | entered-in-error
         status = dict(SAMPLE_STATUSES).get(status)
