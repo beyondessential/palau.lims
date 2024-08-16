@@ -502,3 +502,68 @@ class DefaultReportView(SingleReportView):
         """Returns whether the analysis passed-in is out-of-stock
         """
         return api.get_review_status(analysis) == "out_of_stock"
+
+    def is_provisional(self, model):
+        """Returns whether the model (partitions included) is provisional
+        """
+        sample = api.get_object(model)
+        if sample.isInvalid():
+            return True
+
+        valid_statuses = ['verified', 'published']
+        status = api.get_review_status(sample)
+        if status not in valid_statuses:
+            return True
+
+        # find out partitions
+        partitions = sample.getDescendants(all_descendants=True)
+        for partition in partitions:
+            status = api.get_review_status(partition)
+            if status not in valid_statuses:
+                return True
+
+        return False
+
+    def get_verified_date(self, model):
+        """Returns the last verification date from the analyses and sample
+        """
+        # if the sample has not been verified yet, return None
+        last_verified = self.get_action_date(model, "verify")
+        if not last_verified:
+            return None
+
+        # take verification of sample and partitions into account
+        sample = api.get_object(model)
+        items = sample.getDescendants(all_descendants=True) or []
+
+        # take analyses (all them) into account as well
+        analyses = self.get_verified_analyses(sample) or []
+        items.extend(analyses)
+
+        # pick the latest verification date
+        for item in items:
+            verified = self.get_action_date(item, "verify")
+            if verified and verified > last_verified:
+                last_verified = verified
+
+        return last_verified
+
+    def get_submitted_date(self, model):
+        """Returns the last submitted date from the sample and partitions
+        """
+        # if the sample has not been verified yet, return None
+        last_submitted = self.get_action_date(model, "submit")
+        if not last_submitted:
+            return None
+
+        # take verification of sample and partitions into account
+        sample = api.get_object(model)
+        items = sample.getDescendants(all_descendants=True) or []
+
+        # pick the latest submit date
+        for item in items:
+            submitted = self.get_action_date(item, "submit")
+            if submitted and submitted > last_submitted:
+                last_submitted = submitted
+
+        return last_submitted

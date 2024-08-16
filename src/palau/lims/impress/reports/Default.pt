@@ -14,7 +14,8 @@
           page_height options/page_height|nothing;
           content_width options/content_width|nothing;
           content_height options/content_height|nothing;
-          primary model/PrimaryAnalysisRequest|nothing;">
+          primary model/PrimaryAnalysisRequest|nothing;
+          provisional python:view.is_provisional(model);">
 
   <!-- Documentation
   https://pagetemplates.readthedocs.io/en/latest/tal.html
@@ -285,7 +286,7 @@
         </tal:retestreport>
 
         <!-- Sample not yet verified or published -->
-        <div class="alert alert-info" tal:condition="model/is_provisional">
+        <div class="alert alert-info" tal:condition="provisional">
           <div i18n:translate="">Preliminary report</div>
         </div>
       </div>
@@ -663,10 +664,10 @@
   </tal:render>
 
   <!--  SIGNATURES -->
-  <tal:render condition="not:model/is_provisional">
+  <tal:render condition="not:provisional">
     <div class="row section-signatures no-gutters"
-         tal:define="submitted  python:view.get_action_date(model, 'submit');
-                     verified   python:view.get_action_date(model, 'verify');
+         tal:define="submitted  python:view.get_submitted_date(model);
+                     verified   python:view.get_verified_date(model);
                      submitters python:view.get_submitters_info(model);
                      verifiers  python:view.get_verifiers_info(model);">
       <div class="w-100">
