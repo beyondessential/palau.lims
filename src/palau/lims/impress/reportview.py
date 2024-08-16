@@ -191,7 +191,8 @@ class DefaultReportView(SingleReportView):
         samples.append(model)
 
         # Extend with partitions
-        parts = model.getDescendants(all_descendants=True)
+        sample = api.get_object(model)
+        parts = self.get_undergoing_partitions(sample)
         samples.extend(parts)
 
         return samples
@@ -431,7 +432,7 @@ class DefaultReportView(SingleReportView):
         sample = api.get_object(model)
 
         # get the verifiers and dates from partitions
-        partitions = sample.getDescendants(all_descendants=True)
+        partitions = self.get_undergoing_partitions(sample)
 
         # get the verifiers and dates from analyses
         analyses = self.get_verified_analyses(sample)
@@ -461,7 +462,7 @@ class DefaultReportView(SingleReportView):
         sample = api.get_object(model)
 
         # get the submitters and dates from partitions
-        partitions = sample.getDescendants(all_descendants=True)
+        partitions = self.get_undergoing_partitions(sample)
 
         # get the submitters and dates from analyses
         analyses = self.get_submitted_analyses(sample)
@@ -553,6 +554,17 @@ class DefaultReportView(SingleReportView):
         """
         return api.get_review_status(analysis) == "out_of_stock"
 
+    def get_undergoing_partitions(self, sample):
+        """Returns the partitions of the sample that are undergoing
+        """
+        partitions = []
+        skip = ["cancelled", "invalid", "rejected", "stored", "dispatched"]
+        for partition in sample.getDescendants(all_descendants=True):
+            if api.get_review_status(partition) in skip:
+                continue
+            partitions.append(partition)
+        return partitions
+
     @view.memoize
     def is_provisional(self, model):
         """Returns whether the model (partitions included) is provisional
@@ -567,8 +579,7 @@ class DefaultReportView(SingleReportView):
             return True
 
         # find out partitions
-        partitions = sample.getDescendants(all_descendants=True)
-        for partition in partitions:
+        for partition in self.get_undergoing_partitions(sample):
             status = api.get_review_status(partition)
             if status not in valid_statuses:
                 return True

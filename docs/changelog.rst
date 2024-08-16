@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #204 Do not consider invalid partitions on publish
 - #203 Display users last verification and last submission dates
 - #197 Report "partial" back to tamanu when not all results are submitted
 - #195 Notify Tamanu back with rejection report
