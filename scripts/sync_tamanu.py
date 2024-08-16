@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import os
 import re
+import sys
 from datetime import timedelta
 
 import transaction
@@ -23,6 +25,7 @@ from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.catalog import CLIENT_CATALOG
 from senaite.core.catalog import CONTACT_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
+from senaite.core.decorators import retriable
 from senaite.patient import api as papi
 
 __doc__ = """
@@ -41,6 +44,10 @@ parser.add_argument(
 parser.add_argument(
     "-tu", "--tamanu_user",
     help="User and password in the <username>:<password> form"
+)
+parser.add_argument(
+    "-su", "--senaite_user",
+    help="SENAITE user"
 )
 parser.add_argument(
     "-r", "--resource",
@@ -87,6 +94,19 @@ PRIORITIES = (
 DHM_REGEX = r'^((?P<d>(\d+))d){0,1}\s*' \
             r'((?P<h>(\d+))h){0,1}\s*' \
             r'((?P<m>(\d+))m){0,1}\s*'
+
+
+def error(message, code=1):
+    """Exit with error
+    """
+    print("ERROR: %s" % message)
+    sys.exit(code)
+
+
+def conflict_error(*args, **kwargs):
+    """Exits with a conflict error
+    """
+    error("ConflictError: exhausted retries", code=os.EX_SOFTWARE)
 
 
 def get_client(service_request):
@@ -361,32 +381,41 @@ def sync_patients(session, since):
         if num and num % 100 == 0:
             logger.info("Processing patients {}/{}".format(num, total))
 
-        mrn = resource.get_mrn() or "unk"
-        logger.info("Processing Patient '{}' ({})".format(mrn, resource.UID))
+        # create or update the patient counterpart at SENAITE
+        sync_patient(resource)
 
-        # get/create the patient
-        patient = get_patient(resource)
 
-        # update the patient
-        values = resource.to_object_info()
-        api.edit(patient, check_permissions=False, **values)
+@retriable(sync=True)
+def sync_patient(resource):
+    mrn = resource.get_mrn() or "unk"
+    logger.info("Processing Patient '{}' ({})".format(mrn, resource.UID))
 
-        # assign ownership to 'tamanu' user
-        creator = patient.Creator()
-        if creator != TAMANU_ID:
-            sapi.revoke_local_roles_for(patient, roles=["Owner"], user=creator)
+    # get/create the patient
+    patient = get_patient(resource)
 
-        # grant 'Owner' role to the user who is modifying the object
-        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_ID)
+    # update the patient
+    values = resource.to_object_info()
+    api.edit(patient, check_permissions=False, **values)
 
-        # don't allow the edition, but to tamanu (Owner) only
-        sapi.manage_permission_for(patient, ModifyPortalContent, ["Owner"])
+    # assign ownership to 'tamanu' user
+    creator = patient.Creator()
+    if creator != TAMANU_ID:
+        sapi.revoke_local_roles_for(patient, roles=["Owner"], user=creator)
 
-        # re-index object security indexes (e.g. allowedRolesAndUsers)
-        patient.reindexObjectSecurity()
+    # grant 'Owner' role to the user who is modifying the object
+    sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_ID)
 
-        # flush the object from memory
-        patient._p_deactivate()
+    # don't allow the edition, but to tamanu (Owner) only
+    sapi.manage_permission_for(patient, ModifyPortalContent, ["Owner"])
+
+    # re-index object security indexes (e.g. allowedRolesAndUsers)
+    patient.reindexObjectSecurity()
+
+    # flush the object from memory
+    patient._p_deactivate()
+
+    # commit transaction
+    transaction.commit()
 
 
 def sync_service_requests(session, since):
@@ -409,137 +438,146 @@ def sync_service_requests(session, since):
         if num and num % 10 == 0:
             logger.info("Processing service requests %s/%s" % (num, total))
 
-        # get the Tamanu's test ID for this ServiceRequest
-        tid = sr.getLabTestID()
-        hash = "%s %s" % (tid, sr.UID)
+        # create or update the service request counterpart at SENAITE
+        sync_service_request(sr)
 
-        # skip if the category is not supported
-        category = sr.get("category")
-        codes = tapi.get_codes(category, SNOMED_CODING_SYSTEM)
-        if SNOMED_REQUEST_CATEGORY not in codes:
-            logger.info("Skip %s Category is not supported" % hash)
-            continue
 
-        # get SampleType, Site and DateSampled via FHIR's specimen
-        specimen = sr.getSpecimen()
-        if not specimen:
-            logger.info("Skip %s. Specimen is missing" % hash)
-            continue
+@retriable(sync=True, on_retry_exhausted=conflict_error)
+def sync_service_request(sr):
+    # get the Tamanu's test ID for this ServiceRequest
+    tid = sr.getLabTestID()
+    hash = "%s %s" % (tid, sr.UID)
 
-        # get the sample type
-        sample_type = get_sample_type(sr)
-        if not sample_type:
-            logger.info("Skip %s. Sample type is missing" % hash)
-            continue
+    # skip if the category is not supported
+    category = sr.get("category")
+    codes = tapi.get_codes(category, SNOMED_CODING_SYSTEM)
+    if SNOMED_REQUEST_CATEGORY not in codes:
+        logger.info("Skip %s Category is not supported" % hash)
+        return
 
-        # get the sample for this ServiceRequest, if any
-        sample = sr.getObject()
+    # get SampleType, Site and DateSampled via FHIR's specimen
+    specimen = sr.getSpecimen()
+    if not specimen:
+        logger.info("Skip %s. Specimen is missing" % hash)
+        return
 
-        # skip if sample does not exist yet and no valid status
-        if not sample and sr.status in SKIP_STATUSES:
-            logger.info("Skip %s. Status is not valid: %s" % (hash, sr.status))
-            continue
+    # get the sample type
+    sample_type = get_sample_type(sr)
+    if not sample_type:
+        logger.info("Skip %s. Sample type is missing" % hash)
+        return
 
-        # skip if sample is up-to-date
-        tamanu_modified = tapi.get_tamanu_modified(sr)
-        sample_modified = tapi.get_tamanu_modified(sample)
-        if sample and tamanu_modified <= sample_modified:
-            logger.info("Skip %s. Sample is up-to-date: %r" % (hash, sample))
-            continue
+    # get the sample for this ServiceRequest, if any
+    sample = sr.getObject()
 
-        # skip if the sample cannot be edited
-        if sample and api.get_review_status(sample) in SAMPLE_FINAL_STATUSES:
-            msg = "Skip %s. Sample cannot be edited: %r" % (hash, sample)
-            logger.info(msg)
-            continue
+    # skip if sample does not exist yet and no valid status
+    if not sample and sr.status in SKIP_STATUSES:
+        logger.info("Skip %s. Status is not valid: %s" % (hash, sr.status))
+        return
 
-        # get the specification if only assigned to this sample type
-        specs = get_specifications(sample_type)
-        spec = api.get_object(specs[0]) if len(specs) == 1 else None
+    # skip if sample is up-to-date
+    tamanu_modified = tapi.get_tamanu_modified(sr)
+    sample_modified = tapi.get_tamanu_modified(sample)
+    if sample and tamanu_modified <= sample_modified:
+        logger.info("Skip %s. Sample is up-to-date: %r" % (hash, sample))
+        return
 
-        # get the sample point
-        sample_point = get_sample_point(sr)
-        sample_point_uid = api.get_uid(sample_point) if sample_point else None
+    # skip if the sample cannot be edited
+    if sample and api.get_review_status(sample) in SAMPLE_FINAL_STATUSES:
+        msg = "Skip %s. Sample cannot be edited: %r" % (hash, sample)
+        logger.info(msg)
+        return
 
-        # date sampled
-        date_sampled = specimen.get_date_sampled()
+    # get the specification if only assigned to this sample type
+    specs = get_specifications(sample_type)
+    spec = api.get_object(specs[0]) if len(specs) == 1 else None
 
-        # get the priority
-        priority = sr.get("priority")
-        priority = dict(PRIORITIES).get(priority, "5")
+    # get the sample point
+    sample_point = get_sample_point(sr)
+    sample_point_uid = api.get_uid(sample_point) if sample_point else None
 
-        # get the remarks (notes)
-        remarks = get_remarks(sr)
+    # date sampled
+    date_sampled = specimen.get_date_sampled()
 
-        # get or create the client via FHIR's encounter/serviceProvider
-        client = get_client(sr)
+    # get the priority
+    priority = sr.get("priority")
+    priority = dict(PRIORITIES).get(priority, "5")
 
-        # get or create the contact via FHIR's requester
-        contact = get_contact(sr)
+    # get the remarks (notes)
+    remarks = get_remarks(sr)
 
-        # get or create the patient via FHIR's subject
-        patient_resource = sr.getPatientResource()
-        patient = get_patient(patient_resource)
-        patient_mrn = patient.getMRN()
-        patient_dob = patient.getBirthdate()
-        patient_sex = patient.getSex()
-        patient_name = {
-            "firstname": patient.getFirstname(),
-            "middlename": patient.getMiddlename(),
-            "lastname": patient.getLastname(),
-        }
+    # get or create the client via FHIR's encounter/serviceProvider
+    client = get_client(sr)
 
-        # get profiles
-        profiles = get_profiles(sr)
-        profiles = map(api.get_uid, profiles)
+    # get or create the contact via FHIR's requester
+    contact = get_contact(sr)
 
-        # get the services
-        services = get_services(sr)
+    # get or create the patient via FHIR's subject
+    patient_resource = sr.getPatientResource()
+    patient = get_patient(patient_resource)
+    patient_mrn = patient.getMRN()
+    patient_dob = patient.getBirthdate()
+    patient_sex = patient.getSex()
+    patient_name = {
+        "firstname": patient.getFirstname(),
+        "middlename": patient.getMiddlename(),
+        "lastname": patient.getLastname(),
+    }
 
+    # get profiles
+    profiles = get_profiles(sr)
+    profiles = map(api.get_uid, profiles)
+
+    # get the services
+    services = get_services(sr)
+
+    # create the sample
+    values = {
+        "Client": client,
+        "Contact": contact,
+        "SampleType": sample_type,
+        "SamplePoint": sample_point,
+        "Site": sample_point_uid,
+        "DateSampled": date_sampled,
+        "Profiles": profiles,
+        "MedicalRecordNumber": {"value": patient_mrn},
+        "PatientFullName": patient_name,
+        "DateOfBirth": patient_dob,
+        "Sex": patient_sex,
+        "Priority": priority,
+        "ClientSampleID": tid,
+        "Remarks": remarks,
+        "Specification": spec,
+        #"Ward": api.get_uid(ward),
+        #"ClinicalInformation": "",
+        #"DateOfAdmission": doa,
+        #"CurrentAntibiotics": antibiotics,
+        #"Volume": volume,
+        # TODO WardDepartment: sr.get("encounter").get("location")?
+        #"WardDepartment": department,
+        #"Location": dict(LOCATIONS).get("location", ""),
+    }
+    request = api.get_request() or api.get_test_request()
+    if sample:
+        # edit sample
+        edit_sample(sample, **values)
+        logger.info("Edited: %s %r" % (hash, sample))
+    else:
         # create the sample
-        values = {
-            "Client": client,
-            "Contact": contact,
-            "SampleType": sample_type,
-            "SamplePoint": sample_point,
-            "Site": sample_point_uid,
-            "DateSampled": date_sampled,
-            "Profiles": profiles,
-            "MedicalRecordNumber": {"value": patient_mrn},
-            "PatientFullName": patient_name,
-            "DateOfBirth": patient_dob,
-            "Sex": patient_sex,
-            "Priority": priority,
-            "ClientSampleID": tid,
-            "Remarks": remarks,
-            "Specification": spec,
-            #"Ward": api.get_uid(ward),
-            #"ClinicalInformation": "",
-            #"DateOfAdmission": doa,
-            #"CurrentAntibiotics": antibiotics,
-            #"Volume": volume,
-            # TODO WardDepartment: sr.get("encounter").get("location")?
-            #"WardDepartment": department,
-            #"Location": dict(LOCATIONS).get("location", ""),
-        }
-        request = api.get_request() or api.get_test_request()
-        if sample:
-            # edit sample
-            edit_sample(sample, **values)
-            logger.info("Edited: %s %r" % (hash, sample))
-        else:
-            # create the sample
-            sample = create_sample(client, request, values, services)
-            logger.info("Created: %s %r" % (hash, sample))
+        sample = create_sample(client, request, values, services)
+        logger.info("Created: %s %r" % (hash, sample))
 
-        # link the tamanu resource to this sample
-        tapi.link_tamanu_resource(sample, sr)
+    # link the tamanu resource to this sample
+    tapi.link_tamanu_resource(sample, sr)
 
-        # do the transition
-        action = dict(TRANSITIONS).get(sr.status)
-        if action:
-            doActionFor(sample, action)
-            logger.info("Action (%s): %s %r" % (action, hash, sample))
+    # do the transition
+    action = dict(TRANSITIONS).get(sr.status)
+    if action:
+        doActionFor(sample, action)
+        logger.info("Action (%s): %s %r" % (action, hash, sample))
+
+    # commit transaction
+    transaction.commit()
 
 
 def edit_sample(sample, **kwargs):
@@ -558,13 +596,6 @@ def edit_sample(sample, **kwargs):
 
     # edit the sample
     api.edit(sample, **kwargs)
-
-
-def error(message):
-    """Exit with error
-    """
-    print("ERROR: %s" % message)
-    exit(1)
 
 
 def main(app):
@@ -602,7 +633,8 @@ def main(app):
         error("Resource type is missing or not valid")
 
     # Setup environment
-    setup_script_environment(app, stream_out=False, username=USERNAME)
+    username = args.senaite_user or USERNAME
+    setup_script_environment(app, stream_out=False, username=username)
 
     # Start a session with Tamanu server
     session = TamanuSession(host)
