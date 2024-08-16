@@ -187,8 +187,11 @@ class DefaultReportView(SingleReportView):
         if invalidated:
             samples.append(invalidated)
 
-        # Extend with current
-        samples.append(model)
+        # extend with current only if it contains "valid" tests
+        analyses = model.getAnalyses(full_objects=True)
+        analyses = filter(is_reportable, analyses)
+        if analyses:
+            samples.append(model)
 
         # Extend with partitions
         sample = api.get_object(model)
