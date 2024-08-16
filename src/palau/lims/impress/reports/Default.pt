@@ -666,9 +666,7 @@
   <!--  SIGNATURES -->
   <tal:render condition="not:provisional">
     <div class="row section-signatures no-gutters"
-         tal:define="submitted  python:view.get_submitted_date(model);
-                     verified   python:view.get_verified_date(model);
-                     submitters python:view.get_submitters_info(model);
+         tal:define="submitters python:view.get_submitters_info(model);
                      verifiers  python:view.get_verifiers_info(model);">
       <div class="w-100">
 
@@ -679,7 +677,7 @@
               <div tal:repeat="member submitters" class="pb-2">
                 <h4 i18n:translate="">Tested
                   <span i18n:name="submitted_datetime"
-                        tal:define="verified member/submitted"
+                        tal:define="submitted member/submitted"
                         tal:replace="python:view.long_date(submitted)"></span>
                   by
                 </h4>
