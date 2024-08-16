@@ -673,7 +673,7 @@
         <table class="table table-sm table-condensed">
           <tr>
             <!-- Tested by -->
-            <td tal:condition="submitted" class="border-0 align-top">
+            <td class="border-0 align-top">
               <div tal:repeat="member submitters" class="pb-2">
                 <h4 i18n:translate="">Tested
                   <span i18n:name="submitted_datetime"
@@ -693,7 +693,7 @@
             </td>
 
             <!-- Verified by -->
-            <td tal:condition="verified" class="border-0 align-top">
+            <td class="border-0 align-top">
 
               <div tal:repeat="member verifiers" class="pb-2">
                 <h4 i18n:translate="">Verified
