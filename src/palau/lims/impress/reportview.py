@@ -554,14 +554,23 @@ class DefaultReportView(SingleReportView):
         """
         return api.get_review_status(analysis) == "out_of_stock"
 
+    @view.memoize
     def get_undergoing_partitions(self, sample):
         """Returns the partitions of the sample that are undergoing
         """
         partitions = []
         skip = ["cancelled", "invalid", "rejected", "stored", "dispatched"]
         for partition in sample.getDescendants(all_descendants=True):
+            # skip partitions that are not in a valid status
             if api.get_review_status(partition) in skip:
                 continue
+
+            # do not include partitions without "valid" tests
+            analyses = partition.getAnalyses(full_objects=True)
+            analyses = filter(is_reportable, analyses)
+            if not analyses:
+                continue
+
             partitions.append(partition)
         return partitions
 
