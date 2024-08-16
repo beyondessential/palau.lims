@@ -674,7 +674,7 @@
           <tr>
             <!-- Tested by -->
             <td class="border-0 align-top">
-              <div tal:repeat="member submitters" class="pb-2">
+              <div tal:repeat="member submitters" class="pb-3">
                 <h4 i18n:translate="">Tested
                   <span i18n:name="submitted_datetime"
                         tal:define="submitted member/submitted"
@@ -695,7 +695,7 @@
             <!-- Verified by -->
             <td class="border-0 align-top">
 
-              <div tal:repeat="member verifiers" class="pb-2">
+              <div tal:repeat="member verifiers" class="pb-3">
                 <h4 i18n:translate="">Verified
                   <span i18n:name="verified_datetime"
                         tal:define="verified member/verified"
