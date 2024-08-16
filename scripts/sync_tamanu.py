@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import os
 import re
+import sys
 from datetime import timedelta
 
 import transaction
@@ -88,6 +90,19 @@ PRIORITIES = (
 DHM_REGEX = r'^((?P<d>(\d+))d){0,1}\s*' \
             r'((?P<h>(\d+))h){0,1}\s*' \
             r'((?P<m>(\d+))m){0,1}\s*'
+
+
+def error(message, code=1):
+    """Exit with error
+    """
+    print("ERROR: %s" % message)
+    sys.exit(code)
+
+
+def conflict_error(*args, **kwargs):
+    """Exits with a conflict error
+    """
+    error("ConflictError: exhausted retries", code=os.EX_SOFTWARE)
 
 
 def get_client(service_request):
@@ -423,7 +438,7 @@ def sync_service_requests(session, since):
         sync_service_request(sr)
 
 
-@retriable(sync=True)
+@retriable(sync=True, on_retry_exhausted=conflict_error)
 def sync_service_request(sr):
     # get the Tamanu's test ID for this ServiceRequest
     tid = sr.getLabTestID()
@@ -577,13 +592,6 @@ def edit_sample(sample, **kwargs):
 
     # edit the sample
     api.edit(sample, **kwargs)
-
-
-def error(message):
-    """Exit with error
-    """
-    print("ERROR: %s" % message)
-    exit(1)
 
 
 def main(app):
