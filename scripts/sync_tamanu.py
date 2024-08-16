@@ -46,6 +46,10 @@ parser.add_argument(
     help="User and password in the <username>:<password> form"
 )
 parser.add_argument(
+    "-su", "--senaite_user",
+    help="SENAITE user"
+)
+parser.add_argument(
     "-r", "--resource",
     help="Resource type to sync. Supported: Patient, ServiceRequest"
 )
@@ -629,7 +633,8 @@ def main(app):
         error("Resource type is missing or not valid")
 
     # Setup environment
-    setup_script_environment(app, stream_out=False, username=USERNAME)
+    username = args.senaite_user or USERNAME
+    setup_script_environment(app, stream_out=False, username=username)
 
     # Start a session with Tamanu server
     session = TamanuSession(host)
