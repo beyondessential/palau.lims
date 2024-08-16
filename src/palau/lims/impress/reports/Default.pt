@@ -676,12 +676,13 @@
           <tr>
             <!-- Tested by -->
             <td tal:condition="submitted" class="border-0 align-top">
-              <h4 i18n:translate="">Tested
-                <span i18n:name="submitted_datetime"
-                      tal:replace="python:view.long_date(submitted)"/>
-                by
-              </h4>
               <div tal:repeat="member submitters" class="pb-2">
+                <h4 i18n:translate="">Tested
+                  <span i18n:name="submitted_datetime"
+                        tal:define="verified member/submitted"
+                        tal:replace="python:view.long_date(submitted)"></span>
+                  by
+                </h4>
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation"/>
                   <span tal:condition="member/salutation">&nbsp;</span>
@@ -695,12 +696,14 @@
 
             <!-- Verified by -->
             <td tal:condition="verified" class="border-0 align-top">
-              <h4 i18n:translate="">Verified
-                <span i18n:name="verified_datetime"
-                      tal:replace="python:view.long_date(verified)"/>
-                by
-              </h4>
+
               <div tal:repeat="member verifiers" class="pb-2">
+                <h4 i18n:translate="">Verified
+                  <span i18n:name="verified_datetime"
+                        tal:define="verified member/verified"
+                        tal:replace="python:view.long_date(verified)"></span>
+                  by
+                </h4>
                 <div class="font-weight-bold">
                   <span tal:content="member/salutation" />
                   <span tal:condition="member/salutation">&nbsp;</span>

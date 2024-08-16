@@ -18,6 +18,7 @@ from palau.lims import messageFactory as _
 from palau.lims.utils import get_field_value
 from palau.lims.utils import get_initials
 from palau.lims.utils import is_reportable
+from plone.memoize import view
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.utils import is_ast_analysis
@@ -420,42 +421,91 @@ class DefaultReportView(SingleReportView):
         statuses = ["published", "verified", "to_be_verified"]
         return model.getAnalyses(full_objects=True, review_state=statuses)
 
+    @view.memoize
     def get_verifiers(self, model):
-        """Returns the usernames of the users who at least verified one of the
-        analysis and the user who verified the sample, if any
+        """Returns a dictionary where the keys are the username of the person
+        who verified the sample, partitions or analyses and the value is the
+        last verification date performed by the user
         """
-        verifiers = filter(None, [self.get_action_user(model, "verify")])
-        for analysis in self.get_verified_analyses(model):
-            analysis_verifiers = analysis.getVerificators()
-            verifiers.extend(analysis_verifiers)
-        return list(set(verifiers))
+        # get the verifier and date from the sample
+        sample = api.get_object(model)
 
+        # get the verifiers and dates from partitions
+        partitions = sample.getDescendants(all_descendants=True)
+
+        # get the verifiers and dates from analyses
+        analyses = self.get_verified_analyses(sample)
+
+        # extract the verifiers and dates
+        verifiers = {}
+        items = [sample] + partitions + analyses
+        for item in items:
+            verifier = self.get_action_user(item, "verify")
+            verified = self.get_action_date(item, "verify")
+            if not all([verifier, verified]):
+                continue
+
+            last_verified = verifiers.get(verifier)
+            if not last_verified or verified > last_verified:
+                verifiers[verifier] = verified
+
+        return verifiers
+
+    @view.memoize
     def get_submitters(self, model):
-        """Returns the usernames of the users who at least submitted results
-        for at least one of the valid analyses of the sample and the user who
-        submitted the sample, if any
+        """Returns a dictionary where the keys are the username of the person
+        who submitted the sample, partitions or analyses and the value is the
+        last submission date performed by the user
         """
-        submitters = filter(None, [self.get_action_user(model, "submit")])
-        for analysis in self.get_submitted_analyses(model):
-            username = analysis.getSubmittedBy()
-            submitters.append(username)
-        return list(set(submitters))
+        # get the submitter and date from the sample
+        sample = api.get_object(model)
 
+        # get the submitters and dates from partitions
+        partitions = sample.getDescendants(all_descendants=True)
+
+        # get the submitters and dates from analyses
+        analyses = self.get_submitted_analyses(sample)
+
+        # extract the submitters and dates
+        submitters = {}
+        items = [sample] + partitions + analyses
+        for item in items:
+            submitter = self.get_action_user(item, "submit")
+            submitted = self.get_action_date(item, "submit")
+            if not all([submitter, submitted]):
+                continue
+
+            last_submitted = submitters.get(submitter)
+            if not last_submitted or submitted > last_submitted:
+                submitters[submitter] = submitted
+
+        return submitters
+
+    @view.memoize
     def get_submitters_info(self, model):
         """Returns a list made of dicts representing the LabContacts (or users)
         that submitted at least one analysis
         """
+        info = []
         submitters = self.get_submitters(model)
-        submitters = map(self.get_user_properties, submitters)
-        return filter(None, submitters)
+        for submitter, submitted in submitters.items():
+            props = self.get_user_properties(submitter)
+            props["submitted"] = submitted
+            info.append(props)
+        return info
 
+    @view.memoize
     def get_verifiers_info(self, model):
         """Returns a list made of dicts representing the LabContacts (or users)
         that verified at least one analysis
         """
+        info = []
         verifiers = self.get_verifiers(model)
-        verifiers = map(self.get_user_properties, verifiers)
-        return filter(None, verifiers)
+        for verifier, verified in verifiers.items():
+            props = self.get_user_properties(verifier)
+            props["verified"] = verified
+            info.append(props)
+        return info
 
     def get_results_interpretations(self, model):
         """Returns the result interpretations
@@ -503,6 +553,7 @@ class DefaultReportView(SingleReportView):
         """
         return api.get_review_status(analysis) == "out_of_stock"
 
+    @view.memoize
     def is_provisional(self, model):
         """Returns whether the model (partitions included) is provisional
         """
@@ -524,46 +575,20 @@ class DefaultReportView(SingleReportView):
 
         return False
 
+    @view.memoize
     def get_verified_date(self, model):
         """Returns the last verification date from the analyses and sample
         """
-        # if the sample has not been verified yet, return None
-        last_verified = self.get_action_date(model, "verify")
-        if not last_verified:
+        verifiers = self.get_verifiers(model)
+        if not verifiers:
             return None
+        return max(verifiers.values())
 
-        # take verification of sample and partitions into account
-        sample = api.get_object(model)
-        items = sample.getDescendants(all_descendants=True) or []
-
-        # take analyses (all them) into account as well
-        analyses = self.get_verified_analyses(sample) or []
-        items.extend(analyses)
-
-        # pick the latest verification date
-        for item in items:
-            verified = self.get_action_date(item, "verify")
-            if verified and verified > last_verified:
-                last_verified = verified
-
-        return last_verified
-
+    @view.memoize
     def get_submitted_date(self, model):
         """Returns the last submitted date from the sample and partitions
         """
-        # if the sample has not been verified yet, return None
-        last_submitted = self.get_action_date(model, "submit")
-        if not last_submitted:
+        submitters = self.get_submitters(model)
+        if not submitters:
             return None
-
-        # take verification of sample and partitions into account
-        sample = api.get_object(model)
-        items = sample.getDescendants(all_descendants=True) or []
-
-        # pick the latest submit date
-        for item in items:
-            submitted = self.get_action_date(item, "submit")
-            if submitted and submitted > last_submitted:
-                last_submitted = submitted
-
-        return last_submitted
+        return max(submitters.values())
