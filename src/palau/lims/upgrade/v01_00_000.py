@@ -410,3 +410,16 @@ def setup_department_uid_index(tool):
     setup_catalogs(portal)
 
     logger.info("Setup department_uid index in analysis catalog [DONE]")
+
+
+def install_senaite_lis2a(tool):
+    """Install new SENAITE LIS2A Add-on
+    """
+    logger.info("Installing SENAITE LIS2A 2.x...")
+    qi = api.get_tool("portal_quickinstaller")
+
+    lis2a = "senaite.lis2a"
+    if not qi.isProductInstalled(lis2a):
+        qi.installProduct(lis2a)
+
+    logger.info("Installing SENAITE CORE 2.x [DONE]")
