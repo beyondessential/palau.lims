@@ -8,7 +8,6 @@ from senaite.ast import ISenaiteASTLayer
 from senaite.core.interfaces import ISenaiteCore
 from senaite.impress.interfaces import ILayer as ISenaiteImpressLayer
 from senaite.lims.interfaces import ISenaiteLIMS
-from senaite.lis2a import ISenaiteLis2aLayer
 from senaite.patient import ISenaitePatientLayer
 from senaite.storage import ISenaiteStorageLayer
 
@@ -18,8 +17,7 @@ class IPalauLimsLayer(ISenaiteCore,
                       ISenaiteImpressLayer,
                       ISenaiteStorageLayer,
                       ISenaiteASTLayer,
-                      ISenaitePatientLayer,
-                      ISenaiteLis2aLayer):
+                      ISenaitePatientLayer):
     """Zope 3 browser Layer interface specific for palau.lims
     This interface is referred in profiles/default/browserlayer.xml.
     All views and viewlets register against this layer will appear in the site
