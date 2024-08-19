@@ -3,14 +3,6 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
-      title="Install senaite.lis2a add-on"
-      description="Install senaite.lis2a add-on"
-      source="1016"
-      destination="1017"
-      handler=".v01_00_000.install_senaite_lis2a"
-      profile="palau.lims:default"/>
-
-  <genericsetup:upgradeStep
       title="Setup index department_uid in analyses catalog"
       description="Setup index department_uid in analyses catalog"
       source="1015"
