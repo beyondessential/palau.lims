@@ -100,7 +100,6 @@ class ASTMImporter(Base):
     def import_data(self):
         """Import Sysmex XN-550 Results
         """
-        import pdb;pdb.set_trace()
         if not self.instrument:
             return self.log("Cannot import results, instrument not found")
 
@@ -118,9 +117,24 @@ class ASTMImporter(Base):
             return self.log("Cannot import results, no analyses left for "
                             "sample %s" % sample_id)
 
-        # iterate over astm results and try to find right analyses
+        # iterate over astm results and try to import them
+        attach = False
         for result in self.get_results():
-            self.import_result(result)
+            imported = self.import_result(result)
+            if imported:
+                attach = True
+
+        # create a new attachment with the message contents
+        if attach:
+            sender = self.get_sender()
+            filename = "%s.txt" % "_".join(sender)
+            attachment = self.create_attachment(
+                self.sample.getClient(), self.message, filename=filename
+            )
+            attachments = self.sample.getAttachment()
+            if attachment not in attachments:
+                attachments.append(attachment)
+                self.sample.setAttachment(attachments)
 
     def get_analyses(self, term):
         """Returns analyses from the current sample for the given term
@@ -201,10 +215,12 @@ class ASTMImporter(Base):
         analysis.setPrecisionFromUncertainty(False)
         analysis.setUncertainties([])
 
-        # set the result, unit
+        # set the result, capture date and unit
         analysis.setResult(value)
         analysis.setResultCaptureDate(captured)
         analysis.setUnit(units)
 
         # submit
         doActionFor(analysis, "submit")
+
+        return True
