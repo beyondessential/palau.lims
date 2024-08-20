@@ -127,7 +127,7 @@ class ASTMImporter(Base):
         """
         analyses = []
         # TODO Move this into a fieldset in Instrument!!
-        keywords = dict(KEYWORDS_MAPPING).get(term, default=[term])
+        keywords = dict(KEYWORDS_MAPPING).get(term, [term])
         if not isinstance(keywords, (list, tuple)):
             keywords = [keywords]
         for keyword in keywords:
