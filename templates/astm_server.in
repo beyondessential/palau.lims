@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+BIN=${buildout:astm-bin}
+URL=${buildout:astm-url}
+CONSUMER=${buildout:astm-consumer}
+LOG_DIR=${buildout:astm-log-dir}
+LOG_FILE=$LOG_DIR/server.log
+
+# create the log directory just in case it does not exist yet
+mkdir -p "$LOG_DIR"
+
+# run the astm server (with output files)
+# $BIN -o "$LOG_DIR" --logfile "$LOG_FILE" -u "$URL" -c "$CONSUMER"
+$BIN --logfile "$LOG_FILE" -u "$URL" -c "$CONSUMER"
