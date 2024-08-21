@@ -222,4 +222,8 @@ class ASTMImporter(Base):
         # submit
         doActionFor(analysis, "submit")
 
+        # report to the import log
+        self.log("Imported result for sample %s and test %s: %s %s"
+                 % (sample_id, param, value, units))
+
         return True
