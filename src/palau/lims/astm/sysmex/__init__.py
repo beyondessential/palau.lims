@@ -25,10 +25,6 @@ class SysmexASTMImporter(Base):
     def get_test_id(self, record):
         """Returns the test ID from the given results record
         """
-        test = record.get("test")
-        if not test:
-            # skip records without 'test' component
-            return None
-
+        test = record.get("test") or {}
         param = test.get("parameter") or ""
         return param.strip()
