@@ -53,6 +53,14 @@ class ASTMImporter(Base):
         super(ASTMImporter, self).__init__(data, message, request)
         self._analyses_by_keyword = None
 
+    def get_sender(self):
+        """Return the instrument name, serial and version
+
+        :returns: Tuple of instrument name, serial, version
+        """
+        name, serial, version = super(ASTMImporter, self).get_sender()
+        return name.strip(), serial.strip(), version.strip()
+
     def get_sample_id(self, default=None):
         """Get the Sample ID. For Sysmex XN, the 'sample_id' astm field from
         (O)rder record is not used, but 'instrument specimen id'
