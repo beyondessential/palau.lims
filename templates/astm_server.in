@@ -4,4 +4,8 @@ URL=${buildout:astm-url}
 CONSUMER=${buildout:astm-consumer}
 LOG_DIR=${buildout:astm-log-dir}
 
+# create the log directory just in case it does not exist yet
+mkdir -p $LOG_DIR
+
+# run the astm server
 senaite-astm-server -o $LOG_DIR -v -u $URL -c $CONSUMER
