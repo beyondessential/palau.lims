@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+HOST=${buildout:astm-host}
+URL=${buildout:astm-url}
+CONSUMER=${buildout:astm-consumer}
+LOG_DIR=${buildout:astm-log-dir}
+
+senaite-astm-server -o $LOG_DIR -v -u $URL -c $CONSUMER
