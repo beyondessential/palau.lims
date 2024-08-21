@@ -69,7 +69,7 @@ class ASTMBaseImporter(Base):
         # iterate over astm results and try to import them
         attach = False
         for result in self.get_results():
-            imported = self.import_result(result, )
+            imported = self.import_result(result)
             if imported:
                 attach = True
 
@@ -113,7 +113,7 @@ class ASTMBaseImporter(Base):
         units = record.get("units") or ""
         return units.strip()
 
-    def import_result(self, record, mapping):
+    def import_result(self, record):
         """Tries to import the result (ASTM) for this sample
         """
         value = self.get_test_result(record)
