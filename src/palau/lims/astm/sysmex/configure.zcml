@@ -1,0 +1,10 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <!-- Sysmex XN-550 (sender name comes with 4 leading whitespaces -->
+  <adapter name="XN-550" factory=".xn550.ASTMImporter"/>
+  <adapter name="    XN-550" factory=".xn550.ASTMImporter"/>
+
+  <!-- Sysmex XP-100 -->
+  <adapter name="XP-100" factory=".xp100.ASTMImporter"/>
+
+</configure>

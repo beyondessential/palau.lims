@@ -1,7 +1,6 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
-  <!-- Adapter to handle instrument imports from senaite.astm -->
-  <adapter name="XN-550" factory=".xn550.ASTMImporter"/>
-  <adapter name="    XN-550" factory=".xn550.ASTMImporter"/>
+  <!-- Package includes -->
+  <include package=".sysmex" />
 
 </configure>
