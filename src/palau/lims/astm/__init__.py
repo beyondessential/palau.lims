@@ -152,11 +152,9 @@ class ASTMBaseImporter(Base):
 
         # resolve the basic settings of the analysis
         analysis = analyses[0]
-        precision = analysis.getPrecision()
         result_type = "string"
         if api.is_floatable(value):
             value = api.to_float(value)
-            precision = get_significant_digits(value)
             result_type = "numeric"
 
         # purge analysis
@@ -165,9 +163,6 @@ class ASTMBaseImporter(Base):
         analysis.setResultType(result_type)
         analysis.setUnitChoices([])
         analysis.setDetectionLimitOperand("")
-        #analysis.setLowerDetectionLimit("")
-        #analysis.setUpperDetectionLimit("")
-        analysis.setPrecision(precision)
         analysis.setAllowManualUncertainty(False)
         analysis.setPrecisionFromUncertainty(False)
         analysis.setUncertainties([])
