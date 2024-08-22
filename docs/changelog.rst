@@ -4,6 +4,8 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #208 Add ASTM consumer for Sysmex XP-100
+- #207 Add ASTM consumer for Sysmex XN-550
 - #206 Do not display main sample ID in resuts report if no valid tests
 - #205 Do not display partitions without reportable analyses in results report
 - #204 Do not consider invalid partitions on publish
