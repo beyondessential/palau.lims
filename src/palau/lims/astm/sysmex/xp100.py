@@ -10,6 +10,18 @@ from zope.interface import Interface
 
 KEYWORDS_MAPPING = (
     # Tuple of (instrument_parameter, (service_keywords))
+    ("HCT", ["HCT"]),
+    ("HGB", ["Hb-"]),
+    ("LYM#", ["LYMPH"]),
+    ("LYM%", ["Lymphocytes"]),
+    ("MCH", ["MCH"]),
+    ("MCHC", ["MCHC"]),
+    ("MCV", ["MCV"]),
+    ("MPV", ["MPV"]),
+    ("NEUT#", ["NEUT"]),
+    ("NEUT%", ["Neutrophils"]),
+    ("RBC", ["RBC_BF", "Red-CC", "RBC", "RPBC"]),
+    ("WBC", ["WBC_BF", "White-CC", "WBC", "PWBC", "WC"]),
 )
 
 
