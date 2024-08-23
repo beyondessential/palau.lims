@@ -164,8 +164,6 @@ class ASTMBaseImporter(Base):
         analysis.setUnitChoices([])
         analysis.setDetectionLimitOperand("")
         analysis.setAllowManualUncertainty(False)
-        analysis.setPrecisionFromUncertainty(False)
-        analysis.setUncertainties([])
 
         # set the result, capture date and unit
         analysis.setResult(value)
