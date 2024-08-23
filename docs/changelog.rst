@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #212 Do not clear the uncertainties up on ASTM import
 - #208 Add ASTM consumer for Sysmex XP-100
 - #207 Add ASTM consumer for Sysmex XN-550
 - #206 Do not display main sample ID in resuts report if no valid tests
