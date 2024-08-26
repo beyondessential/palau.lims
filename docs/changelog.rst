@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #214 Added dependency: bes.lims
 - #213 Fix BES's Zendesk support icon is not rendered
 - #212 Do not clear the uncertainties up on ASTM import
 - #208 Add ASTM consumer for Sysmex XP-100
