@@ -6,10 +6,10 @@
 
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
+from bes.lims.extender.field import ExtBooleanField
+from bes.lims.extender.field import ExtStringField
 from bika.lims.interfaces import IClient
 from palau.lims import messageFactory as _
-from palau.lims.content.fields import ExtBooleanField
-from palau.lims.content.fields import ExtStringField
 from palau.lims.interfaces import IPalauLimsLayer
 from Products.Archetypes.Widget import BooleanWidget
 from Products.Archetypes.Widget import StringWidget

@@ -7,11 +7,11 @@
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
+from bes.lims.extender.field import ExtStringField
+from bes.lims.extender.field import ExtTextField
 from bika.lims.interfaces import ISampleType
 from palau.lims import messageFactory as _
 from palau.lims.content import update_field
-from palau.lims.content.fields import ExtStringField
-from palau.lims.content.fields import ExtTextField
 from palau.lims.interfaces import IPalauLimsLayer
 from Products.Archetypes import DisplayList
 from Products.Archetypes.Widget import RichWidget

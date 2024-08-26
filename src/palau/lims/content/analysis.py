@@ -8,9 +8,9 @@ import copy
 
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import ISchemaExtender
+from bes.lims.extender.field import ExtIntegerField
 from bika.lims.interfaces import IAnalysis
 from bika.lims.interfaces.analysis import IRequestAnalysis
-from palau.lims.content.fields import ExtIntegerField
 from palau.lims.interfaces import IPalauLimsLayer
 from senaite.ast.utils import get_ast_siblings
 from zope.component import adapter

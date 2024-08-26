@@ -7,6 +7,11 @@
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
+from bes.lims.extender.field import ExtDateTimeField
+from bes.lims.extender.field import ExtRecordsField
+from bes.lims.extender.field import ExtStringField
+from bes.lims.extender.field import ExtTextField
+from bes.lims.extender.field import ExtUIDReferenceField
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _sc
 from bika.lims.browser.widgets import DateTimeWidget
@@ -19,12 +24,7 @@ from palau.lims.config import PRIORITIES
 from palau.lims.config import SAMPLE_FIELDS_ORDER
 from palau.lims.content import disable_field
 from palau.lims.content import update_field
-from palau.lims.content.fields import ExtDateTimeField
-from palau.lims.content.fields import ExtRecordsField
 from palau.lims.content.fields import ExtSiteField
-from palau.lims.content.fields import ExtStringField
-from palau.lims.content.fields import ExtTextField
-from palau.lims.content.fields import ExtUIDReferenceField
 from palau.lims.interfaces import IPalauLimsLayer
 from palau.lims.permissions import FieldEditBottles
 from palau.lims.permissions import FieldEditClinicalInformation
