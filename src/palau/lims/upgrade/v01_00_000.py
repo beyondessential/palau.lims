@@ -447,10 +447,13 @@ def update_default_stickers(tool):
     cat = api.get_tool(SETUP_CATALOG)
     for brain in cat(portal_type="SampleType"):
         obj = api.get_object(brain)
-        admitted = obj.getField("AdmittedStickerTemplates").get(obj)
+        admitted = obj.getAdmittedStickerTemplates()
         for record in admitted:
+            if not record:
+                continue
             record["admitted"] = fix(record["admitted"])
             record["small_default"] = fix(record["small_default"])
             record["large_default"] = fix(record["large_default"])
+        obj.setAdmittedStickerTemplates(admitted)
 
     logger.info("Update default stickers [DONE]")
