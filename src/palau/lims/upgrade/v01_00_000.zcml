@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Update default stickers"
+      description="Update default stickers from control panel and sample types"
+      source="1016"
+      destination="1017"
+      handler=".v01_00_000.update_default_stickers"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Setup index department_uid in analyses catalog"
       description="Setup index department_uid in analyses catalog"
       source="1015"

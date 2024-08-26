@@ -410,3 +410,47 @@ def setup_department_uid_index(tool):
     setup_catalogs(portal)
 
     logger.info("Setup department_uid index in analysis catalog [DONE]")
+
+
+def update_default_stickers(tool):
+    """Update the default stickers of sample types
+    """
+    logger.info("Update default stickers ...")
+    portal = tool.aq_inner.aq_parent
+
+    replace_by = (
+        ("Code_39_40", "Code_39_70"),
+    )
+
+    def fix(value):
+        if not value:
+            return value
+        if api.is_list(value):
+            return list([fix(val) for val in value])
+        for old_code, new_code in replace_by:
+            value = value.replace(old_code, new_code)
+        return value
+
+    def update_sticker_field(context, field_name):
+        fields = api.get_fields(context)
+        field = fields.get(field_name)
+        value = field.get(context)
+        field.set(context, fix(value))
+
+    # update setup/control panel
+    setup = api.get_setup()
+    update_sticker_field(setup, "AutoStickerTemplate")
+    update_sticker_field(setup, "SmallStickerTemplate")
+    update_sticker_field(setup, "LargeStickerTemplate")
+
+    # update sample types
+    cat = api.get_tool(SETUP_CATALOG)
+    for brain in cat(portal_type="SampleType"):
+        obj = api.get_object(brain)
+        admitted = obj.getField("AdmittedStickerTemplates").get(obj)
+        for record in admitted:
+            record["admitted"] = fix(record["admitted"])
+            record["small_default"] = fix(record["small_default"])
+            record["large_default"] = fix(record["large_default"])
+
+    logger.info("Update default stickers [DONE]")
