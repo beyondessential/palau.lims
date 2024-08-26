@@ -52,9 +52,9 @@ SETUP_SETTINGS = [
     # Sticker
     ("AutoPrintStickers", "receive"),
     ("DefaultNumberOfCopies", "3"),
-    ("AutoStickerTemplate", "palau.lims.stickers:Code_39_40x20mm"),
+    ("AutoStickerTemplate", "palau.lims.stickers:Code_39_70x20mm"),
     ("SmallStickerTemplate", "palau.lims.stickers:QR_1x14mmx39mm"),
-    ("LargeStickerTemplate", "palau.lims.stickers:Code_39_40x20mm"),
+    ("LargeStickerTemplate", "palau.lims.stickers:Code_39_70x20mm"),
 ]
 
 LABORATORY_ADDRESS = {

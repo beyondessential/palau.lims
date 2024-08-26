@@ -1,15 +1,15 @@
-/* 40x20mm sticker */
+/* 68x20mm sticker */
 .sticker {
     font-family: Helvetica, Arial;
     font-size: 7pt;
     padding: 1mm;
     /*
-    Total width:  38mm + 2x1mm (padding) = 40mm
+    Total width:  68mm + 2x1mm (padding) = 70mm
     Total height: 18mm + 2x1mm (padding) = 20mm
     */
-    width: 38mm;
-    min-width: 38mm;
-    max-width: 38mm;
+    width: 68mm;
+    min-width: 68mm;
+    max-width: 68mm;
     height: 20mm;
     min-height: 20mm;
     max-height: 20mm;
@@ -24,12 +24,12 @@
 
 .sticker .barcode {
     margin: 0 auto;
-    padding: 1mm 0 !important;
+    padding: 0 0 !important;
     text-align: center;
 }
 
 .sticker .hazardous img {
-    width: 10px;
+    width: 8px;
 }
 
 .sticker .item-info table {
@@ -40,6 +40,11 @@
 
 .sticker .item-info table td {
     text-align: center;
+    padding:0;
+}
+
+.sticker .item-info table td .large-info {
+    font-size: 7pt;
 }
 
 .barcode {
@@ -52,11 +57,11 @@
 
 @media print {
     @page {
-        size:  40mm 20mm !important;
+        size:  70mm 20mm !important;
         margin: 0mm !important;
     }
     html, body {
-        width: 40mm !important;
+        width: 70mm !important;
         height: 20mm !important;
         margin: 0mm !important;
     }
