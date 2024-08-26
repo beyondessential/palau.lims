@@ -4,6 +4,8 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #215 Increase the width of barcode stickers from 40mm to 70mm
+- #214 Port statistic reports to bes.lims
 - #214 Added dependency: bes.lims
 - #213 Fix BES's Zendesk support icon is not rendered
 - #212 Do not clear the uncertainties up on ASTM import
