@@ -28,12 +28,6 @@
       provides="archetypes.schemaextender.interfaces.ISchemaModifier"
       factory=".sampletype.SampleTypeSchemaModifier" />
 
-  <!-- Schema extender for LIMS Setup -->
-  <adapter
-      name="palau.lims.setup.schemaextender"
-      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
-      factory=".limssetup.LimsSetupSchemaExtender" />
-
   <!-- Schema extender for Client -->
   <adapter
       name="palau.lims.client.schemaextender"

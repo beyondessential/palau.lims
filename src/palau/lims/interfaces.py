@@ -4,20 +4,12 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-from senaite.ast import ISenaiteASTLayer
-from senaite.core.interfaces import ISenaiteCore
-from senaite.impress.interfaces import ILayer as ISenaiteImpressLayer
-from senaite.lims.interfaces import ISenaiteLIMS
-from senaite.patient import ISenaitePatientLayer
+from bes.lims.interfaces import IBESLimsLayer
 from senaite.storage import ISenaiteStorageLayer
 
 
-class IPalauLimsLayer(ISenaiteCore,
-                      ISenaiteLIMS,
-                      ISenaiteImpressLayer,
-                      ISenaiteStorageLayer,
-                      ISenaiteASTLayer,
-                      ISenaitePatientLayer):
+class IPalauLimsLayer(IBESLimsLayer,
+                      ISenaiteStorageLayer):
     """Zope 3 browser Layer interface specific for palau.lims
     This interface is referred in profiles/default/browserlayer.xml.
     All views and viewlets register against this layer will appear in the site

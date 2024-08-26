@@ -8,8 +8,8 @@ from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import ISchemaExtender
 from bika.lims.interfaces import ILabContact
 from palau.lims import messageFactory as _
-from palau.lims.content.fields import ExtBooleanField
-from palau.lims.content.fields import ExtUIDReferenceField
+from bes.lims.extender.field import ExtBooleanField
+from bes.lims.extender.field import ExtUIDReferenceField
 from palau.lims.interfaces import IPalauLimsLayer
 from Products.Archetypes.Widget import BooleanWidget
 from Products.CMFCore.permissions import ModifyPortalContent

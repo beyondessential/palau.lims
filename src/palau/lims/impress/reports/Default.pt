@@ -82,7 +82,7 @@
                     word-wrap: break-word;
                     overflow-wrap: break-word;
                     overflow: hidden;
-                    white-space: pre-wrap; 
+                    white-space: pre-wrap;
                   }
      .report table.range-table td { padding: 0 0.2rem 0 0; border: none; }
      .report .section-header h1 { font-size: 175%; }

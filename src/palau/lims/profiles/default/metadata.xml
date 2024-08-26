@@ -10,9 +10,7 @@
 
   <!-- Be sure to install the following dependencies if not yet installed -->
   <dependencies>
-    <dependency>profile-senaite.lims:default</dependency>
-    <dependency>profile-senaite.ast:default</dependency>
-    <dependency>profile-senaite.patient:default</dependency>
+    <dependency>profile-bes.lims:default</dependency>
     <dependency>profile-senaite.storage:default</dependency>
   </dependencies>
 
