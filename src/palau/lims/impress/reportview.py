@@ -15,7 +15,6 @@ from bika.lims.workflow import getTransitionActor
 from bika.lims.workflow import getTransitionDate
 from collections import OrderedDict
 from palau.lims import messageFactory as _
-from palau.lims.utils import get_field_value
 from palau.lims.utils import get_initials
 from palau.lims.utils import is_reportable
 from plone.memoize import view
@@ -52,7 +51,7 @@ class DefaultReportView(SingleReportView):
         """Returns the src suitable for embedding into img html element of the
         client's logo, if any. Returns None otherwise
         """
-        logo = client.ReportLogo
+        logo = client.getReportLogo()
         if not logo:
             return None
         return self.get_image_blob_src(logo)
@@ -62,7 +61,7 @@ class DefaultReportView(SingleReportView):
         laboratory's logo, if any. Returns None otherwise
         """
         setup = api.get_setup()
-        logo = get_field_value(setup, "ReportLogo")
+        logo = setup.getReportLogo()
         return self.get_image_blob_src(logo)
 
     def get_image_blob_src(self, img):

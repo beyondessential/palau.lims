@@ -74,7 +74,7 @@ class RejectionView(BrowserView):
         """Returns the src suitable for embedding into img html element of the
         client's logo, if any. Returns None otherwise
         """
-        logo = client.ReportLogo
+        logo = client.getReportLogo()
         if not logo:
             return None
         return self.get_image_blob_src(logo)
@@ -84,7 +84,7 @@ class RejectionView(BrowserView):
         laboratory's logo, if any. Returns None otherwise
         """
         setup = api.get_setup()
-        logo = get_field_value(setup, "ReportLogo")
+        logo = setup.getReportLogo()
         return self.get_image_blob_src(logo)
 
     def get_image_blob_src(self, img):
