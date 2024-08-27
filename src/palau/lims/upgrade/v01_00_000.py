@@ -416,10 +416,9 @@ def update_default_stickers(tool):
     """Update the default stickers of sample types
     """
     logger.info("Update default stickers ...")
-    portal = tool.aq_inner.aq_parent
-
     replace_by = (
-        ("Code_39_40", "Code_39_70"),
+        ("Code_39_70x20", "Code_39_40x28"),
+        ("Code_39_40x20", "Code_39_40x28"),
     )
 
     def fix(value):

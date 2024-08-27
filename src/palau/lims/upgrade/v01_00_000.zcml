@@ -4,6 +4,14 @@
 
   <genericsetup:upgradeStep
       title="Update default stickers"
+      description="Revert the width of the stickers to their original size"
+      source="1017"
+      destination="1018"
+      handler=".v01_00_000.update_default_stickers"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
+      title="Update default stickers"
       description="Update default stickers from control panel and sample types"
       source="1016"
       destination="1017"

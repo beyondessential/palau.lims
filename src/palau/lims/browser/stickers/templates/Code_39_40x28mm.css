@@ -1,0 +1,54 @@
+/* 40x28mm sticker */
+.sticker {
+    font-family: Helvetica, Arial;
+    font-size: 7pt;
+    padding: 1mm;
+    /*
+    Total width:  38mm + 2x1mm (padding) = 40mm
+    Total height: 26mm + 2x1mm (padding) = 28mm
+    */
+    width: 38mm;
+    min-width: 38mm;
+    max-width: 38mm;
+    height: 26mm;
+    min-height: 26mm;
+    max-height: 26mm;
+    text-align: center;
+}
+
+.sticker .barcode {
+    margin: 0 auto;
+    padding: 0 0 !important;
+    text-align: center;
+}
+
+.sticker .item-info .item_id {
+    font-weight:bold;
+    font-size:8pt;
+}
+
+.sticker .item-info .hazardous img {
+    width: 8px;
+}
+
+.sticker .item-info table {
+    border-collapse: collapse;
+    margin: 1px 1px 1px 1px;
+    width: 100%;
+}
+
+.sticker .item-info table td {
+    text-align: center;
+}
+
+@media print {
+    @page {
+        size:  40mm 28mm !important;
+        margin: 0mm !important;
+    }
+    html, body {
+        width: 40mm !important;
+        height: 28mm !important;
+        margin: 0mm !important;
+    }
+}
