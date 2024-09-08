@@ -4,6 +4,7 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
+from bes.lims.workflow.analysis.events import after_set_out_of_stock
 from bika.lims import api
 from bika.lims.api import security as sapi
 from bika.lims.interfaces import IVerified
@@ -15,7 +16,6 @@ from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_roles_and_groups
 from palau.lims.setuphandlers import setup_workflows
-from palau.lims.workflow.analysis.events import after_set_out_of_stock
 from Products.Archetypes.BaseUnit import BaseUnit
 from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.api.catalog import del_column

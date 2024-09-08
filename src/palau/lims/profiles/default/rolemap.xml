@@ -108,16 +108,6 @@
       <role name="Manager"/>
       <role name="Client"/>
     </permission>
-    <permission name="palau.lims: Transition: Set Out Of Stock" acquire="False">
-      <role name="LabClerk"/>
-      <role name="LabManager"/>
-      <role name="Manager"/>
-    </permission>
-    <permission name="palau.lims: Transition: Rollback" acquire="False">
-      <role name="LabClerk"/>
-      <role name="LabManager"/>
-      <role name="Manager"/>
-    </permission>
 
   </permissions>
 

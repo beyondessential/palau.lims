@@ -20,8 +20,3 @@ class DefaultReportView(BaseView):
         if not department:
             return ""
         return api.get_title(department)
-
-    def is_out_of_stock(self, analysis):
-        """Returns whether the analysis passed-in is out-of-stock
-        """
-        return api.get_review_status(analysis) == "out_of_stock"
