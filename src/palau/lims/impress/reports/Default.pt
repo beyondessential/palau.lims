@@ -177,33 +177,6 @@
     </style>
   </tal:css>
 
-  <!-- HEADER -->
-  <tal:render condition="python:False">
-    <div class="row section-header no-gutters">
-      <!-- Header Table -->
-      <div class="w-100 mb-2">
-        <table class="w-100 mb-0 noborder">
-          <colgroup>
-            <col style="width:50%"/>
-            <col style="width:50%;"/>
-          </colgroup>
-          <tr>
-            <!-- Header Left -->
-            <td class="align-middle text-left">
-              <h1 i18n:translate="">Analysis Report</h1>
-            </td>
-            <!-- Header Right -->
-            <td class="align-middle text-right">
-              <img class="logo"
-                   tal:attributes="src python:view.get_resource_url('logo_print.png')"/>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </tal:render>
-  <!-- /HEADER -->
-
   <!-- INFO -->
   <tal:render condition="python:True">
     <div class="row section-info no-gutters">

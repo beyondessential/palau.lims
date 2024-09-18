@@ -5,6 +5,5 @@
   <include file="analysisrequest.zcml"/>
   <include file="client.zcml"/>
   <include file="sampletemplate.zcml"/>
-  <include file="sampletype.zcml"/>
 
 </configure>

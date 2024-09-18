@@ -7,6 +7,7 @@
 from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
+from bes.lims.browser.widgets.bottleswidget import BottlesWidget
 from bes.lims.extender.field import ExtDateTimeField
 from bes.lims.extender.field import ExtRecordsField
 from bes.lims.extender.field import ExtStringField
@@ -18,7 +19,6 @@ from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.interfaces import IAnalysisRequest
 from palau.lims import messageFactory as _
-from palau.lims.browser.widgets import BottlesWidget
 from palau.lims.config import LOCATIONS
 from palau.lims.config import PRIORITIES
 from palau.lims.config import SAMPLE_FIELDS_ORDER

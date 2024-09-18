@@ -16,18 +16,6 @@
     provides="archetypes.schemaextender.interfaces.ISchemaExtender"
     factory=".analysisrequest.AnalysisRequestSchemaExtender" />
 
-  <!-- Schema extender for Sample Type -->
-  <adapter
-    name="palau.lims.sampletype.schemaextender"
-    provides="archetypes.schemaextender.interfaces.ISchemaExtender"
-    factory=".sampletype.SampleTypeSchemaExtender" />
-
-  <!-- Schema modifier for Sample Type -->
-  <adapter
-      name="palau.lims.sampletype.schemamodifier"
-      provides="archetypes.schemaextender.interfaces.ISchemaModifier"
-      factory=".sampletype.SampleTypeSchemaModifier" />
-
   <!-- Schema extender for Client -->
   <adapter
       name="palau.lims.client.schemaextender"

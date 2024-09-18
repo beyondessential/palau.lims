@@ -4,7 +4,6 @@
     i18n_domain="palau.lims">
 
   <!-- Package includes -->
-  <include package=".bica"/>
   <include package=".browser"/>
   <include package=".content"/>
   <include package=".subscribers"/>

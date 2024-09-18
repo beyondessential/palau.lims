@@ -19,15 +19,6 @@
     type="plone"
     name="palau.lims.static" />
 
-  <!-- Static Resources Viewlet -->
-  <browser:viewlet
-    name="palau.lims.static"
-    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
-    class="senaite.core.browser.viewlets.resources.ResourcesViewlet"
-    permission="zope2.View"
-    template="./static/resources.pt"
-    layer="palau.lims.interfaces.IPalauLimsLayer" />
-
   <!-- Returns a JSON with active bottle-like Containers registered -->
   <browser:page
     for="*"

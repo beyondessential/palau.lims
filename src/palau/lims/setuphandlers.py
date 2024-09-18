@@ -73,13 +73,6 @@ COLUMNS = [
     (SAMPLE_CATALOG, "isMedicalRecordTemporary"),
 ]
 
-# Skin layers that have priority over others, sorted from more to less priority
-SORTED_SKIN_LAYERS = [
-    "custom",
-    "palau.lims",
-    "bika",
-]
-
 # Tuples of ID, Title, FTI
 SETUP_FOLDERS = [
     ("wards", "Wards", "Wards"),
@@ -218,9 +211,6 @@ def setup_handler(context):
 
     logger.info("{} setup handler [BEGIN]".format(PRODUCT_NAME.upper()))
     portal = context.getSite()
-
-    # Setup the sorting of skin layers
-    setup_skin_layers(portal)
 
     # Setup catalogs
     setup_catalogs(portal)
@@ -386,23 +376,6 @@ def delete_ast_objects(portal):
 
     for obj in to_remove:
         delete_object(obj)
-
-
-def setup_skin_layers(portal):
-    """Setup the sorting of skin layers
-    """
-    logger.info("Setup Skin layers ...")
-    skins_tool = api.get_tool("portal_skins")
-    selections = skins_tool._getSelections()
-
-    # For each skin, resort the skins layers in accordande
-    for skin_name in selections.keys():
-        layers = selections[skin_name].split(",")
-        filtered = filter(lambda lay: lay not in SORTED_SKIN_LAYERS, layers)
-        new_layers = SORTED_SKIN_LAYERS + filtered
-        selections[skin_name] = ",".join(new_layers)
-
-    logger.info("Setup Skin layers [DONE]")
 
 
 def setup_default_settings(portal):
