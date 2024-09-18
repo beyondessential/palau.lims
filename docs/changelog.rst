@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #219 Compatibility with senaite.core#2584 (SampleType to DX)
 - #218 Compatibility with bes.lims#4 (out of stock and rollback transitions)
 - #216 Resize label stickers to 40x28mm and barcode height of 8mm
 - #215 Increase the width of barcode stickers from 40mm to 70mm
