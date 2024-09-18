@@ -214,14 +214,6 @@ SAMPLE_FIELDS_ORDER = [
     "Specification",
 ]
 
-# List of an analysis status to be reported in results
-ANALYSIS_REPORTABLE_STATUSES = (
-    "to_be_verified",
-    "verified",
-    "published",
-    "out_of_stock",
-)
-
 LOCATIONS = DisplayList((
     ("int", _("Inpatient")),
     ("out", _("Outpatient")),

@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Compatibility with senaite.core#2584"
+      description="Makes this product compatible with senaite.core#2584"
+      source="1019"
+      destination="1020"
+      handler=".v01_00_000.purge_palau_skin"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Compatibility with bes.lims#4"
       description="Makes this product compatible with bes.lims#4"
       source="1018"

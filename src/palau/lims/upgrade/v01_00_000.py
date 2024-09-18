@@ -456,3 +456,26 @@ def update_default_stickers(tool):
         obj.setAdmittedStickerTemplates(admitted)
 
     logger.info("Update default stickers [DONE]")
+
+
+def purge_palau_skin(tool):
+    """Purge skin from palau.lims that are no longer used
+    """
+    logger.info("Purge palau.lims skin layer ...")
+    skins_tool = api.get_tool("portal_skins")
+    selections = skins_tool._getSelections()
+
+    to_remove = ["palau.lims", "palau_images", "palau_templates"]
+
+    # For each skin, resort the skins layers in accordance
+    for skin_name in selections.keys():
+        layers = selections[skin_name].split(",")
+        filtered = filter(lambda lay: lay not in to_remove, layers)
+        selections[skin_name] = ",".join(filtered)
+
+    # Physically remove the skin folders
+    for folder in to_remove:
+        if folder in skins_tool.keys():
+            skins_tool._delObject(folder)
+
+    logger.info("Purge palau.lims skin layer [DONE]")

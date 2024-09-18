@@ -11,9 +11,6 @@
   <!-- Register locales -->
   <i18n:registerTranslations directory="locales"/>
 
-  <!-- Filesystem directory view -->
-  <cmf:registerDirectory name="skins" directory="skins" recursive="True"/>
-
   <!-- Import senaite.core permissions -->
   <include package="bika.lims" file="permissions.zcml" />
 
