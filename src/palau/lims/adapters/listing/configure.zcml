@@ -19,13 +19,6 @@
     provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".samples.SamplesListingAdapter" />
 
-  <!-- Analyses listing -->
-  <subscriber
-    for="bika.lims.browser.analyses.view.AnalysesView
-         bika.lims.interfaces.IAnalysisRequest"
-    provides="senaite.app.listing.interfaces.IListingViewAdapter"
-    factory=".analyses.SampleAnalysesListingAdapter" />
-
   <!-- Clients listing -->
   <subscriber
     for="bika.lims.browser.clientfolder.ClientFolderContentsView

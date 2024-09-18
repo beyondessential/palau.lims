@@ -4,6 +4,8 @@ BASE=${buildout:directory}
 I18N=$BASE/bin/i18ndude
 SRC=${buildout:src-dir}/src/palau/lims
 LOCALES=$SRC/locales
+BES_LOCALES=${buildout:directory}/src/bes.lims/src/bes/lims/locales
+
 
 function die() {
     echo "ERROR: $1"
@@ -47,6 +49,9 @@ echo "Processing Domain $DOMAIN [DONE]"
 DOMAIN=senaite.core
 # Flush the english .po files, other .po files won't be synced otherwise
 echo -n "" > $LOCALES/en/LC_MESSAGES/$DOMAIN.po
+# Merge bes.lims' senaite.core.pot
+$I18N trmerge $LOCALES/$DOMAIN.pot $BES_LOCALES/$DOMAIN.pot > $LOCALES/$DOMAIN-tmp.pot
+mv $LOCALES/$DOMAIN-tmp.pot $LOCALES/$DOMAIN.pot
 # Synchronize all .po files with the new $DOMAIN.pot
 $I18N sync --pot $LOCALES/$DOMAIN.pot $LOCALES/*/LC_MESSAGES/$DOMAIN.po
 # Replace base .pot file with english .po file (so strings are sorted)
