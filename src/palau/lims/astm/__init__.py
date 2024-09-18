@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from bika.lims import api
-from bika.lims.utils.analysis import get_significant_digits
 from bika.lims.workflow import doActionFor
 from plone.memoize.instance import memoize
 from senaite.core.api import dtime

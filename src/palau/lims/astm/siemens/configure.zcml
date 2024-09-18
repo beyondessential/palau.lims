@@ -1,0 +1,6 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <!-- SIEMENS DCA Vantage -->
+  <adapter name="DCA VANTAGE" factory=".dcavantage.ASTMImporter"/>
+
+</configure>
