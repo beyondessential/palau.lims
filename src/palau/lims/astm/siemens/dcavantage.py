@@ -28,11 +28,15 @@ class ASTMImporter(Base):
     def get_sample_id(self, default=None):
         """Get the Sample ID
         """
+        sample_id = super(ASTMImporter, self).get_sample_id(default=default)
+        if sample_id:
+            return sample_id
+
+        # Fallback to patient record's practice_id
         patient = self.get_patient()
         if not patient:
             return default
 
-        # Use patient record's practice_id
         sid = patient.get("practice_id")
         if not sid:
             return default
