@@ -11,7 +11,7 @@ from senaite.patient.catalog import PATIENT_CATALOG
 
 def main(app):
     # Setup environment
-    setup_script_environment(app)
+    setup_script_environment(app, stream_out=False)
 
     query = {
         "portal_type": "Patient",

@@ -21,7 +21,7 @@ def assigned_to_worksheets(sample):
 
 def main(app):
     # Setup environment
-    setup_script_environment(app)
+    setup_script_environment(app, stream_out=False)
 
     query = {
         "portal_type": "AnalysisRequest",
