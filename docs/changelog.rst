@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #221 Added scripts for deletion of dispatched samples and inactive patients
 - #220 Add ASTM consumer for Siemens DCA Vantage® Analyzer
 - #219 Compatibility with senaite.core#2584 (SampleType to DX)
 - #218 Compatibility with bes.lims#4 (out of stock and rollback transitions)
