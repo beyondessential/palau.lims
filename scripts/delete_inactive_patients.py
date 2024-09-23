@@ -4,6 +4,7 @@ import transaction
 from bika.lims import api
 from palau.lims import logger
 from palau.lims.scripts import setup_script_environment
+from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade.utils import delete_object
 from senaite.patient.catalog import PATIENT_CATALOG
 
@@ -20,8 +21,12 @@ def main(app):
     brains = api.search(query, PATIENT_CATALOG)
     total = len(brains)
     logger.info("Deleting %s inactive patients ..." % total)
-    for brain in enumerate(brains):
-        patient = api.get_object(brain)
+    for brain in brains:
+        try:
+            patient = brain.getObject()
+        except AttributeError:
+            # the object associated to the brain was removed already
+            continue
 
         # delete the patient
         logger.info("Deleting %r ..." % patient)
