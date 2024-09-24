@@ -9,11 +9,11 @@ from datetime import timedelta
 from time import time
 
 import transaction
+from bes.lims.scripts import setup_script_environment
 from bika.lims import api
 from bika.lims.api import security as sapi
 from palau.lims import logger
 from palau.lims.config import TAMANU_ID
-from palau.lims.scripts import setup_script_environment
 from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.api import dtime
 from senaite.core.api.dtime import to_localized_time
