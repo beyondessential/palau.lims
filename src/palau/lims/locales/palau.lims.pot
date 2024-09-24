@@ -1,10 +1,10 @@
-# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
-# SOME DESCRIPTIVE TITLE.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#--- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+#SOME DESCRIPTIVE TITLE.
+#FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2024-09-08 07:00+0000\n"
+"POT-Creation-Date: 2024-09-24 16:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,610 +17,575 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: palau.lims\n"
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:340
+#: palau/lims/impress/reports/Default.pt:313
 msgid "(Estimated)"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/listing/clients.py:29
-#: palau.lims/src/palau/lims/content/client.py:28
+#: palau/lims/adapters/listing/clients.py:29
+#: palau/lims/content/client.py:28
 msgid "Abbreviation"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/content/warddepartments.py:51
-#: palau.lims/src/palau/lims/browser/content/wards.py:50
+#: palau/lims/browser/content/warddepartments.py:51
+#: palau/lims/browser/content/wards.py:50
 msgid "Active"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/content/warddepartments.py:32
-#: palau.lims/src/palau/lims/browser/content/wards.py:31
+#: palau/lims/browser/content/warddepartments.py:32
+#: palau/lims/browser/content/wards.py:31
 msgid "Add"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/views/templates/ast_results.pt:35
+#: palau/lims/browser/views/templates/ast_results.pt:35
 msgid "Add panel"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:238
+#: palau/lims/config.py:230
 msgid "Adult patient"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:108
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:336
+#: palau/lims/browser/sample/templates/rejection_content.pt:108
+#: palau/lims/impress/reports/Default.pt:309
 msgid "Age"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/content/warddepartments.py:63
-#: palau.lims/src/palau/lims/browser/content/wards.py:62
+#: palau/lims/browser/content/warddepartments.py:63
+#: palau/lims/browser/content/wards.py:62
 msgid "All"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:398
+#: palau/lims/impress/reports/Default.pt:371
 msgid "Amended results"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:193
-msgid "Analysis Report"
-msgstr ""
-
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:153
+#: palau/lims/browser/sample/templates/rejection_content.pt:153
 msgid "Analysis Template"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:246
+#: palau/lims/config.py:238
 msgid "April"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:233
+#: palau/lims/config.py:225
 msgid "Asap"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:647
+#: palau/lims/impress/reports/Default.pt:620
 msgid "Attachment for"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:631
+#: palau/lims/impress/reports/Default.pt:604
 msgid "Attachments for ${DYNAMIC_CONTENT}"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:31
+#: palau/lims/impress/reports/Default.pt:31
 msgid "Attachments per Row"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:250
+#: palau/lims/config.py:242
 msgid "August"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/sampletemplate.py:40
-#: palau.lims/src/palau/lims/content/sampletype.py:68
+#: palau/lims/behaviors/sampletemplate.py:40
 msgid "Auto-text for when there is not enough volume"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/containertype.py:19
+#: palau/lims/behaviors/containertype.py:19
 msgid "BACTEC bottle"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/sampletype.py:30
-msgid "BACTEC bottles control"
-msgstr ""
-
-#: palau.lims/src/palau/lims/content/analysisrequest.py:180
+#: palau/lims/content/analysisrequest.py:180
 msgid "Bottle"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:215
+#: palau/lims/content/analysisrequest.py:215
 msgid "Bottles"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/labcontact.py:50
+#: palau/lims/content/labcontact.py:50
 msgid "Can reject samples"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:70
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:232
+#: palau/lims/browser/sample/templates/rejection_content.pt:70
+#: palau/lims/impress/reports/Default.pt:205
 msgid "Clinical Laboratory Services"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:287
+#: palau/lims/content/analysisrequest.py:287
 msgid "Current antibiotic(s)"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:26
+#: palau/lims/impress/reports/Default.pt:26
 msgid "Custom Report Options"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/views/templates/ast_results.pt:43
+#: palau/lims/browser/views/templates/ast_results.pt:43
 msgid "Customize"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:372
+#: palau/lims/impress/reports/Default.pt:345
 msgid "Date collected"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:268
+#: palau/lims/content/analysisrequest.py:268
 msgid "Date of Admission"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/viewlets/templates/error_date_of_admission_viewlet.pt:13
+#: palau/lims/browser/viewlets/templates/error_date_of_admission_viewlet.pt:13
 msgid "Date of Admission must be before or equal the Sampled Date on"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/addsample.py:124
+#: palau/lims/adapters/addsample.py:124
 msgid "Date of Admission must be equal or before Sampled Date on {}"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:118
+#: palau/lims/browser/sample/templates/rejection_content.pt:118
 msgid "Date received"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:254
+#: palau/lims/config.py:246
 msgid "December"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/labcontact.py:32
+#: palau/lims/content/labcontact.py:32
 msgid "Default Hospital/Clinic"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:330
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:359
+#: palau/lims/content/analysisrequest.py:330
+#: palau/lims/impress/reports/Default.pt:332
 msgid "Department"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/addsample.py:84
+#: palau/lims/adapters/addsample.py:84
 msgid "Department is required for this Hospital/Clinic"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/client.py:39
+#: palau/lims/content/client.py:39
 msgid "Department mandatory"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/content/warddepartments.py:44
-#: palau.lims/src/palau/lims/browser/content/wards.py:43
-#: palau.lims/src/palau/lims/content/analysisrequest.py:229
+#: palau/lims/browser/content/warddepartments.py:44
+#: palau/lims/browser/content/wards.py:43
+#: palau/lims/content/analysisrequest.py:229
 msgid "Description"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/listing/samples.py:27
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:123
-#: palau.lims/src/palau/lims/content/analysisrequest.py:75
+#: palau/lims/adapters/listing/samples.py:27
+#: palau/lims/browser/sample/templates/rejection_content.pt:123
+#: palau/lims/content/analysisrequest.py:75
 msgid "Doctor"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/samplecontainer.py:24
+#: palau/lims/behaviors/samplecontainer.py:24
 msgid "Dry weight of the container. When set, the volume of the sample is calculated automatically by subtracting this value from the container's weight set on sample registration"
 msgstr ""
 
-#: palau.lims/src/palau/lims/profiles/default/actions.xml
+#: palau/lims/profiles/default/actions.xml
 msgid "Export to WHONET"
 msgstr ""
 
-#: palau.lims/src/palau/lims/configure.zcml:46
+#: palau/lims/configure.zcml:43
 msgid "Extension profile for SENAITE: PALAU LIMS"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:761
+#: palau/lims/impress/reports/Default.pt:734
 msgid "Fax"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:244
+#: palau/lims/config.py:236
 msgid "February"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:654
+#: palau/lims/impress/reports/Default.pt:627
 msgid "Filename:"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/baseanalysis.py:26
+#: palau/lims/content/baseanalysis.py:26
 msgid "Flag"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/whonet/templates/export.pt:49
+#: palau/lims/browser/whonet/templates/export.pt:49
 msgid "Generate CSV file"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/sampletype.py:29
-msgid "Generic search control"
-msgstr ""
-
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:99
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:327
+#: palau/lims/browser/sample/templates/rejection_content.pt:99
+#: palau/lims/impress/reports/Default.pt:300
 msgid "Hospital Number"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:127
-#: palau.lims/src/palau/lims/content/analysisrequest.py:69
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:355
+#: palau/lims/browser/sample/templates/rejection_content.pt:127
+#: palau/lims/content/analysisrequest.py:69
+#: palau/lims/impress/reports/Default.pt:328
 msgid "Hospital/Clinic"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:181
+#: palau/lims/content/analysisrequest.py:181
 msgid "Identifier"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/client.py:40
+#: palau/lims/content/client.py:40
 msgid "If enabled, the department in sample form will become a required field."
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/content/warddepartments.py:57
-#: palau.lims/src/palau/lims/browser/content/wards.py:56
+#: palau/lims/browser/content/warddepartments.py:57
+#: palau/lims/browser/content/wards.py:56
 msgid "Inactive"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:226
+#: palau/lims/config.py:218
 msgid "Inpatient"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:394
+#: palau/lims/impress/reports/Default.pt:367
 msgid "Invalidated"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:243
+#: palau/lims/config.py:235
 msgid "January"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:249
+#: palau/lims/config.py:241
 msgid "July"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:248
+#: palau/lims/config.py:240
 msgid "June"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/listing/samples.py:21
-#: palau.lims/src/palau/lims/content/analysisrequest.py:354
+#: palau/lims/adapters/listing/samples.py:21
+#: palau/lims/content/analysisrequest.py:354
 msgid "Location"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/listing/samples.py:24
+#: palau/lims/adapters/listing/samples.py:24
 msgid "Location ID"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:245
+#: palau/lims/config.py:237
 msgid "March"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/listing/sampletypes.py:29
-#: palau.lims/src/palau/lims/content/sampletype.py:84
-msgid "Maximum Volume"
-msgstr ""
-
-#: palau.lims/src/palau/lims/config.py:247
+#: palau/lims/config.py:239
 msgid "May"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/sampletemplate.py:31
+#: palau/lims/behaviors/sampletemplate.py:31
 msgid "MinimumVolume"
 msgstr ""
 
-#: palau.lims/src/palau/lims/tamanu/browser/viewlets/tamanuobject.py:122
+#: palau/lims/tamanu/browser/viewlets/tamanuobject.py:122
 msgid "Missing profiles"
 msgstr ""
 
-#: palau.lims/src/palau/lims/tamanu/browser/viewlets/tamanuobject.py:128
+#: palau/lims/tamanu/browser/viewlets/tamanuobject.py:128
 msgid "Missing test"
 msgstr ""
 
-#: palau.lims/src/palau/lims/skins/palau_templates/palau_widgets/bottleswidget.pt:266
-msgid "More"
-msgstr ""
-
-#: palau.lims/src/palau/lims/content/baseanalysis.py:37
+#: palau/lims/content/baseanalysis.py:37
 msgid "Negative"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:432
+#: palau/lims/impress/reports/Default.pt:405
 msgid "Normal values"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/form.py:109
+#: palau/lims/adapters/form.py:109
 msgid "Not a valid quantity or unit"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/sampletemplate.py:64
+#: palau/lims/behaviors/sampletemplate.py:64
 msgid "Not a valid volume"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/listing/samples.py:84
+#: palau/lims/adapters/listing/samples.py:84
 msgid "Not enough sample"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:228
+#: palau/lims/config.py:220
 msgid "Not specified"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:253
+#: palau/lims/config.py:245
 msgid "November"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:41
+#: palau/lims/impress/reports/Default.pt:41
 msgid "Number of attachments rendered within one row per Analysis Request"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:252
+#: palau/lims/config.py:244
 msgid "October"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:227
+#: palau/lims/config.py:219
 msgid "Outpatient"
 msgstr ""
 
-#: palau.lims/src/palau/lims/configure.zcml:46
+#: palau/lims/configure.zcml:43
 msgid "PALAU LIMS"
 msgstr ""
 
-#: palau.lims/src/palau/lims/configure.zcml:64
+#: palau/lims/configure.zcml:61
 msgid "PALAU LIMS (uninstall)"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:239
+#: palau/lims/config.py:231
 msgid "Paediatric patient"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/views/templates/ast_results.pt:19
+#: palau/lims/browser/views/templates/ast_results.pt:19
 msgid "Panel"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:95
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:322
+#: palau/lims/browser/sample/templates/rejection_content.pt:95
+#: palau/lims/impress/reports/Default.pt:295
 msgid "Patient name"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:757
+#: palau/lims/impress/reports/Default.pt:730
 msgid "Phone"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:114
+#: palau/lims/browser/sample/templates/rejection_content.pt:114
 msgid "Place of residence"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/baseanalysis.py:38
+#: palau/lims/content/baseanalysis.py:38
 msgid "Positive"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:290
+#: palau/lims/impress/reports/Default.pt:263
 msgid "Preliminary report"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:252
+#: palau/lims/content/analysisrequest.py:252
 msgid "Relevant clinical information"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/views/templates/ast_results.pt:69
+#: palau/lims/browser/views/templates/ast_results.pt:69
 msgid "Removed microorganisms:"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/patient.py:27
+#: palau/lims/behaviors/patient.py:27
 msgid "Replaced By Patient"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:773
+#: palau/lims/impress/reports/Default.pt:746
 msgid "Report v1"
 msgstr ""
 
-#: palau.lims/src/palau/lims/tamanu/browser/viewlets/templates/tamanu_object.pt:10
+#: palau/lims/tamanu/browser/viewlets/templates/tamanu_object.pt:10
 msgid "Resource from Tamanu"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:430
+#: palau/lims/impress/reports/Default.pt:403
 msgid "Result"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:282
+#: palau/lims/impress/reports/Default.pt:255
 msgid "Revised report for sample"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:234
+#: palau/lims/config.py:226
 msgid "Routine"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:136
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:364
+#: palau/lims/browser/sample/templates/rejection_content.pt:136
+#: palau/lims/impress/reports/Default.pt:337
 msgid "Sample ID"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:194
+#: palau/lims/browser/sample/templates/rejection_content.pt:194
 msgid "Sample rejected by"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:140
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:368
+#: palau/lims/browser/sample/templates/rejection_content.pt:140
+#: palau/lims/impress/reports/Default.pt:341
 msgid "Sample type"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/views/templates/ast_results.pt:27
+#: palau/lims/browser/views/templates/ast_results.pt:27
 msgid "Select panel"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/views/templates/ast_results.pt:59
+#: palau/lims/browser/views/templates/ast_results.pt:59
 msgid "Selected panels"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/views/templates/ast_results.pt:49
+#: palau/lims/browser/views/templates/ast_results.pt:49
 msgid "Selective reporting"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:251
+#: palau/lims/config.py:243
 msgid "September"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:103
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:331
+#: palau/lims/browser/sample/templates/rejection_content.pt:103
+#: palau/lims/impress/reports/Default.pt:304
 msgid "Sex"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:144
+#: palau/lims/browser/sample/templates/rejection_content.pt:144
 msgid "Site"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:111
+#: palau/lims/content/analysisrequest.py:111
 msgid "Site additional information"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/addsample.py:104
+#: palau/lims/adapters/addsample.py:104
 msgid "Specification is required"
 msgstr ""
 
-#: palau.lims/src/palau/lims/config.py:232
+#: palau/lims/config.py:224
 msgid "Stat"
 msgstr ""
 
-#: palau.lims/src/palau/lims/profiles/default/actions.xml
+#: palau/lims/profiles/default/actions.xml
 msgid "Statistic reports"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:272
+#: palau/lims/impress/reports/Default.pt:245
 msgid "Supplementary report for"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:540
+#: palau/lims/impress/reports/Default.pt:513
 msgid "Temporarily Unavailable"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:679
+#: palau/lims/impress/reports/Default.pt:652
 msgid "Tested ${submitted_datetime} by"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/viewlets/templates/unknown_doctor_viewlet.pt:13
+#: palau/lims/browser/viewlets/templates/unknown_doctor_viewlet.pt:13
 msgid "The Doctor assigned to this sample is unknown"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/client.py:29
+#: palau/lims/content/client.py:29
 msgid "The abbreviation of the hospital"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/labcontact.py:33
+#: palau/lims/content/labcontact.py:33
 msgid "The hospital or clinic to be selected by default on sample creation"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/sampletype.py:85
-msgid "The maximum sample volume required for analysis eg. '10 ml' or '1 kg'."
-msgstr ""
-
-#: palau.lims/src/palau/lims/behaviors/sampletemplate.py:32
+#: palau/lims/behaviors/sampletemplate.py:32
 msgid "The minimum sample volume required for analysis eg. '10 ml'"
 msgstr ""
 
-#: palau.lims/src/palau/lims/tamanu/browser/viewlets/templates/tamanu_object.pt:19
+#: palau/lims/tamanu/browser/viewlets/templates/tamanu_object.pt:19
 msgid "There are inconsistencies with Tamanu's record"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/viewlets/templates/not_enough_sample_viewlet.pt:13
+#: palau/lims/browser/viewlets/templates/not_enough_sample_viewlet.pt:13
 msgid "There is not enough volume of sample"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/viewlets/templates/over_sample_viewlet.pt:13
+#: palau/lims/browser/viewlets/templates/over_sample_viewlet.pt:13
 msgid "There is over volume of sample"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:260
+#: palau/lims/impress/reports/Default.pt:233
 msgid "This Sample has been invalidated due to erroneously published results"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:263
+#: palau/lims/impress/reports/Default.pt:236
 msgid "This Sample has been replaced by"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/patient.py:47
-#: palau.lims/src/palau/lims/browser/content/warddepartments.py:41
-#: palau.lims/src/palau/lims/browser/content/wards.py:40
+#: palau/lims/behaviors/patient.py:47
+#: palau/lims/browser/content/warddepartments.py:41
+#: palau/lims/browser/content/wards.py:40
 msgid "Title"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/actions.py:25
+#: palau/lims/adapters/actions.py:25
 msgid "Too many samples selected"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/listing/samples.py:78
+#: palau/lims/adapters/listing/samples.py:78
 msgid "Unknown doctor"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:700
+#: palau/lims/impress/reports/Default.pt:673
 msgid "Verified ${verified_datetime} by"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/whonet/templates/export.pt:34
+#: palau/lims/browser/whonet/templates/export.pt:34
 msgid "Verified and published analyses, from samples collected between"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:312
+#: palau/lims/content/analysisrequest.py:312
 msgid "Volume"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:183
+#: palau/lims/content/analysisrequest.py:183
 msgid "Volume (ml)"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/addsample.py:153
-#: palau.lims/src/palau/lims/adapters/form.py:82
+#: palau/lims/adapters/addsample.py:153
+#: palau/lims/adapters/form.py:82
 msgid "Volume is below {}"
 msgstr ""
 
-#: palau.lims/src/palau/lims/adapters/addsample.py:194
+#: palau/lims/adapters/addsample.py:194
 msgid "Volume is over {}"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:313
+#: palau/lims/content/analysisrequest.py:313
 msgid "Volume of sample, expressed as quantity and unit (e.g '10 ml')"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/whonet/templates/export.pt:12
+#: palau/lims/browser/whonet/templates/export.pt:12
 msgid "WHONET Export"
 msgstr ""
 
-#: palau.lims/src/palau/lims/browser/sample/templates/rejection_content.pt:131
-#: palau.lims/src/palau/lims/content/analysisrequest.py:148
-#: palau.lims/src/palau/lims/profiles/default/types/Ward.xml
+#: palau/lims/browser/sample/templates/rejection_content.pt:131
+#: palau/lims/content/analysisrequest.py:148
+#: palau/lims/profiles/default/types/Ward.xml
 msgid "Ward"
 msgstr ""
 
-#: palau.lims/src/palau/lims/profiles/default/types/WardDepartment.xml
+#: palau/lims/profiles/default/types/WardDepartment.xml
 msgid "WardDepartment"
 msgstr ""
 
-#: palau.lims/src/palau/lims/profiles/default/types/WardDepartments.xml
+#: palau/lims/profiles/default/types/WardDepartments.xml
 msgid "WardDepartments"
 msgstr ""
 
-#: palau.lims/src/palau/lims/profiles/default/types/Wards.xml
+#: palau/lims/profiles/default/types/Wards.xml
 msgid "Wards"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/samplecontainer.py:23
+#: palau/lims/behaviors/samplecontainer.py:23
 msgid "Weight"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/analysisrequest.py:182
+#: palau/lims/content/analysisrequest.py:182
 msgid "Weight (g)"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/sampletemplate.py:41
-#: palau.lims/src/palau/lims/content/sampletype.py:69
+#: palau/lims/behaviors/sampletemplate.py:41
 msgid "When there is not enough volume, the contents entered here are automatically inserted in Results Interpretation after Sample verification"
 msgstr ""
 
-#: palau.lims/src/palau/lims/behaviors/containertype.py:20
+#: palau/lims/behaviors/containertype.py:20
 msgid "Whether containers from this type are available for selection when the default container for the selected sample type is a BACTEC bottle"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/labcontact.py:51
+#: palau/lims/content/labcontact.py:51
 msgid "Whether the user linked to this laboratory contact is authorised to reject samples. Note that user won't be able to reject a sample if she/he does not belong to an authorised group (LabManager or LabClerk), even if this option is selected"
 msgstr ""
 
-#: palau.lims/src/palau/lims/content/sampletype.py:52
-msgid "Widget for container selection"
-msgstr ""
-
-#: palau.lims/src/palau/lims/content/sampletype.py:53
-msgid "Widget to display on sample view and add sample form for the selection of the sample container when this sample type is selected."
-msgstr ""
-
-#: palau.lims/src/palau/lims/browser/whonet/templates/export.pt:42
+#: palau/lims/browser/whonet/templates/export.pt:42
 msgid "and"
 msgstr ""
 
-#: palau.lims/src/palau/lims/impress/reports/Default.pt:617
+#: palau/lims/impress/reports/Default.pt:590
 msgid "by"
 msgstr ""
 
-#: palau.lims/src/palau/lims/tamanu/browser/viewlets/templates/tamanu_object.pt:11
+#: palau/lims/tamanu/browser/viewlets/templates/tamanu_object.pt:11
 msgid "show original metadata (JSON)"
 msgstr ""
