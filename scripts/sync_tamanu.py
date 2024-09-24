@@ -7,13 +7,13 @@ import sys
 from datetime import timedelta
 
 import transaction
+from bes.lims.scripts import setup_script_environment
 from bika.lims import api
 from bika.lims.api import security as sapi
 from bika.lims.utils.analysisrequest import \
     create_analysisrequest as create_sample
 from bika.lims.workflow import doActionFor
 from palau.lims.config import TAMANU_ID
-from palau.lims.scripts import setup_script_environment
 from palau.lims.tamanu import api as tapi
 from palau.lims.tamanu import logger
 from palau.lims.tamanu.config import SAMPLE_FINAL_STATUSES
