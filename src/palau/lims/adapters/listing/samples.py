@@ -38,6 +38,21 @@ ADD_STATUSES = [
 
 # Statuses to update. List of tuples (status_id, {properties})
 UPDATE_STATUSES = [
+    ("default", {
+        "flat_listing": True,
+    }),
+    ("sample_due", {
+        "flat_listing": True,
+    }),
+    ("sample_received", {
+        "flat_listing": True,
+    }),
+    ("to_be_verified", {
+        "flat_listing": True,
+    }),
+    ("verified", {
+        "flat_listing": True,
+    })
 ]
 
 
