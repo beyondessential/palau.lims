@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #223 Flat listing for due, received, to be verified and verified samples
 - #221 Added scripts for deletion of dispatched samples and inactive patients
 - #220 Add ASTM consumer for Siemens DCA Vantage® Analyzer
 - #219 Compatibility with senaite.core#2584 (SampleType to DX)
