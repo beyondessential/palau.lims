@@ -24,9 +24,6 @@
     <role name="Reader"/>
     <role name="Reviewer"/>
     <role name="Site Administrator"/>
-  
-    <!-- PALAU ROLES -->
-    <role name="Rejector"/>
 
   </roles>
 

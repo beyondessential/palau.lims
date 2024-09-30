@@ -4,6 +4,7 @@
 #
 # Copyright 2020-2023 Beyond Essential Systems Pty Ltd
 
+from bes.lims.upgrade.v01_00_000 import setup_rejector  # noqa
 from bes.lims.workflow.analysis.events import after_set_out_of_stock
 from bika.lims import api
 from bika.lims.api import security as sapi
@@ -14,7 +15,6 @@ from palau.lims.config import PRIORITIES
 from palau.lims.config import TAMANU_ID
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
-from palau.lims.setuphandlers import setup_roles_and_groups
 from palau.lims.setuphandlers import setup_workflows
 from Products.Archetypes.BaseUnit import BaseUnit
 from Products.CMFCore.permissions import ModifyPortalContent
@@ -182,33 +182,6 @@ def fix_out_of_stock(tool):
         obj._p_deactivate()
 
     logger.info("Setup analysis workflow [DONE]")
-
-
-def setup_rejector(tool):
-    portal = tool.aq_inner.aq_parent
-    setup = portal.portal_setup
-
-    logger.info("Setting Rejector role for Analyses [BEGIN]...")
-
-    setup.runImportStepFromProfile(profile, "rolemap")
-    setup_roles_and_groups(portal)
-
-    # Update Analyses rolemap
-    states = ["assigned", "unassigned", "to_be_verified"]
-    query = {"portal_type": "Analysis", "review_state": states}
-    brains = api.search(query, ANALYSIS_CATALOG)
-
-    wf_tool = api.get_tool("portal_workflow")
-    wf = wf_tool.getWorkflowById(ANALYSIS_WORKFLOW)
-
-    for brain in brains:
-        obj = api.get_object(brain)
-        wf.updateRoleMappingsFor(obj)
-
-        # Flush the object from memory
-        obj._p_deactivate()
-
-    logger.info("Rejector role set successfully for Analyses [END]...")
 
 
 def setup_analysisprofile_behavior(tool):
