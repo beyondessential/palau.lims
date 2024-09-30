@@ -7,7 +7,6 @@
 import os
 
 from bika.lims import api
-from bika.lims.api import security
 from bika.lims.browser.analysisrequest.add2 import AR_CONFIGURATION_STORAGE
 from BTrees.OOBTree import OOBTree
 from palau.lims import logger
@@ -33,7 +32,6 @@ from senaite.ast.config import AST_CALCULATION_TITLE
 from senaite.ast.config import IDENTIFICATION_KEY
 from senaite.ast.config import SERVICE_CATEGORY
 from senaite.ast.config import SERVICES_SETTINGS
-from senaite.core import permissions as permissionsCore
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
@@ -187,22 +185,6 @@ WORKFLOWS_TO_UPDATE = {
 }
 
 
-# List of tuples of (role, path, [(permissions, acquire), ...])
-# When path is empty/None, the permissions are applied to portal object
-ROLES = [
-    ("Rejector", "", [
-        (permissionsCore.TransitionRejectAnalysis, 0),
-    ]),
-]
-
-# List of tuples of (id, title, roles)
-GROUPS = [
-    ("Rejectors", "Rejectors", [
-        "Member", "Rejector", "Analyst"
-    ]),
-]
-
-
 def setup_handler(context):
     """Generic setup handler
     """
@@ -214,9 +196,6 @@ def setup_handler(context):
 
     # Setup catalogs
     setup_catalogs(portal)
-
-    # Setup roles and groups
-    setup_roles_and_groups(portal)
 
     # Setup folders
     add_setup_folders(portal)
@@ -845,47 +824,3 @@ def setup_languages(portal):
     for key, val in LANG_SETTINGS:
         ploneapi.portal.set_registry_record("plone.{}".format(key), val)
     logger.info("Setup languages settings [DONE]")
-
-
-def setup_roles(portal):
-    """Setup roles
-    """
-    logger.info("Setup roles ...")
-    for role, path, perms in ROLES:
-        folder_path = path or api.get_path(portal)
-        folder = api.get_object_by_path(folder_path)
-        for permission, acquire in perms:
-            logger.info("{} {} {} (acquire={})".format(role, folder_path,
-                                                       permission, acquire))
-            security.grant_permission_for(folder, permission, role,
-                                          acquire=acquire)
-    logger.info("Setup roles [DONE]")
-
-
-def setup_groups(portal):
-    """Setup roles and groups
-    """
-    logger.info("Setup groups ...")
-    portal_groups = api.get_tool("portal_groups")
-    for group_id, title, roles in GROUPS:
-
-        # create the group and grant the roles
-        if group_id not in portal_groups.listGroupIds():
-            logger.info("Adding group {} ({}): {}".format(
-                title, group_id, ", ".join(roles)))
-            portal_groups.addGroup(group_id, title=title, roles=roles)
-
-        # grant the roles to the existing group
-        else:
-            ploneapi.group.grant_roles(groupname=group_id, roles=roles)
-            logger.info("Granting roles for group {} ({}): {}".format(
-                title, group_id, ", ".join(roles)))
-
-    logger.info("Setup groups [DONE]")
-
-
-def setup_roles_and_groups(portal):
-    """Setup roles and groups
-    """
-    setup_roles(portal)
-    setup_groups(portal)
