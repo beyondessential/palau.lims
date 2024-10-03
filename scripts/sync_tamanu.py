@@ -221,7 +221,8 @@ def get_sample_type(service_request):
     if not title:
         raise ValueError("Sample type without title: %s" % repr(specimen))
 
-    container = api.get_setup().bika_sampletypes
+    setup = api.get_senaite_setup()
+    container = setup.sampletypes
     return api.create(container, "SampleType", **info)
 
 
