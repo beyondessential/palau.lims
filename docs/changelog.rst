@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #229 Fix error on SampleType creation while synchronizing with Tamanu
 - #224 Compatibility with bes.lims#9 (Rejector role and group)
 - #223 Flat listing for due, received, to be verified and verified samples
 - #221 Added scripts for deletion of dispatched samples and inactive patients
