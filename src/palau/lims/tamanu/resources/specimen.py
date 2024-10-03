@@ -68,7 +68,7 @@ class SpecimenResource(TamanuResource):
             return {}
         return {
             "title": coding[0].get("display"),
-            "Prefix": coding[0].get("code"),
+            "prefix": coding[0].get("code"),
         }
 
     def get_sample_point_info(self):
