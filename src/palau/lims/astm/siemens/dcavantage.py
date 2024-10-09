@@ -6,7 +6,7 @@ from palau.lims.astm import ASTMBaseImporter as Base
 KEYWORDS_MAPPING = (
     # Tuple of (instrument_parameter, (service_keywords))
     ("Crt", ["creat", "CREAT_A", "UCREA", "CREAT_V"]),
-    ("Alb", ["Alb"]),
+    ("Alb", ["Alb", "UALB"]),
     ("Ratio", ["MALB"]),
     ("HbA1c", ["HbA1c"]),
 )
