@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #230 Add UALB service keyword for DCA Vantage's parameter Alb
 - #229 Fix error on SampleType creation while synchronizing with Tamanu
 - #224 Compatibility with bes.lims#9 (Rejector role and group)
 - #223 Flat listing for due, received, to be verified and verified samples
