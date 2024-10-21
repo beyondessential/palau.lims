@@ -88,7 +88,7 @@
 
   <!-- Additional filter queries for when Sample type is selected -->
   <adapter
-      for="bika.lims.interfaces.ISampleType"
+      for="senaite.core.interfaces.ISampleType"
       factory=".addsample.AddSampleTypeInfo"
       provides="bika.lims.interfaces.IAddSampleObjectInfo"
       name="palau.lims.addsample_sampletype_info" />
