@@ -518,10 +518,9 @@ def sync_service_request(sr):
     priority = dict(PRIORITIES).get(priority, "5")
 
     # get the remarks (notes)
-    remarks = get_remarks(sr)
+    #remarks = get_remarks(sr)
 
     # get the relevant clinical info (notes)
-    # https://github.com/beyondessential/palau.lims/issues/231
     clinical_info = get_relevant_clinical_information(sr)
 
     # get or create the client via FHIR's encounter/serviceProvider
@@ -564,7 +563,7 @@ def sync_service_request(sr):
         "Sex": patient_sex,
         "Priority": priority,
         "ClientSampleID": tid,
-        "Remarks": remarks,
+        #"Remarks": remarks,
         "Specification": spec,
         #"Ward": api.get_uid(ward),
         "ClinicalInformation": clinical_info,
