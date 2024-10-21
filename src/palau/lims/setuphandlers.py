@@ -29,9 +29,17 @@ from Products.DCWorkflow.Guard import Guard
 from senaite.abx.interfaces import IAntibiotic
 from senaite.abx.interfaces import IAntibioticClass
 from senaite.ast.config import AST_CALCULATION_TITLE
+from senaite.ast.config import AST_POINT_OF_CAPTURE
+from senaite.ast.config import BREAKPOINTS_TABLE_KEY
+from senaite.ast.config import DISK_CONTENT_KEY
 from senaite.ast.config import IDENTIFICATION_KEY
+from senaite.ast.config import MIC_KEY
+from senaite.ast.config import REPORT_EXTRAPOLATED_KEY
+from senaite.ast.config import REPORT_KEY
+from senaite.ast.config import RESISTANCE_KEY
 from senaite.ast.config import SERVICE_CATEGORY
 from senaite.ast.config import SERVICES_SETTINGS
+from senaite.ast.config import ZONE_SIZE_KEY
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
@@ -243,6 +251,10 @@ def setup_handler(context):
     # the introduction of growth number required for "BD EpiCenter"
     # https://github.com/beyondessential/pnghealth.lims/issues/170
     update_ast_identification(portal)
+
+    # Enable self-verification of AST analyses
+    # https://github.com/beyondessential/palau.lims/issues/228
+    update_ast_self_verification(portal)
 
     logger.info("{} setup handler [DONE]".format(PRODUCT_NAME.upper()))
 
@@ -824,3 +836,31 @@ def setup_languages(portal):
     for key, val in LANG_SETTINGS:
         ploneapi.portal.set_registry_record("plone.{}".format(key), val)
     logger.info("Setup languages settings [DONE]")
+
+
+def update_ast_self_verification(portal):
+    """Enables self-verification of AST-like analyses
+    """
+    keywords = [
+        BREAKPOINTS_TABLE_KEY,
+        DISK_CONTENT_KEY,
+        MIC_KEY,
+        ZONE_SIZE_KEY,
+        RESISTANCE_KEY,
+        REPORT_KEY,
+        REPORT_EXTRAPOLATED_KEY,
+    ]
+    logger.info("Setup self-verification of AST services ...")
+    query = {
+        "portal_type": "AnalysisService",
+        "point_of_capture": AST_POINT_OF_CAPTURE,
+        "getKeyword": keywords
+    }
+    brains = api.search(query, SETUP_CATALOG)
+    for brain in brains:
+        service = api.get_object(brain)
+
+        logger.info("Enabling self-verification of %r" % service)
+        service.setSelfVerification(1)
+
+    logger.info("Setup self-verification of AST services [DONE]")

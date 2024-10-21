@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Enable self-verification of AST-like services and analyses"
+      description="Enable self-verification of AST-like services and analyses"
+      source="1020"
+      destination="1021"
+      handler=".v01_00_000.enable_ast_self_verification"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Compatibility with senaite.core#2584"
       description="Makes this product compatible with senaite.core#2584"
       source="1019"
