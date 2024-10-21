@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #234 Store Tamanu notes from ServiceRequest as relevant clinical information
 - #233 Enable self-verification of AST-like services and analyses
 - #232 Fix specification is not autofilled on sample type select
 - #230 Add UALB service keyword for DCA Vantage's parameter Alb

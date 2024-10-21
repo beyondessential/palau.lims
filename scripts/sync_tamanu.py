@@ -330,6 +330,19 @@ def get_remarks(service_request):
     return remarks
 
 
+def get_relevant_clinical_information(service_request):
+    """Returns the relevant clinical information counterpart for the given
+    resource
+    """
+    contents = []
+    notes = service_request.get("note") or []
+    for note in notes:
+        text = note.get("text")
+        if text:
+            contents.append(text)
+    return "\n".join(contents)
+
+
 def get_specifications(sample_type):
     """Returns the list of specifications as brains assigned to the sample type
     """
@@ -505,7 +518,10 @@ def sync_service_request(sr):
     priority = dict(PRIORITIES).get(priority, "5")
 
     # get the remarks (notes)
-    remarks = get_remarks(sr)
+    #remarks = get_remarks(sr)
+
+    # get the relevant clinical info (notes)
+    clinical_info = get_relevant_clinical_information(sr)
 
     # get or create the client via FHIR's encounter/serviceProvider
     client = get_client(sr)
@@ -547,10 +563,10 @@ def sync_service_request(sr):
         "Sex": patient_sex,
         "Priority": priority,
         "ClientSampleID": tid,
-        "Remarks": remarks,
+        #"Remarks": remarks,
         "Specification": spec,
         #"Ward": api.get_uid(ward),
-        #"ClinicalInformation": "",
+        "ClinicalInformation": clinical_info,
         #"DateOfAdmission": doa,
         #"CurrentAntibiotics": antibiotics,
         #"Volume": volume,
