@@ -16,6 +16,7 @@ from palau.lims.config import TAMANU_ID
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_workflows
+from palau.lims.setuphandlers import update_ast_self_verification
 from Products.Archetypes.BaseUnit import BaseUnit
 from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.api.catalog import del_column
@@ -452,3 +453,38 @@ def purge_palau_skin(tool):
             skins_tool._delObject(folder)
 
     logger.info("Purge palau.lims skin layer [DONE]")
+
+
+def enable_ast_self_verification(tool):
+    """Enables the self-verification of ast-like services and analyses
+    """
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+
+    # Enable self-verification of ast-like services
+    update_ast_self_verification(portal)
+
+    # Enable self-verification of ast-like analyses
+    logger.info("Setup self-verification of AST analyses ...")
+    statuses = ["registered", "unassigned", "assigned", "to_be_verified"]
+    query = {
+        "portal_type": "Analysis",
+        "review_state": statuses,
+    }
+    brains = api.search(query, ANALYSIS_CATALOG)
+    for brain in brains:
+        try:
+            analysis = api.get_object(brain, default=None)
+        except AttributeError:
+            analysis = None
+
+        if not analysis:
+            continue
+
+        logger.info("Enabling self-verification of %r" % analysis)
+        analysis.setSelfVerification(1)
+
+        # Flush the object from memory
+        analysis._p_deactivate()
+
+    logger.info("Setup self-verification of AST analyses [DONE]")
