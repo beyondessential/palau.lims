@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #232 Fix specification is not autofilled on sample type select
 - #230 Add UALB service keyword for DCA Vantage's parameter Alb
 - #229 Fix error on SampleType creation while synchronizing with Tamanu
 - #224 Compatibility with bes.lims#9 (Rejector role and group)
