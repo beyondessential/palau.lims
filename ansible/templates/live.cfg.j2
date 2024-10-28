@@ -9,6 +9,7 @@ eggs +=
 
 parts +=
     i18ndude
+    reset_permissions
     client_sync_tamanu
     sync_tamanu
 
@@ -22,11 +23,17 @@ always-checkout = true
 # git@github.com:plone/plone.recipe.zope2instance#locales
 locales = ${buildout:directory}/src/palau.lims/src/palau/lims/locales
 
-
 [i18ndude]
 unzip = true
 recipe = zc.recipe.egg
 eggs = i18ndude
+
+[reset_permissions]
+# Restores ownership and permissions of var folder
+recipe = collective.recipe.template
+output = ${buildout:directory}/bin/reset_permissions
+input = ${buildout:product-dir}/templates/reset_permissions.in
+mode = 755
 
 [zeoserver]
 # By default, clients communicate with through a TCP/IP connection, that is
