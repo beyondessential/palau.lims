@@ -19,9 +19,12 @@ environment-vars +=
 
 always-checkout = true
 
+# Product dir
+product-dir = ${buildout:directory}/src/palau.lims
+
 # Override core's/plone's whatever default translations
 # git@github.com:plone/plone.recipe.zope2instance#locales
-locales = ${buildout:directory}/src/palau.lims/src/palau/lims/locales
+locales = ${buildout:product-dir}/palau/lims/locales
 
 [i18ndude]
 unzip = true
@@ -32,7 +35,7 @@ eggs = i18ndude
 # Restores ownership and permissions of var folder
 recipe = collective.recipe.template
 output = ${buildout:directory}/bin/reset_permissions
-input = ${buildout:directory}/src/palau.lims/templates/reset_permissions.in
+input = ${buildout:product-dir}/templates/reset_permissions.in
 mode = 755
 
 [zeoserver]
@@ -75,7 +78,7 @@ event-log-level = INFO
 [sync_tamanu]
 recipe = collective.recipe.template
 output = ${buildout:directory}/bin/sync_tamanu
-input = ${buildout:directory}/src/{{ product_name }}/templates/sync_tamanu.in
+input = ${buildout:product-dir}/templates/sync_tamanu.in
 mode = 755
 # zeo client to use for the synchronization with Tamanu
 zeoclient = client_sync_tamanu
