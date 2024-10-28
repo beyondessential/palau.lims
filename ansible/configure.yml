@@ -1,7 +1,9 @@
 ---
 
-# Name of the SSH key to connect with source code repos
-ssh_key_filename: "github_lims"
+# SSH deploy key names to connect with Github private repositories
+ssh_keys:
+  - github_lims
+  - github_bes_lims
 
 # Plone version
 plone_version: "5.2.14"
@@ -11,6 +13,9 @@ plone_instance_name: "senaite"
 
 # SENAITE's Site id (used by nginx for rev-proxy)
 plone_site_id: "senaite"
+
+# Base buildout cfg
+plone_buildout_cfg: live.base.cfg
 
 # Default number of objects zeo clients will keep in cache
 plone_zodb_cache_size: "50000"
@@ -25,6 +30,7 @@ plone_additional_eggs:
   - pdbpp
 
 plone_sources:
+  - "bes.lims = git github_bes_lims:beyondessential/bes.lims branch=master"
   - "palau.lims = git github_lims:beyondessential/palau.lims.git branch=master"
   - "senaite.core = git https://github.com/senaite/senaite.core.git branch=2.x"
   - "senaite.app.listing = git https://github.com/senaite/senaite.app.listing.git branch=2.x"

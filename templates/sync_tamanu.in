@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-HOST=${buildout:tamanu-host}
-CREDS=${buildout:tamanu-user}
+HOST=${sync_tamanu:host}
+CREDS=${sync_tamanu:credentials}
 
-SINCE_SERVICE_REQUEST=5h
-SINCE_PATIENTS=1d
+SINCE_SERVICE_REQUEST=${sync_tamanu:sample_since}
+SINCE_PATIENTS=${sync_tamanu:patients_since}
 
 BASE=${buildout:directory}
 BIN_DIR=${buildout:directory}/bin
@@ -12,7 +12,7 @@ SRC_DIR=${buildout:directory}/src
 SRC=$SRC_DIR/palau.lims/scripts/sync_tamanu.py
 
 # Synchronize service requests
-$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r ServiceRequest -s $SINCE_SERVICE_REQUEST
+$BIN_DIR/${sync_tamanu:zeoclient} run $SRC -th $HOST -tu $CREDS -r ServiceRequest -s $SINCE_SERVICE_REQUEST
 
 # Synchronize patients
-$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r Patient -s $SINCE_PATIENTS
+$BIN_DIR/${sync_tamanu:zeoclient} run $SRC -th $HOST -tu $CREDS -r Patient -s $SINCE_PATIENTS
