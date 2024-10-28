@@ -4,7 +4,9 @@ import argparse
 import os
 import re
 import sys
+from datetime import datetime
 from datetime import timedelta
+from time import time
 
 import transaction
 from bes.lims.scripts import setup_script_environment
@@ -660,6 +662,12 @@ def main(app):
     username = args.senaite_user or USERNAME
     setup_script_environment(app, stream_out=False, username=username)
 
+    # do the work
+    logger.info("-" * 79)
+    logger.info("Synchronizing with %s ..." % host)
+    logger.info("Started: {}".format(datetime.now().isoformat()))
+    start = time()
+
     # Start a session with Tamanu server
     session = TamanuSession(host)
     logged = session.login(user, password)
@@ -678,9 +686,10 @@ def main(app):
         return
 
     # Commit transaction
-    logger.info("Commit transaction ...")
     transaction.commit()
-    logger.info("Commit transaction [DONE]")
+    logger.info("Synchronizing with %s [DONE]" % host)
+    logger.info("Elapsed: {}".format(timedelta(seconds=(time() - start))))
+    logger.info("-" * 79)
 
 
 if __name__ == "__main__":
