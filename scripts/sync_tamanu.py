@@ -660,7 +660,7 @@ def main(app):
 
     # Setup environment
     username = args.senaite_user or USERNAME
-    setup_script_environment(app, stream_out=False, username=username)
+    setup_script_environment(app, username=username, logger=logger)
 
     # do the work
     logger.info("-" * 79)
