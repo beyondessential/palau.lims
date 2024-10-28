@@ -668,15 +668,17 @@ def main(app):
     logger.info("Started: {}".format(datetime.now().isoformat()))
     start = time()
 
-    # Start a session with Tamanu server
-    session = TamanuSession(host)
-    logged = session.login(user, password)
-    if not logged:
-        error("Cannot login, wrong credentials")
-
-    # Call the sync function
     try:
+
+        # Start a session with Tamanu server
+        session = TamanuSession(host)
+        logged = session.login(user, password)
+        if not logged:
+            error("Cannot login, wrong credentials")
+
+        # Call the sync function
         sync_func(session, since)
+
     except ConnectionError as e:
         connection_error(str(e))
 
