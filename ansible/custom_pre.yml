@@ -3,20 +3,26 @@
 - debug:
     msg: "******************** CUSTOM PRE [START] *******************"
 
-- name: "Generate SSH key"
+- name: "Cleanup nginx's enabled sites, if any"
+  shell: "rm -f /etc/nginx/sites-enabled/*"
+  become: yes
+
+- name: "Generate deploy key for bes.nauru.lims repos"
   user:
     name: "{{user}}"
     generate_ssh_key: yes
     ssh_key_type: rsa
     ssh_key_bits: 4096
-    ssh_key_file: "{{ plone_target_path }}/.ssh/{{ ssh_key_filename }}"
+    ssh_key_file: "{{ plone_target_path }}/.ssh/{{ item }}"
+  loop: "{{ ssh_keys }}"
 
-- name: "Check SSH public key"
-  command: "cat {{ plone_target_path }}/.ssh/{{ ssh_key_filename }}.pub"
+- name: "Check SSH public keys"
+  command: "cat {{ plone_target_path }}/.ssh/{{ item }}.pub"
   register: cat
   changed_when: False
+  loop: "{{ ssh_keys }}"
 
-- name: "Print SSH public key"
+- name: "Print SSH public keys"
   debug:
     var: cat.stdout
 
@@ -39,6 +45,7 @@
   shell: "ssh -T -i ~/.ssh/{{ ssh_key_filename }} -oStrictHostKeyChecking=accept-new git@ssh.github.com"
   become_user: "{{ user }}"
   ignore_errors: "yes"
+  loop: "{{ ssh_keys }}"
   tags:
     - senaite-custom
 

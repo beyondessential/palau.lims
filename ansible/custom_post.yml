@@ -5,12 +5,23 @@
 
 - name: "Copy custom scripts to instance home"
   copy:
-    src="scripts/"
-    dest="{{ plone_target_path }}/{{ plone_site_id }}/"
-    force=yes
-    owner={{ plone_buildout_user }}
-    group={{ plone_group }}
-    mode=preserve
+    src: "scripts/"
+    dest: "{{ plone_target_path }}/{{ plone_site_id }}/"
+    force: yes
+    owner: {{ plone_buildout_user }}
+    group: {{ plone_group }}
+    mode: preserve
+  tags:
+    - senaite-custom
+
+- name: "Copy live.cfg to instance home"
+  template:
+    src: templates/live.cfg.j2
+    dest: "{{ plone_target_path }}/{{ plone_site_id }}/"
+    force: no
+    owner: senaite
+    group: senaite
+    mode: 0644
   tags:
     - senaite-custom
 
@@ -30,12 +41,17 @@
   tags:
     - senaite-custom
 
-- name: "Rerun buildout to prevent WSGI's hop-by-hop header error"
+- name: "Rerun buildout with live.cfg"
   shell: "bin/buildout -c live.cfg > buildout.log 2>&1"
   args:
     chdir: "{{ plone_instance_home }}"
   become_user: "{{ plone_buildout_user }}"
-  notify: restart supervisor
+  tags:
+    - senaite-custom
+
+- name: restart supervisor service
+  shell: "service supervisor restart"
+  become: yes
   tags:
     - senaite-custom
 
