@@ -22,6 +22,7 @@ from palau.lims.tamanu.config import SENAITE_TESTS_CODING_SYSTEM
 from palau.lims.tamanu.config import SNOMED_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from Products.CMFCore.permissions import ModifyPortalContent
+from requests import ConnectionError
 from senaite.core.catalog import CLIENT_CATALOG
 from senaite.core.catalog import CONTACT_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
@@ -107,6 +108,12 @@ def conflict_error(*args, **kwargs):
     """Exits with a conflict error
     """
     error("ConflictError: exhausted retries", code=os.EX_SOFTWARE)
+
+
+def connection_error(message, code=os.EX_UNAVAILABLE):
+    """Exits with a connection error
+    """
+    error("ConnectionError: %s" % message, code=os.EX_UNAVAILABLE)
 
 
 def get_client(service_request):
@@ -660,7 +667,10 @@ def main(app):
         error("Cannot login, wrong credentials")
 
     # Call the sync function
-    sync_func(session, since)
+    try:
+        sync_func(session, since)
+    except ConnectionError as e:
+        connection_error(str(e))
 
     if args.dry:
         # Dry mode. Do not do transaction
