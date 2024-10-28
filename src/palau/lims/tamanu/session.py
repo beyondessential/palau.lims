@@ -39,7 +39,6 @@ class TamanuSession(object):
         self._auth = (email, password)
         auth = dict(email=email, password=password)
         resp = self.post("login", payload=auth)
-        resp.raise_for_status()
         self.token = resp.json().get("token")
         if self.token:
             return True

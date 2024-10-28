@@ -112,7 +112,7 @@ def conflict_error(*args, **kwargs):
     error("ConflictError: exhausted retries", code=os.EX_SOFTWARE)
 
 
-def connection_error(message, code=os.EX_UNAVAILABLE):
+def connection_error(message):
     """Exits with a connection error
     """
     error("ConnectionError: %s" % message, code=os.EX_UNAVAILABLE)
@@ -668,17 +668,15 @@ def main(app):
     logger.info("Started: {}".format(datetime.now().isoformat()))
     start = time()
 
+    # Start a session with Tamanu server
+    session = TamanuSession(host)
+    logged = session.login(user, password)
+    if not logged:
+        error("Cannot login, wrong credentials")
+
     try:
-
-        # Start a session with Tamanu server
-        session = TamanuSession(host)
-        logged = session.login(user, password)
-        if not logged:
-            error("Cannot login, wrong credentials")
-
         # Call the sync function
         sync_func(session, since)
-
     except ConnectionError as e:
         connection_error(str(e))
 
