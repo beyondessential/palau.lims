@@ -32,7 +32,7 @@ eggs = i18ndude
 # Restores ownership and permissions of var folder
 recipe = collective.recipe.template
 output = ${buildout:directory}/bin/reset_permissions
-input = ${buildout:product-dir}/templates/reset_permissions.in
+input = ${buildout:directory}/src/palau.lims/templates/reset_permissions.in
 mode = 755
 
 [zeoserver]
