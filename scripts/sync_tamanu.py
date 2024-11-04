@@ -686,7 +686,7 @@ def set_cache(data):
 
     # reset the cache
     global _cache
-    _cache = {}
+    _cache = data
 
 
 def cache_modified(resource):
