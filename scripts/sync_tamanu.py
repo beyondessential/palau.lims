@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import json
 import os
 import re
 import sys
@@ -25,6 +26,7 @@ from palau.lims.tamanu.config import SNOMED_CODING_SYSTEM
 from palau.lims.tamanu.session import TamanuSession
 from Products.CMFCore.permissions import ModifyPortalContent
 from requests import ConnectionError
+from senaite.core.api import dtime
 from senaite.core.catalog import CLIENT_CATALOG
 from senaite.core.catalog import CONTACT_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
@@ -65,6 +67,9 @@ parser.add_argument(
     help="Run in dry mode"
 )
 
+# File where sync data (e.g. last update date, etc.) will be stored
+SYNC_DATA_FILE = ".sync_tamanu.data"
+
 # Default since in dhm format
 DEFAULT_SINCE = "1d"
 
@@ -97,6 +102,8 @@ PRIORITIES = (
 DHM_REGEX = r'^((?P<d>(\d+))d){0,1}\s*' \
             r'((?P<h>(\d+))h){0,1}\s*' \
             r'((?P<m>(\d+))m){0,1}\s*'
+
+_cache = None
 
 
 def error(message, code=1):
@@ -366,6 +373,9 @@ def get_specifications(sample_type):
 def to_timedelta(since):
     """Returns a timedelta for the given
     """
+    if isinstance(since, timedelta):
+        return since
+
     if api.is_floatable(since):
         # days by default
         return timedelta(days=api.to_int(since))
@@ -413,6 +423,11 @@ def sync_patient(resource):
     mrn = resource.get_mrn() or "unk"
     logger.info("Processing Patient '{}' ({})".format(mrn, resource.UID))
 
+    # skip if up-to-date in our temp cache
+    if is_up_to_date(resource):
+        logger.info("Skip %s. Patient is up-to-date with cache" % mrn)
+        return
+
     # get/create the patient
     patient = get_patient(resource)
 
@@ -439,6 +454,9 @@ def sync_patient(resource):
 
     # commit transaction
     transaction.commit()
+
+    # store the modification date of this record in cache
+    cache_modified(resource)
 
 
 def sync_service_requests(session, since):
@@ -471,11 +489,16 @@ def sync_service_request(sr):
     tid = sr.getLabTestID()
     hash = "%s %s" % (tid, sr.UID)
 
+    # skip if up-to-date in our temp cache
+    if is_up_to_date(sr):
+        logger.info("Skip %s. Sample is up-to-date with cache" % hash)
+        return
+
     # skip if the category is not supported
     category = sr.get("category")
     codes = tapi.get_codes(category, SNOMED_CODING_SYSTEM)
     if SNOMED_REQUEST_CATEGORY not in codes:
-        logger.info("Skip %s Category is not supported" % hash)
+        logger.info("Skip %s. Category is not supported" % hash)
         return
 
     # get SampleType, Site and DateSampled via FHIR's specimen
@@ -605,6 +628,9 @@ def sync_service_request(sr):
     # commit transaction
     transaction.commit()
 
+    # store the modification date of this record in cache
+    cache_modified(sr)
+
 
 def edit_sample(sample, **kwargs):
     # pop non-editable fields
@@ -622,6 +648,75 @@ def edit_sample(sample, **kwargs):
 
     # edit the sample
     api.edit(sample, **kwargs)
+
+
+def get_cache_file():
+    """Returns the file for caching
+    """
+    cwd = os.getcwd()
+    return os.path.join(cwd, SYNC_DATA_FILE)
+
+
+def get_cache():
+    """Get the data of resources synchronization stored in a local file
+    """
+    global _cache
+    if not _cache:
+        cache_file = get_cache_file()
+        if not os.path.isfile(cache_file):
+            return {}
+
+        # read from the file and convert to a dict
+        with open(cache_file, "r") as in_file:
+            data = in_file.read()
+        _cache = api.parse_json(data, {})
+
+    return _cache
+
+
+def set_cache(data):
+    """Store synchronization information in a local file
+    """
+    json_data = json.dumps(data)
+    cache_file = get_cache_file()
+    with open(cache_file, "w") as out_file:
+        out_file.write(json_data)
+
+    # reset the cache
+    global _cache
+    _cache = {}
+
+
+def cache_modified(resource):
+    # get the modification date of the tamanu resource
+    uid = resource.UID
+    modified = dtime.to_ansi(resource.modified)
+    if not modified:
+        return
+
+    # store the modification time of this resource
+    data = get_cache()
+    data[uid] = modified
+    set_cache(data)
+
+
+def is_up_to_date(resource):
+    # get the modification date of the tamanu resource
+    uid = resource.UID
+    modified = dtime.to_ansi(resource.modified)
+    if not modified:
+        # maybe created??
+        return False
+
+    # get the modification date time we keep in our cache
+    data = get_cache()
+    last_modified = data.get(uid)
+    last_modified = dtime.to_dt(last_modified)
+    last_modified = dtime.to_ansi(last_modified)
+    if not last_modified:
+        return False
+
+    return modified <= last_modified
 
 
 def main(app):
