@@ -120,25 +120,25 @@ ID_FORMATTING = [
         # should be 3, so the parts "AR", "{sampleType}" and "{parentId}" are
         # joined together as the prefix template ("AR-{sampleType}{parentId}",
         # so the last part ({alpha:3a2d}) becomes computed each time.
-        "split_length": 1,
+        "split_length": 3,
     }, {
         "portal_type": "AnalysisRequestPartition",
         "form": "{parent_ar_id}P{partition_count:01d}",
         "prefix": "analysisrequestpartition",
         "sequence_type": "",
-        "split-length": 1
+        "split-length": 2
     }, {
         "portal_type": "AnalysisRequestRetest",
         "form": "{parent_base_id}R{retest_count:01d}",
         "prefix": "analysisrequestretest",
         "sequence_type": "",
-        "split-length": 1
+        "split-length": 2
     }, {
         "portal_type": "AnalysisRequestSecondary",
         "form": "{parent_ar_id}S{secondary_count:01d}",
         "prefix": "analysisrequestsecondary",
         "sequence_type": "",
-        "split-length": 1
+        "split-length": 2
     }, {
         "portal_type": "Worksheet",
         "form": "WS{yymmdd}-{seq:02d}",
