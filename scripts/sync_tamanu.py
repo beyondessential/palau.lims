@@ -411,7 +411,7 @@ def sync_patients(session, since):
 
     total = len(resources)
     for num, resource in enumerate(resources):
-        if num and num % 100 == 0:
+        if num and num % 10 == 0:
             logger.info("Processing patients {}/{}".format(num, total))
 
         # create or update the patient counterpart at SENAITE
@@ -421,12 +421,14 @@ def sync_patients(session, since):
 @retriable(sync=True)
 def sync_patient(resource):
     mrn = resource.get_mrn() or "unk"
-    logger.info("Processing Patient '{}' ({})".format(mrn, resource.UID))
+    hash = "%s %s" % (mrn, resource.UID)
 
     # skip if up-to-date in our temp cache
     if is_up_to_date(resource):
-        logger.info("Skip %s. Patient is up-to-date with cache" % mrn)
+        logger.info("Skip %s. Patient is up-to-date with cache" % hash)
         return
+
+    logger.info("Processing Patient '{}' ({})".format(mrn, resource.UID))
 
     # get/create the patient
     patient = get_patient(resource)
