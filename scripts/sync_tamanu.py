@@ -532,6 +532,8 @@ def sync_service_request(sr):
     if sample and api.get_review_status(sample) in SAMPLE_FINAL_STATUSES:
         msg = "Skip %s. Sample cannot be edited: %r" % (hash, sample)
         logger.info(msg)
+        # store the modification date of this record in cache
+        cache_modified(sr)
         return
 
     # get the specification if only assigned to this sample type
