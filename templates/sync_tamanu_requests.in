@@ -7,6 +7,7 @@ BASE=${buildout:directory}
 BIN_DIR=${buildout:directory}/bin
 SRC_DIR=${buildout:directory}/src
 SRC=$SRC_DIR/palau.lims/scripts/sync_tamanu.py
+CACHE_DIR=${buildout:var-dir}/sync_tamanu
 
 SINCE=1d
 
@@ -14,4 +15,4 @@ if [ -n "$1" ]; then
   SINCE=$1
 fi
 
-$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r ServiceRequest -s $SINCE
+$BIN_DIR/client_reserved run $SRC -th $HOST -tu $CREDS -r ServiceRequest -s $SINCE -c $CACHE_DIR

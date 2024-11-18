@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import errno
 import json
 import os
 import re
@@ -62,16 +63,30 @@ parser.add_argument(
     "-s", "--since",
     help="Last updated since. Supports d (days), hours (hours), minutes (m)"
 )
+
+parser.add_argument(
+    "-c", "--cache",
+    help="The local filesystem path for cached content"
+)
+
+parser.add_argument(
+    "-cs", "--cache_since",
+    help="Default days to keep cached content since their last update date",
+)
+
 parser.add_argument(
     "-d", "--dry", action="store_true",
     help="Run in dry mode"
 )
 
 # File where sync data (e.g. last update date, etc.) will be stored
-SYNC_DATA_FILE = ".sync_tamanu.data"
+SYNC_DATA_FILE = "cache"
 
 # Default since in dhm format
 DEFAULT_SINCE = "1d"
+
+# Default days to keep cache
+DEFAULT_CACHE_SINCE = "7d"
 
 # Username at SENAITE
 USERNAME = "tamanu"
@@ -103,6 +118,8 @@ DHM_REGEX = r'^((?P<d>(\d+))d){0,1}\s*' \
             r'((?P<h>(\d+))h){0,1}\s*' \
             r'((?P<m>(\d+))m){0,1}\s*'
 
+_cache_path = None
+_cache_since = DEFAULT_CACHE_SINCE
 _cache = None
 
 
@@ -657,8 +674,18 @@ def edit_sample(sample, **kwargs):
 def get_cache_file():
     """Returns the file for caching
     """
-    cwd = os.getcwd()
-    return os.path.join(cwd, SYNC_DATA_FILE)
+    global _cache_path
+    if not _cache_path:
+        return None
+
+    filename = os.path.join(_cache_path, SYNC_DATA_FILE)
+    if not os.path.exists(os.path.dirname(filename)):
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
+    return filename
 
 
 def get_cache():
@@ -667,6 +694,8 @@ def get_cache():
     global _cache
     if not _cache:
         cache_file = get_cache_file()
+        if not cache_file:
+            return {}
         if not os.path.isfile(cache_file):
             return {}
 
@@ -681,10 +710,21 @@ def get_cache():
 def set_cache(data):
     """Store synchronization information in a local file
     """
-    json_data = json.dumps(data)
+    # filter records before the cache since
+    if _cache_since:
+        since = to_timedelta(_cache_since)
+        min_date = dtime.to_ansi(datetime.now() - since)
+        n_data = {}
+        for key, val in data.items():
+            if val > min_date:
+                n_data[key] = val
+        json_data = json.dumps(n_data)
+    else:
+        json_data = json.dumps(data)
     cache_file = get_cache_file()
-    with open(cache_file, "w") as out_file:
-        out_file.write(json_data)
+    if cache_file:
+        with open(cache_file, "w") as out_file:
+            out_file.write(json_data)
 
     # reset the cache
     global _cache
@@ -724,6 +764,7 @@ def is_up_to_date(resource):
 
 
 def main(app):
+    global _cache_path
     args, _ = parser.parse_known_args()
     if hasattr(args, "help") and args.help:
         print("")
@@ -736,6 +777,9 @@ def main(app):
     if not host:
         error("Remote URL is missing")
 
+    # get the local filesystem path for cached content
+    _cache_path = args.cache
+
     # get the user and password
     try:
         user, password = args.tamanu_user.split(":")
@@ -745,6 +789,9 @@ def main(app):
 
     # get since dhms
     since = args.since or DEFAULT_SINCE
+
+    # get cache since dhms
+    _cache_since = args.cache_since or DEFAULT_CACHE_SINCE
 
     # mapping of supported resource types and sync functions
     resources = {
@@ -764,6 +811,9 @@ def main(app):
     # do the work
     logger.info("-" * 79)
     logger.info("Synchronizing with %s ..." % host)
+    if _cache_path:
+        logger.info("Cache path: {}".format(_cache_path))
+        logger.info("Cache since: {}".format(_cache_since))
     logger.info("Started: {}".format(datetime.now().isoformat()))
     start = time()
 
