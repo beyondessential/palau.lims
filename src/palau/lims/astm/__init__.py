@@ -184,6 +184,13 @@ class ASTMBaseImporter(Base):
         analysis.setDetectionLimitOperand("")
         analysis.setAllowManualUncertainty(False)
 
+        if value and value[0] in DL_OPERANDS:
+            # We do want to store the detection limit, even if the manual
+            # detection limit for the analysis is set to False
+            analysis.setAllowManualDetectionLimit(True)
+            analysis.setDetectionLimitOperand(value[0])
+            value = value[1:].strip()
+
         # set the result, capture date and unit
         analysis.setResult(value)
         analysis.setResultCaptureDate(captured)
