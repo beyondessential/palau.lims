@@ -10,6 +10,8 @@ ALLOWED_SAMPLE_STATES = ["sample_received"]
 
 ALLOWED_ANALYSIS_STATES = ["unassigned", "assigned"]
 
+DL_OPERANDS = ["<", ">"]
+
 
 class ASTMBaseImporter(Base):
     """Basic ASTM results importer
@@ -112,6 +114,15 @@ class ASTMBaseImporter(Base):
         units = record.get("units") or ""
         return units.strip()
 
+    def get_detection_limit_operand(self, record):
+        """Returns the detection limit operand ('<' or '>') if present in the
+        result record, unless already included in the result value
+        """
+        flag = record.get("abnormal_flag") or ""
+        if flag in DL_OPERANDS:
+            return flag
+        return ""
+
     def import_result(self, record):
         """Tries to import the result (ASTM) for this sample
         """
@@ -119,6 +130,11 @@ class ASTMBaseImporter(Base):
         if not value:
             # skip empty results
             return False
+
+        dl_operand = self.get_detection_limit_operand(record)
+        if dl_operand:
+            # assume the value represents a detection limit
+            value = "%s%s" % (dl_operand, value)
 
         param = self.get_test_id(record)
         if not param:
@@ -163,6 +179,13 @@ class ASTMBaseImporter(Base):
         analysis.setUnitChoices([])
         analysis.setDetectionLimitOperand("")
         analysis.setAllowManualUncertainty(False)
+
+        if value and value[0] in DL_OPERANDS:
+            # We do want to store the detection limit, even if the manual
+            # detection limit for the analysis is set to False
+            analysis.setAllowManualDetectionLimit(True)
+            analysis.setDetectionLimitOperand(value[0])
+            value = value[1:].strip()
 
         # set the result, capture date and unit
         analysis.setResult(value)
