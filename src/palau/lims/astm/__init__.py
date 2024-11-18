@@ -118,9 +118,6 @@ class ASTMBaseImporter(Base):
         """Returns the detection limit operand ('<' or '>') if present in the
         result record, unless already included in the result value
         """
-        value = self.get_test_result(record)
-        if value and value[0] in DL_OPERANDS:
-            return ""
         flag = record.get("abnormal_flag") or ""
         if flag in DL_OPERANDS:
             return flag
@@ -137,7 +134,7 @@ class ASTMBaseImporter(Base):
         dl_operand = self.get_detection_limit_operand(record)
         if dl_operand:
             # assume the value represents a detection limit
-            value = "%s %s" % (dl_operand, value)
+            value = "%s%s" % (dl_operand, value)
 
         param = self.get_test_id(record)
         if not param:
