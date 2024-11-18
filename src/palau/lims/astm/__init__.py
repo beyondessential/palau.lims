@@ -119,7 +119,6 @@ class ASTMBaseImporter(Base):
         result record, unless already included in the result value
         """
         value = self.get_test_result(record) or ""
-        value = value.strip()
         if value and value[0] in DL_OPERANDS:
             return ""
         flag = record.get("abnormal_flag") or ""
