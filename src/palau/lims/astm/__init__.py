@@ -131,11 +131,6 @@ class ASTMBaseImporter(Base):
             # skip empty results
             return False
 
-        dl_operand = self.get_detection_limit_operand(record)
-        if dl_operand:
-            # assume the value represents a detection limit
-            value = "%s%s" % (dl_operand, value)
-
         param = self.get_test_id(record)
         if not param:
             # skip no parameter found
@@ -180,12 +175,12 @@ class ASTMBaseImporter(Base):
         analysis.setDetectionLimitOperand("")
         analysis.setAllowManualUncertainty(False)
 
-        if value and value[0] in DL_OPERANDS:
+        dl_operand = self.get_detection_limit_operand(record)
+        if dl_operand:
             # We do want to store the detection limit, even if the manual
             # detection limit for the analysis is set to False
             analysis.setAllowManualDetectionLimit(True)
-            analysis.setDetectionLimitOperand(value[0])
-            value = value[1:].strip()
+            analysis.setDetectionLimitOperand(dl_operand)
 
         # set the result, capture date and unit
         analysis.setResult(value)
