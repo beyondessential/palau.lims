@@ -549,4 +549,4 @@ def fix_sample_ids(tool):
 
     for key, value in keys.items():
         # note we store the next non-given id
-        number_generator.storage[key] = value + 1
+        number_generator.storage[key] = value
