@@ -15,6 +15,7 @@ from palau.lims.config import PRIORITIES
 from palau.lims.config import TAMANU_ID
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
+from palau.lims.setuphandlers import setup_id_formatting
 from palau.lims.setuphandlers import setup_workflows
 from palau.lims.setuphandlers import update_ast_self_verification
 from Products.Archetypes.BaseUnit import BaseUnit
@@ -24,12 +25,18 @@ from senaite.core.api.catalog import reindex_index
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.catalog import SETUP_CATALOG
+from senaite.core.idserver import alphanumber
 from senaite.core.migration.migrator import get_attribute_storage
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.core.workflow import ANALYSIS_WORKFLOW
 from senaite.patient.catalog import PATIENT_CATALOG
+from zope.component import getUtility
+from senaite.core.interfaces import INumberGenerator
+from senaite.core.catalog import CLIENT_CATALOG
+from DateTime import DateTime
+import re
 
 version = "1.0.0"  # Remember version number in metadata.xml and setup.py
 profile = "profile-{0}:default".format(product)
@@ -488,3 +495,58 @@ def enable_ast_self_verification(tool):
         analysis._p_deactivate()
 
     logger.info("Setup self-verification of AST analyses [DONE]")
+
+
+def fix_sample_ids(tool):
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+
+    # reimport the id server settings
+    setup_id_formatting(portal)
+
+    # get all client_ids
+    client_ids = []
+    cat = api.get_tool(CLIENT_CATALOG)
+    for brain in cat(portal_type="Client"):
+        obj = api.get_object(brain)
+        client_ids.append(obj.getClientID())
+
+    # get all sample type prefixes
+    sample_types = []
+    cat = api.get_tool(SETUP_CATALOG)
+    for brain in cat(portal_type="SampleType"):
+        obj = api.get_object(brain)
+        sample_types.append(obj.getPrefix())
+
+    # cleanup the number generator
+    number_generator = getUtility(INumberGenerator)
+    keys = list(number_generator.storage.keys())
+    for key in keys:
+        if key.startswith("analysisrequest-"):
+            del(number_generator.storage[key])
+
+    # regex to get the {clientId}{sampleType} part from existing samples
+    rx = re.compile(r"(^[a-zA-Z]+)(2[3-4])([a-zA-Z]\d+)")
+
+    # get all samples ids
+    keys = {}
+    cat = api.get_tool(SAMPLE_CATALOG)
+    for brain in cat(portal_type="AnalysisRequest", isRootAncestor=True):
+        sample_id = brain.getId
+        matches = rx.findall(sample_id)
+        if not matches:
+            raise ValueError("Not a valid sample id: %s" % sample_id)
+        elif len(matches) != 1:
+            raise ValueError("Not a valid sample id: %s" % sample_id)
+        parts = matches[0]
+        if len(parts) != 3:
+            raise ValueError("Not a valid sample id: %s" % sample_id)
+
+        key = "analysisrequest-%s%s" % (parts[0], parts[1])
+        num = alphanumber.to_decimal(parts[2])
+        existing = keys.get(key, 0)
+        keys[key] = max([existing, num])
+
+    for key, value in keys.items():
+        # note we store the next non-given id
+        number_generator.storage[key] = value

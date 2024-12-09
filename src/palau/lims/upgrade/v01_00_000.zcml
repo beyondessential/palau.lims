@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Fix IDs formatting and reset number generator"
+      description="Fix IDs formatting and reset number generator"
+      source="1021"
+      destination="1022"
+      handler=".v01_00_000.fix_sample_ids"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Enable self-verification of AST-like services and analyses"
       description="Enable self-verification of AST-like services and analyses"
       source="1020"
