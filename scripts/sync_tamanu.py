@@ -499,7 +499,16 @@ def sync_service_requests(session, since):
             logger.info("Processing service requests %s/%s" % (num, total))
 
         # create or update the service request counterpart at SENAITE
-        sync_service_request(sr)
+        try:
+            sync_service_request(sr)
+        except Exception as e:
+            hash = "%s %s" % (sr.getLabTestID(), sr.UID)
+            try:
+                data = json.dumps(sr.to_dict())
+            except Exception:
+                data = "-- invalid json ---"
+            logger.error("Error while importing %s:\n%s\n" % (hash, data))
+            raise
 
 
 @retriable(sync=True, on_retry_exhausted=conflict_error)
