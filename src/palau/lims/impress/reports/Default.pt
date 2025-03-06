@@ -345,6 +345,18 @@
             <td class="label" i18n:translate="">Date collected</td>
             <td tal:content="python:view.to_localized_time(model.DateSampled)"/>
           </tr>
+
+          <tal:clinical-info define="clinical_info model/ClinicalInformation"
+                             condition="clinical_info">
+            <tr>
+              <td colspan="6" class="label" i18n:translate="">
+                Clinical information
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6" tal:content="clinical_info"></td>
+            </tr>
+          </tal:clinical-info>
         </table>
       </div>
     </div>
