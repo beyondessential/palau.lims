@@ -33,6 +33,11 @@
           <span tal:condition="not:received" i18n:translate="">-- due --</span>
         </td>
       </tr>
+      <tr>
+        <td>
+          <span tal:content="item/Collector|nothing"></span>
+        </td>
+      </tr>
     </table>
   </div>
 
