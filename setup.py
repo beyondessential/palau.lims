@@ -2,7 +2,7 @@
 #
 # This file is part of PALAU.LIMS
 #
-# Copyright 2023 Beyond Essential Systems Pty. Ltd.
+# Copyright 2023-2025 Beyond Essential Systems Pty. Ltd.
 
 from setuptools import setup, find_packages
 

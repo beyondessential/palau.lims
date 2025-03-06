@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-SRC_BASE_DIR=${buildout:directory}/src
-LOCALES=$SRC_BASE_DIR/palau.lims/src/palau/lims/locales
+LOCALES=${buildout:src-dir}/src/palau/lims/locales
 
 # Clean all generated .mo files
 find "$LOCALES" -name "*.mo" -delete
