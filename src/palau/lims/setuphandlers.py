@@ -4,8 +4,6 @@
 #
 # Copyright 2023 Beyond Essential Systems Pty Ltd
 
-import os
-
 from bika.lims import api
 from bika.lims.browser.analysisrequest.add2 import AR_CONFIGURATION_STORAGE
 from BTrees.OOBTree import OOBTree
@@ -26,9 +24,6 @@ from palau.lims.config import SETUP_SETTINGS
 from plone import api as ploneapi
 from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
-from senaite.abx.interfaces import IAntibiotic
-from senaite.abx.interfaces import IAntibioticClass
-from senaite.ast.config import AST_CALCULATION_TITLE
 from senaite.ast.config import AST_POINT_OF_CAPTURE
 from senaite.ast.config import BREAKPOINTS_TABLE_KEY
 from senaite.ast.config import DISK_CONTENT_KEY
@@ -37,8 +32,6 @@ from senaite.ast.config import MIC_KEY
 from senaite.ast.config import REPORT_EXTRAPOLATED_KEY
 from senaite.ast.config import REPORT_KEY
 from senaite.ast.config import RESISTANCE_KEY
-from senaite.ast.config import SERVICE_CATEGORY
-from senaite.ast.config import SERVICES_SETTINGS
 from senaite.ast.config import ZONE_SIZE_KEY
 from senaite.core.catalog import ANALYSIS_CATALOG
 from senaite.core.catalog import SAMPLE_CATALOG
@@ -46,7 +39,6 @@ from senaite.core.catalog import SETUP_CATALOG
 from senaite.core.permissions import FieldEditRemarks
 from senaite.core.setuphandlers import setup_core_catalogs
 from senaite.core.setuphandlers import setup_other_catalogs
-from senaite.core.upgrade.utils import delete_object
 from senaite.core.workflow import SAMPLE_WORKFLOW
 from zope.annotation.interfaces import IAnnotations
 from zope.component import getUtility
@@ -214,9 +206,6 @@ def setup_handler(context):
     # Setup workflows
     setup_workflows(portal)
 
-    # Import baseline data
-    import_content_structure(portal)
-
     # Configure visible navigation items
     setup_navigation_types(portal)
 
@@ -296,77 +285,6 @@ def post_uninstall(portal_setup):
     portal = context.getSite()  # noqa
 
     logger.info("{} uninstall handler [DONE]".format(PRODUCT_NAME.upper()))
-
-
-def import_content_structure(portal):
-    logger.info("Importing content structure ...")
-
-    # Delete pre-existing objects we do not want to re-import
-    delete_ast_objects(portal)
-    delete_antibiotics(portal)
-    delete_antibiotics_classes(portal)
-
-    # Get the tarball full path
-    src_path = "/src/{}".format(PRODUCT_NAME.replace(".", "/"))
-    dirname = os.path.dirname(os.path.abspath(__file__))
-    dirname = dirname.replace(src_path, "")
-    tarball = "{}/structure.tar.gz".format(dirname)
-
-    # Import the tarball
-    portal_setup = api.get_tool("portal_setup")
-    logger.info("Importing {} ...".format(tarball))
-    tarball_file = open(tarball, mode="r")
-    portal_setup.manage_importTarball(tarball_file)
-    logger.info("Importing content structure [DONE]")
-
-
-def delete_antibiotics_classes(portal):
-    """Removes existing antibiotic classes
-    """
-    logger.info("Deleting antibiotic classes ...")
-    folder = api.get_setup().get("antibiotic_classes")
-    for obj in folder.objectValues():
-        if not IAntibioticClass.providedBy(obj):
-            continue
-        obj_id = api.get_id(obj)
-        obj_path = api.get_path(obj)
-        logger.info("Deleting {} ({})".format(obj_path, obj_id))
-        delete_object(obj)
-    logger.info("Deleting antibiotic classes [DONE]")
-
-
-def delete_antibiotics(portal):
-    """Removes existing antibiotics
-    """
-    logger.info("Deleting antibiotics ...")
-    folder = api.get_setup().get("antibiotics")
-    for obj in folder.objectValues():
-        if not IAntibiotic.providedBy(obj):
-            continue
-        obj_id = api.get_id(obj)
-        obj_path = api.get_path(obj)
-        logger.info("Deleting {} ({})".format(obj_path, obj_id))
-        delete_object(obj)
-    logger.info("Deleting antibiotics [DONE]")
-
-
-def delete_ast_objects(portal):
-    """Remove auto-generated objects from senaite.ast
-    """
-    # AST Services
-    query = {"portal_type": "AnalysisService",
-             "getKeyword": SERVICES_SETTINGS.keys()}
-    brains = api.search(query, SETUP_CATALOG)
-    to_remove = map(api.get_object, brains)
-
-    # AST Category and Calculation
-    query = {"portal_type": ["AnalysisCategory", "Calculation"],
-             "title": [SERVICE_CATEGORY, AST_CALCULATION_TITLE]}
-    brains = api.search(query, SETUP_CATALOG)
-    to_remove.extend(map(api.get_object, brains))
-
-    for obj in to_remove:
-        delete_object(obj)
 
 
 def setup_default_settings(portal):

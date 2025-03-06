@@ -11,7 +11,7 @@ version = "1.0.0"
 with open("README.rst", "r") as fh:
     long_description = fh.read()
 
-with open("docs/changelog.rst", "r") as fh:
+with open("CHANGES.rst", "r") as fh:
     long_description += "\n\n"
     long_description += fh.read()
 
