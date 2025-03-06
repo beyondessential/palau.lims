@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-if [ -z "$1" ]
-then
-  echo "No backend defined. Usage: ./disable_backend senaite_2"
-  exit 1;
-fi
-
-echo "disable server senaite_backend/$1" | socat stdio /var/lib/haproxy/stats

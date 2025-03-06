@@ -1,9 +1,0 @@
-# Secure access to source code repos
-{% for ssh_key in ssh_keys %}
-Host {{ ssh_key }}
-  HostName ssh.github.com
-  Port 443
-  User git
-  PreferredAuthentications publickey
-  IdentityFile ~/.ssh/{{ ssh_key }}
-{% endfor %}
