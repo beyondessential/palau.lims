@@ -35,7 +35,7 @@ class ServiceRequest(TamanuResource):
         return self.get("subject")
 
     def getSpecimen(self):
-        """Returns the SampleType resource assigned to this ServiceRequest
+        """Returns the Specimen resource assigned to this ServiceRequest
         """
         specimens = self.get("specimen")
         if not specimens:

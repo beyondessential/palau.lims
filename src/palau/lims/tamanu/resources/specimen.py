@@ -104,3 +104,21 @@ class SpecimenResource(TamanuResource):
             "title": coding[0].get("display"),
             "code": coding[0].get("code"),
         }
+
+    def getCollectorName(self):
+        """Returns the fullname of the practitioner assigned as the collector
+        """
+        collection = self.get_collection() or {}
+        collector = collection.get("collector")
+        if not collector:
+            return None
+        return collector.get("display")
+
+    def getCollector(self):
+        """Returns the Practitioner resource assigned as the collector
+        """
+        collection = self.get_collection() or {}
+        collector = collection.get("collector")
+        if not collector:
+            return None
+        return self.get_reference(collector)

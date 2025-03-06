@@ -40,4 +40,10 @@
       provides="archetypes.schemaextender.interfaces.ISchemaExtender"
       factory=".analysis.AnalysisSchemaExtender" />
 
+  <!-- Schema modifier for BikaSetup -->
+  <adapter
+      name="palau.lims.bikasetup.schemamodifier"
+      provides="archetypes.schemaextender.interfaces.ISchemaModifier"
+      factory=".bikasetup.BikaSetupSchemaModifier" />
+
 </configure>

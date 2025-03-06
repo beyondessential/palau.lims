@@ -553,6 +553,9 @@ def sync_service_request(sr):
         logger.info("Skip %s. Specimen is missing" % hash)
         return
 
+    # the fullname of the practitioner who collected the sample
+    collector = specimen.getCollectorName()
+
     # get the sample type
     sample_type = get_sample_type(sr)
     if not sample_type:
@@ -643,6 +646,8 @@ def sync_service_request(sr):
         "Sex": patient_sex,
         "Priority": priority,
         "ClientSampleID": tid,
+        "Collector": collector,
+        "Sampler": collector,
         #"Remarks": remarks,
         "Specification": spec,
         #"Ward": api.get_uid(ward),
