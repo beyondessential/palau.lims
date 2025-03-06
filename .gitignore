@@ -80,6 +80,7 @@ package-lock.json
 *.lock
 
 # ANSIBLE recipe
+ansible/
 ansible/playbook.retry
 ansible/roles
 ansible/senaite.ansible-playbook/roles
