@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #247 Added collector name in sample barcode labels
 - #246 Capture specimen collector from Tamanu
 - #241 Less than < and greater than > to show for transmitted results
 - #240 Port whonet report to bes.lims

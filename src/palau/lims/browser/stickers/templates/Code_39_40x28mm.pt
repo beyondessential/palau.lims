@@ -8,7 +8,7 @@
   <div class="barcode"
        tal:attributes="data-id item_id;"
        data-code="code39"
-       data-barHeight="30"
+       data-barHeight="25"
        data-addQuietZone="false"
        data-showHRI="false">
   </div>
@@ -41,6 +41,11 @@
           <span tal:condition="received"
                 tal:content="python:view.long_date(received)"></span>
           <span tal:condition="not:received" i18n:translate="">-- due --</span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span tal:content="item/Collector|nothing"></span>
         </td>
       </tr>
     </table>
