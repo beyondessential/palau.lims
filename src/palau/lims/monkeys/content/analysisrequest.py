@@ -126,3 +126,17 @@ def setResultsInterpretationDepts(self, value):
 
         # set the field
         self.getField("ResultsInterpretationDepts").set(self, records)
+
+
+def getCollector(self):
+    """Returns the collector of the sample/specimen, if any
+    """
+    return self.getField("Collector").get(self)
+
+
+def setCollector(self, value):
+    """Returns the collector of the sample/specimen, if any
+    """
+    self.getField("Collector").set(self, value)
+    # Keep sampler field in-sync
+    self.getField("Sampler").set(self, value)
