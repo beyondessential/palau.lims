@@ -3,6 +3,14 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Disable sampling workflow fields from setup"
+      description="Disable sampling workflow fields from setup"
+      source="1022"
+      destination="1023"
+      handler=".v01_00_000.disable_sampling_workflow"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Fix IDs formatting and reset number generator"
       description="Fix IDs formatting and reset number generator"
       source="1021"

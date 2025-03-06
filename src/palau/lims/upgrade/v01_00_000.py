@@ -564,3 +564,13 @@ def fix_sample_ids(tool):
     for key, value in keys.items():
         # note we store the next non-given id
         number_generator.storage[key] = value
+
+
+def disable_sampling_workflow(tool):
+    """Disables sampling workflow specific fields from Setup
+    """
+    logger.info("Disable sampling workflow fields ...")
+    setup = api.get_setup()
+    setup.setSamplingWorkflowEnabled(False)
+    setup.setScheduleSamplingEnabled(False)
+    logger.info("Disable sampling workflow fields [DONE]")

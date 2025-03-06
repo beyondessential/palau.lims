@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #246 Capture specimen collector from Tamanu
 - #241 Less than < and greater than > to show for transmitted results
 - #240 Port whonet report to bes.lims
 - #234 Store Tamanu notes from ServiceRequest as relevant clinical information

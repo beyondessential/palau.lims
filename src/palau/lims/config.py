@@ -60,6 +60,8 @@ SETUP_SETTINGS = [
     # Appearance
     ("ShowPartitions", True),
     # Sampling
+    ("SamplingWorkflowEnabled", False),
+    ("ScheduleSamplingEnabled", False),
     ("AutoreceiveSamples", True),
     # Sticker
     ("AutoPrintStickers", "receive"),

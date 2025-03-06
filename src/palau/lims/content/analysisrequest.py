@@ -56,6 +56,7 @@ from senaite.core.browser.widgets import QuerySelectWidget
 from senaite.core.browser.widgets import ReferenceWidget
 from senaite.core.catalog import SETUP_CATALOG
 from senaite.core.permissions import FieldEditSamplePoint
+from senaite.core.permissions import FieldEditSampler
 from zope.component import adapts
 from zope.interface import implementer
 
@@ -414,6 +415,23 @@ NEW_FIELDS = [
                     "label": _(u"Description"),
                 },
             ],
+        )
+    ),
+
+    ExtStringField(
+        "Collector",
+        default="",
+        mode="rw",
+        read_permission=View,
+        write_permission=FieldEditSampler,
+        widget=StringWidget(
+            render_own_label=True,
+            size=20,
+            label=_("Collector"),
+            description=_("The practitioner who collected the sample"),
+            visible={
+                "add": "edit",
+            }
         )
     ),
 
