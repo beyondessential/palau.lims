@@ -52,7 +52,7 @@ Resources
 License
 -------
 
-**BES.LIMS** Copyright (C) 2023-2025 Beyond Essential Systems Pty Ltd
+**PALAU.LIMS** Copyright (C) 2023-2025 Beyond Essential Systems Pty Ltd
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the `GNU General Public License version 2`_ as published
