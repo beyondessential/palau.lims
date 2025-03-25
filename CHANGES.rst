@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #249 Port flat listing for default, due, received, to be verified and verified samples to bes.lims
 - #248 Display clinical information in results report
 - #247 Added collector name in sample barcode labels
 - #246 Capture specimen collector from Tamanu
