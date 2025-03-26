@@ -64,12 +64,6 @@
       provides="bika.lims.interfaces.IGetDefaultFieldValueARAddHook"
       name="PrimaryAnalysisRequest_default_value_hook" />
 
-  <!-- IGetStickerTemplates adapter to only return the stickers from png -->
-  <adapter
-    for="*"
-    provides="bika.lims.interfaces.IGetStickerTemplates"
-    factory=".stickers.StickerTemplates" />
-
   <!-- PDF Report Storage Adapter -->
   <adapter
       for="zope.interface.Interface

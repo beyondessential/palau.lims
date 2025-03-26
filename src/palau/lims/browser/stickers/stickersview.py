@@ -18,11 +18,11 @@
 # Copyright 2023-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from bika.lims.browser.stickers import Sticker
 from palau.lims import utils
+from senaite.core.browser.stickers.view import StickerView
 
 
-class StickersDefaultView(Sticker):
+class StickersDefaultView(StickerView):
     """Product-specific controller view for stickers/labels
     """
 
