@@ -9,12 +9,6 @@
   <include package=".subscribers"/>
   <include package=".utils"/>
 
-  <!-- Stickers available for sample depending on sample type -->
-  <monkey:patch
-      class="bika.lims.adapters.stickers.GetSampleStickers"
-      original="__call__"
-      replacement=".adapters.stickers.get_sample_stickers"/>
-
   <monkey:patch
       class="senaite.ast.datamanagers.ASTAnalysisDataManager"
       original="is_field_writeable"
