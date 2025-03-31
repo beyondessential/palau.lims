@@ -125,3 +125,9 @@ Changelog
 - #10 Replace "Date sampled" by "Date of collection"
 - #10 Make Location field non-mandatory
 - #10 Make Ward field non-mandatory
+
+- Initial version (port of `png.lims@36de4eb9f`_)
+
+.. Links
+
+.. _png.lims@36de4eb9f: https://github.com/beyondessential/pnghealth.lims/tree/36de4eb9feb91c39817bd71173ebefc4f8c068f8
