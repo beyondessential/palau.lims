@@ -40,6 +40,8 @@ KEYWORDS_MAPPING = (
     ("NEUT%", ["Neutrophils"]),
     ("RBC", ["RBC_BF", "Red-CC", "RBC", "RPBC"]),
     ("WBC", ["WBC_BF", "White-CC", "WBC", "PWBC", "WC"]),
+    ("MXD%", ["MXD"]),
+    ("MXD#", ["MXDA"]),
 )
 
 
