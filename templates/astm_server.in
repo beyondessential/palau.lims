@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 BIN=${buildout:astm-bin}
+PORT=${buildout:astm-port}
 URL=${buildout:astm-url}
 CONSUMER=${buildout:astm-consumer}
 RETRIES=${buildout:astm-retries}
@@ -12,5 +13,5 @@ LOG_FILE=$LOG_DIR/server.log
 mkdir -p "$LOG_DIR"
 
 # run the astm server (with output files)
-# $BIN -o "$LOG_DIR" --logfile "$LOG_FILE" -u "$URL" -c "$CONSUMER" -d $DELAY -r $RETRIES
-$BIN --logfile "$LOG_FILE" -u "$URL" -c "$CONSUMER" -d $DELAY -r $RETRIES
+# $BIN -p $PORT -o "$LOG_DIR" --logfile "$LOG_FILE" -u "$URL" -c "$CONSUMER" -d $DELAY -r $RETRIES
+$BIN -p $PORT --logfile "$LOG_FILE" -u "$URL" -c "$CONSUMER" -d $DELAY -r $RETRIES
