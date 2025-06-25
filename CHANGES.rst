@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #256 Port Tamanu synchronization logic to bes.lims
 - #255 Remove custom reflex machinery
 - #251 Map Mixed XP assay in XP-100
 - #250 Compatibility with core#2692 (Refactor sticker functionality)
