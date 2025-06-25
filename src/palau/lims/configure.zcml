@@ -27,6 +27,7 @@
   <include package=".impress" />
   <include package=".monkeys" />
   <include package=".subscribers" />
+  <include package=".tamanu" />
   <include package=".upgrade" />
   <include package=".workflow" />
 
