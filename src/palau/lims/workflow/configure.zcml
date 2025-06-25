@@ -1,12 +1,4 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    i18n_domain="palau.lims">
-
-  <!-- After event handler for Analysis -->
-  <subscriber
-    for="bika.lims.interfaces.IAnalysis
-         Products.DCWorkflow.interfaces.IAfterTransitionEvent"
-    handler=".analysis.AfterTransitionEventHandler" />
+<configure xmlns="http://namespaces.zope.org/zope">
 
   <!-- Object created event handler for Client
    System automatically adds an "Unknown" Contact on creation

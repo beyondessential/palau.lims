@@ -3,6 +3,8 @@ Changelog
 
 1.0.0 (Unreleased)
 ------------------
+
+- #255 Remove custom reflex machinery
 - #251 Map Mixed XP assay in XP-100
 - #250 Compatibility with core#2692 (Refactor sticker functionality)
 - #249 Port flat listing for default, due, received, to be verified and verified samples to bes.lims
