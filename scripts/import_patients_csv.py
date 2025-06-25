@@ -31,7 +31,7 @@ from bes.lims.scripts import setup_script_environment
 from bika.lims import api
 from bika.lims.api import security as sapi
 from palau.lims import logger
-from palau.lims.config import TAMANU_ID
+from bes.lims.tamanu.config import TAMANU_USER
 from Products.CMFCore.permissions import ModifyPortalContent
 from senaite.core.api import dtime
 from senaite.core.api.dtime import to_localized_time
@@ -214,11 +214,11 @@ def import_patients(infile):
 
         # assign ownership to 'tamanu' user
         creator = patient.Creator()
-        if creator != TAMANU_ID:
+        if creator != TAMANU_USER:
             sapi.revoke_local_roles_for(patient, roles=["Owner"], user=creator)
 
         # grant 'Owner' role to the user who is modifying the object
-        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_ID)
+        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_USER)
 
         # don't allow the edition, but to tamanu (Owner) only
         sapi.manage_permission_for(patient, ModifyPortalContent, ["Owner"])

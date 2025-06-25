@@ -53,14 +53,7 @@ setup(
     zip_safe=False,
     install_requires=[
         "bes.lims>=1.0.0",
-        "requests",
         "senaite.storage>=2.6.0",
-        # senaite.core does no longer provides schemaextender
-        # https://github.com/senaite/senaite.core/pull/1931
-        "archetypes.schemaextender",
-        # Python 2.7: python-slugify < 5.0.0
-        # Python 3.6+: python-slugify >= 5.0.0
-        "python-slugify < 5.0.0",
     ],
     extras_require={
         "test": [
