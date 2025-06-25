@@ -22,8 +22,6 @@ from palau.lims import messageFactory as _
 from Products.Archetypes import DisplayList
 
 
-TAMANU_ID = 'tamanu'
-
 UNKNOWN_DOCTOR_FULLNAME = "Unknown doctor"
 
 LANG_SETTINGS = [

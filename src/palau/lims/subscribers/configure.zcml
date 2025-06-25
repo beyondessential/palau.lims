@@ -5,14 +5,4 @@
     for="senaite.core.events.upgrade.IAfterUpgradeStepEvent"
     handler=".upgrade.afterUpgradeStepHandler"/>
 
-  <subscriber
-    for="senaite.patient.interfaces.IPatient
-         zope.lifecycleevent.interfaces.IObjectAddedEvent"
-    handler=".patient.on_patient_added"/>
-
-  <subscriber
-    for="senaite.patient.interfaces.IPatient
-         zope.lifecycleevent.interfaces.IObjectModifiedEvent"
-    handler=".patient.on_patient_modified"/>
-
 </configure>

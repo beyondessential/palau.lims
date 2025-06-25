@@ -26,7 +26,7 @@ from bika.lims.interfaces import IVerified
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
 from palau.lims.config import PRIORITIES
-from palau.lims.config import TAMANU_ID
+from bes.lims.tamanu.config import TAMANU_USER
 from palau.lims.setuphandlers import setup_behaviors
 from palau.lims.setuphandlers import setup_catalogs
 from palau.lims.setuphandlers import setup_id_formatting
@@ -305,7 +305,7 @@ def set_tamanu_patients_edit_restrictions(tool):
         patient = api.get_object(brain)
 
         # grant 'Owner' role to the user who is modifying the object
-        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_ID)
+        sapi.grant_local_roles_for(patient, roles=["Owner"], user=TAMANU_USER)
 
         # don't allow the edition, but to tamanu (Owner) only
         sapi.manage_permission_for(patient, ModifyPortalContent, ["Owner"])
@@ -323,7 +323,7 @@ def setup_tamanu_catalogs(tool):
     """Setup the catalogs for the integration with Tamanu to work properly
     """
     logger.info("Setup Tamanu integration ...")
-    from palau.lims.tamanu.setuphandlers import setup_catalogs
+    from bes.lims.tamanu.setuphandlers import setup_catalogs
     portal = tool.aq_inner.aq_parent
     setup_catalogs(portal)
     logger.info("Setup Tamanu integration [DONE]")

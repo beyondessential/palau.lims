@@ -17,9 +17,3 @@
 #
 # Copyright 2023-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
-
-import logging
-
-PRODUCT_NAME = "palau.lims.tamanu"
-
-logger = logging.getLogger(PRODUCT_NAME)
