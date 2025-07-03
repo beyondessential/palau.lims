@@ -18,6 +18,9 @@
 # Copyright 2023-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import collections
+
+from bika.lims import api
 from palau.lims.astm import ASTMBaseImporter as Base
 
 # 4. test_id:             Chlamydia       Gonorrhea     HBV-VL
@@ -139,12 +142,78 @@ class ASTMImporter(Base):
 
         return True
 
+    def get_test_key(self, result):
+        """Returns the test key used for grouping tests, that is made of the
+        concatenation of the panel_id + test_id
+        """
+        panel_id = result.get("panel_id", "")
+        test_id = result.get("test_id", "")
+        return ".".join([panel_id, test_id])
+
+    def group_by_test(self, results):
+        """Groups the ASTM results by test
+        """
+        groups = collections.OrderedDict()
+        for result in results:
+            key = self.get_test_key(result)
+            groups.setdefault(key, []).append(result)
+        return groups
+
+    def to_interim(self, result):
+        """Converts the result to an interim-compliant dict
+        """
+        analyte_name = result.get("analyte_name")
+        complementary_name = result.get("complementary_name")
+        parts = list(filter(None, [analyte_name, complementary_name]))
+        if not parts:
+            return None
+
+        result_value = self.get_test_result(result)
+        result_type = "" if api.is_floatable(result) else "string"
+        return {
+            "keyword": "_".join(parts),
+            "title": ".".join(parts),
+            "value": result_value,
+            "choices": [],
+            "result_type": result_type,
+            "allow_empty": True,
+            "unit": self.get_test_units(result),
+            "hidden": False,
+            "wide": False,
+        }
+
     def get_results(self):
         """Return the (R)esult records that are considered as main results
         """
         results = super(ASTMImporter, self).get_results()
-        # purge analyte and complementary results
-        return [result for result in results if self.is_main_result(result)]
+
+        # extract main results
+        main_results = [r for r in results if self.is_main_result(r)]
+
+        # extract secondary (analyte and complementary) results
+        sec_results = [r for r in results if r not in main_results]
+
+        # group secondary results by test
+        sec_by_test = self.group_by_test(sec_results)
+
+        # assign secondary results to main result
+        for result in main_results:
+
+            # get the test full key
+            key = self.get_test_key(result)
+
+            # get the analyte and complementary results
+            secondaries = sec_by_test.get(key)
+            for secondary in secondaries:
+                # convert to an interim-like record
+                interim = self.to_interim(secondary)
+                if not interim:
+                    continue
+                # add as an interim result field
+                result.setdefault("interims", []).append(interim)
+
+        # return the main results (with interims)
+        return main_results
 
     def get_test_result(self, record):
         """Returns the qualitative or quantitative result of the result record

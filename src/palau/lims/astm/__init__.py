@@ -18,6 +18,8 @@
 # Copyright 2023-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import copy
+
 from bika.lims import api
 from bika.lims.workflow import doActionFor
 from plone.memoize.instance import memoize
@@ -128,6 +130,10 @@ class ASTMBaseImporter(Base):
         value = record.get("value") or ""
         return value.strip()
 
+    def get_test_interims(self, record):
+        interims = record.get("interims") or []
+        return copy.deepcopy(interims)
+
     def get_test_units(self, record):
         units = record.get("units") or ""
         return units.strip()
@@ -199,6 +205,11 @@ class ASTMBaseImporter(Base):
             # detection limit for the analysis is set to False
             analysis.setAllowManualDetectionLimit(True)
             analysis.setDetectionLimitOperand(dl_operand)
+
+        # get the interims/result variables
+        interims = self.get_test_interims(record)
+        if interims:
+            analysis.setInterimFields(interims)
 
         # set the result, capture date and unit
         analysis.setResult(value)
