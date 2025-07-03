@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #253 Add ASTM consumer for Cepheid's GeneXpert
 - #256 Port Tamanu synchronization logic to bes.lims
 - #255 Remove custom reflex machinery
 - #251 Map Mixed XP assay in XP-100
