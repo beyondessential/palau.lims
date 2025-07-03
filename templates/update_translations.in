@@ -46,7 +46,7 @@ echo "Processing Domain $DOMAIN"
 # Flush the english .po files, other .po files won't be synced otherwise
 echo -n "" > $LOCALES/en/LC_MESSAGES/$DOMAIN.po
 # Merge bes.lims' senaite.core.pot
-$I18N trmerge $LOCALES/$DOMAIN.pot $BES_LOCALES/$DOMAIN.pot > $LOCALES/$DOMAIN-tmp.pot
+$I18N trmerge $BES_LOCALES/$DOMAIN.pot $LOCALES/$DOMAIN.pot > $LOCALES/$DOMAIN-tmp.pot
 mv $LOCALES/$DOMAIN-tmp.pot $LOCALES/$DOMAIN.pot
 # Synchronize all .po files with the new senaite.patient.pot
 $I18N sync --pot $LOCALES/$DOMAIN.pot $LOCALES/*/LC_MESSAGES/$DOMAIN.po
@@ -59,7 +59,7 @@ echo "Processing Domain $DOMAIN"
 # Flush the english .po files, other .po files won't be synced otherwise
 echo -n "" > $LOCALES/en/LC_MESSAGES/$DOMAIN.po
 # Merge bes.lims' senaite.core.pot
-$I18N trmerge $LOCALES/$DOMAIN.pot $BES_LOCALES/$DOMAIN.pot > $LOCALES/$DOMAIN-tmp.pot
+$I18N trmerge $BES_LOCALES/$DOMAIN.pot $LOCALES/$DOMAIN.pot > $LOCALES/$DOMAIN-tmp.pot
 mv $LOCALES/$DOMAIN-tmp.pot $LOCALES/$DOMAIN.pot
 # Synchronize all .po files with the new senaite.core.pot
 $I18N sync --pot $LOCALES/$DOMAIN.pot $LOCALES/*/LC_MESSAGES/$DOMAIN.po

@@ -72,12 +72,6 @@ def get_field_value(instance, field_name, default=None):
     return value
 
 
-def translate(i18n_message, mapping=None):
-    """Translates a message and handles mapping
-    """
-    return to_utf8(_t(_(i18n_message, mapping=mapping)))
-
-
 def is_unknown_doctor(contact):
     """Returns whether the contact passed-in is an Unknown doctor
     """
