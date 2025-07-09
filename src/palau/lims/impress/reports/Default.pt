@@ -608,7 +608,7 @@
   </tal:render>
 
   <!-- ATTACHMENTS -->
-  <tal:render condition="python:False">
+  <tal:render condition="python:True">
     <div class="row section-attachments no-gutters">
       <tal:attachment tal:define="attachments python:model.get_sorted_attachments('r');">
         <h2 i18n:translate=""
