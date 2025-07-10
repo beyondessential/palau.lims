@@ -24,11 +24,63 @@ from bika.lims import api
 from senaite.impress.decorators import synchronized
 from senaite.impress.storage import PdfReportStorageAdapter as BaseAdapter
 from bika.lims.workflow import doActionFor as do_action_for
+from PyPDF2 import PdfMerger
+from StringIO import StringIO
 
 
 class PdfReportStorageAdapter(BaseAdapter):
-    """Storage adapter for PDF reports
+    """Storage adapter for PDF reports with PDF attachment support
     """
+
+    def get_pdf_attachments(self, parent):
+        """Get PDF attachments that are flagged for rendering in report
+        """
+        pdf_attachments = []
+
+        # Get sample attachments
+        attachments = parent.getAttachment()
+
+        for attachment in attachments:
+            if not attachment.getRenderInReport():
+                continue
+
+            attachment_file = attachment.getAttachmentFile()
+            if not attachment_file:
+                continue
+
+            # Check if it's a PDF
+            content_type = attachment_file.getContentType()
+            if content_type and content_type.lower() == 'application/pdf':
+                pdf_attachments.append(attachment)
+
+        return pdf_attachments
+
+    def merge_pdf_attachments(self, main_pdf, attachments):
+        """Merge PDF attachments into the main PDF
+        """
+        if not attachments:
+            return main_pdf
+
+        # Create PDF merger
+        merger = PdfMerger()
+
+        main_pdf_stream = StringIO(main_pdf)
+        merger.append(main_pdf_stream)
+
+        # Add each PDF attachment
+        for attachment in attachments:
+            attachment_file = attachment.getAttachmentFile()
+            attachment_data = attachment_file.data
+            attachment_stream = StringIO(attachment_data)
+            merger.append(attachment_stream)
+
+        output = StringIO()
+        merger.write(output)
+        merged_pdf = output.getvalue()
+        output.close()
+        merger.close()
+
+        return merged_pdf
 
     @synchronized(max_connections=1)
     def create_report(self, parent, pdf, html, uids, metadata):
@@ -46,6 +98,13 @@ class PdfReportStorageAdapter(BaseAdapter):
 
         # Manually update the view on the database to avoid conflict errors
         parent._p_jar.sync()
+
+        # Get PDF attachments that should be merged
+        pdf_attachments = self.get_pdf_attachments(parent)
+
+        # Merge PDF attachments into the main PDF if any exist
+        if pdf_attachments:
+            pdf = self.merge_pdf_attachments(pdf, pdf_attachments)
 
         # Create the report object
         report = api.create(
