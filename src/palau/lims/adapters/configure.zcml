@@ -64,13 +64,6 @@
       provides="bika.lims.interfaces.IGetDefaultFieldValueARAddHook"
       name="PrimaryAnalysisRequest_default_value_hook" />
 
-  <!-- PDF Report Storage Adapter -->
-  <adapter
-      for="zope.interface.Interface
-           palau.lims.interfaces.IPalauLimsLayer"
-      factory=".impress.PdfReportStorageAdapter"
-      permission="zope2.View"/>
-
   <!-- Create supplementary test from existing samples -->
   <adapter
       for="*
