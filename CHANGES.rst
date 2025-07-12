@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #258 Compatibility with bes#14 (Merge PDF attachments into results report)
 - #256 Port Tamanu synchronization logic to bes.lims
 - #255 Remove custom reflex machinery
 - #251 Map Mixed XP assay in XP-100
