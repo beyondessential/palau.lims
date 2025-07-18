@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #259 Update condition check for invalid report in Default.pt template
 - #258 Compatibility with bes#14 (Merge PDF attachments into results report)
 - #256 Port Tamanu synchronization logic to bes.lims
 - #255 Remove custom reflex machinery
