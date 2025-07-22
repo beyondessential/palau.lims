@@ -232,7 +232,7 @@
         <div class="alert alert-danger" tal:condition="model/is_invalid">
           <div i18n:translate="">This Sample has been invalidated due to erroneously published results</div>
           <tal:invalidreport tal:define="child python:model.getRetest()"
-                             tal:condition="child">
+                             tal:condition="python:child">
             <span i18n:translate="">This Sample has been replaced by</span>
             <a tal:attributes="href child/absolute_url"
                tal:content="child/getId"/>
