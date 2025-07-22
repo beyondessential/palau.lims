@@ -5,6 +5,8 @@ Changelog
 ------------------
 
 - #253 Add ASTM consumer for Cepheid's GeneXpert
+- #259 Update condition check for invalid report in Default.pt template
+- #258 Compatibility with bes#14 (Merge PDF attachments into results report)
 - #256 Port Tamanu synchronization logic to bes.lims
 - #255 Remove custom reflex machinery
 - #251 Map Mixed XP assay in XP-100
