@@ -32,8 +32,8 @@ from palau.lims.astm import ASTMBaseImporter as Base
 KEYWORDS_MAPPING = (
     # Tuple of (instrument_parameter, (service_keywords))
     # R|1|^CTNG^^Chlamydia^Xpert CT_NG^3^CT^|NOT DETECTED^||
-    ("Chlamyidia", []),
-    ("CT", []),
+    ("Chlamydia", ["Chlamydia"]),
+    ("CT", ["Chlamydia"]),
     # R|11|^CTNG^^Gonorrhea^Xpert CT_NG^3^NG^|NOT DETECTED^||
     ("Gonorrhea", ["Gonorrhea"]),
     ("NG", ["Gonorrhea"]),
