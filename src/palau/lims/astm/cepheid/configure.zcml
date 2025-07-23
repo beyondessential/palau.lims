@@ -1,0 +1,6 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <!-- Chepeid's GeneXpert -->
+  <adapter name="GeneXpert" factory=".genexpert.ASTMImporter"/>
+
+</configure>
