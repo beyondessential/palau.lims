@@ -68,16 +68,4 @@
       original="setResultsInterpretationDepts"
       replacement=".analysisrequest.setResultsInterpretationDepts"/>
 
-  <monkey:patch
-      class="bika.lims.content.analysisrequest.AnalysisRequest"
-      original="getCollector"
-      ignoreOriginal="True"
-      replacement=".analysisrequest.getCollector" />
-
-  <monkey:patch
-      class="bika.lims.content.analysisrequest.AnalysisRequest"
-      original="setCollector"
-      ignoreOriginal="True"
-      replacement=".analysisrequest.setCollector" />
-
 </configure>
