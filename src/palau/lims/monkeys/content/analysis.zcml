@@ -25,10 +25,4 @@
       original="setInterimFields"
       replacement=".analysis.setInterimFields" />
 
-  <monkey:patch
-      class="bika.lims.content.analysis.Analysis"
-      original="getDepartmentTitle"
-      ignoreOriginal="True"
-      replacement=".analysis.getDepartmentTitle" />
-
 </configure>
