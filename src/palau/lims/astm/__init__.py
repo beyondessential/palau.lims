@@ -18,6 +18,9 @@
 # Copyright 2023-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import copy
+from collections import OrderedDict
+
 from bika.lims import api
 from bika.lims.workflow import doActionFor
 from plone.memoize.instance import memoize
@@ -128,6 +131,10 @@ class ASTMBaseImporter(Base):
         value = record.get("value") or ""
         return value.strip()
 
+    def get_test_interims(self, record):
+        interims = record.get("interims") or []
+        return copy.deepcopy(interims)
+
     def get_test_units(self, record):
         units = record.get("units") or ""
         return units.strip()
@@ -140,6 +147,40 @@ class ASTMBaseImporter(Base):
         if flag in DL_OPERANDS:
             return flag
         return ""
+
+    def resolve_interims(self, analysis, record):
+        """Returns the interims/result variables that are present in the
+        analysis with the values and other parameters in accordance with those
+        present in the result record passed-in
+        """
+        # group analysis' interims/result variables by keyword
+        by_keyword = OrderedDict()
+        for interim in analysis.getInterimFields():
+            keyword = interim.get("keyword")
+            by_keyword[keyword] = interim
+
+        # get the incoming interims/result variables
+        interims = self.get_test_interims(record)
+
+        # purge interims that are not present in the analysis
+        keys = by_keyword.keys()
+        interims = list(filter(lambda it: it["keyword"] in keys, interims))
+
+        # update incoming interims with values from existing interims
+        for interim in interims:
+            existing = by_keyword.pop(interim["keyword"], {})
+            interim.update({
+                "title": existing.get("title") or interim["title"],
+                "report": existing.get("report", False),
+                "hidden": existing.get("hidden", False),
+            })
+
+        # extend with existing, but not imported, interim/result variables
+        for interim in by_keyword.values():
+            interims.append(interim)
+
+        # sort them in the same order as in the analysis
+        return sorted(interims, key=lambda it: keys.index(it["keyword"]))
 
     def import_result(self, record):
         """Tries to import the result (ASTM) for this sample
@@ -199,6 +240,10 @@ class ASTMBaseImporter(Base):
             # detection limit for the analysis is set to False
             analysis.setAllowManualDetectionLimit(True)
             analysis.setDetectionLimitOperand(dl_operand)
+
+        # import the interim results
+        interims = self.resolve_interims(analysis, record)
+        analysis.setInterimFields(interims)
 
         # set the result, capture date and unit
         analysis.setResult(value)

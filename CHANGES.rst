@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #253 Add ASTM consumer for Cepheid's GeneXpert
 - #261 Remove getDepartmentTitle patch for Analysis
 - #260 Port Collector field addition to bes.lims
 - #259 Update condition check for invalid report in Default.pt template
