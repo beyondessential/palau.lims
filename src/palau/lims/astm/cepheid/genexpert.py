@@ -146,8 +146,9 @@ class ASTMImporter(Base):
         """Returns the test key used for grouping tests, that is made of the
         concatenation of the panel_id + test_id
         """
-        panel_id = result.get("panel_id", "")
-        test_id = result.get("test_id", "")
+        test = result.get("test") or {}
+        panel_id = test.get("panel_id") or ""
+        test_id = test.get("test_id") or ""
         return ".".join([panel_id, test_id])
 
     def group_by_test(self, results):
@@ -162,8 +163,9 @@ class ASTMImporter(Base):
     def to_interim(self, result):
         """Converts the result to an interim-compliant dict
         """
-        analyte_name = result.get("analyte_name")
-        complementary_name = result.get("complementary_name")
+        test = result.get("test") or {}
+        analyte_name = test.get("analyte_name")
+        complementary_name = test.get("complementary_name")
         parts = list(filter(None, [analyte_name, complementary_name]))
         if not parts:
             return None
