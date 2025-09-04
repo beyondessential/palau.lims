@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #265 Compatibility with bes.lims#83 (Add Tamanu ID field)
 - #253 Add ASTM consumer for Cepheid's GeneXpert
 - #261 Remove getDepartmentTitle patch for Analysis
 - #260 Port Collector field addition to bes.lims
