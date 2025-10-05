@@ -21,6 +21,7 @@
 from bika.lims import api
 
 
+# TODO Port get_rejection_pdf to bes.lims
 def get_rejection_pdf(sample):
     """Generates a pdf with sample rejection reasons
     """

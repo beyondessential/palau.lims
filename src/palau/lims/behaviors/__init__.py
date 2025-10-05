@@ -21,6 +21,7 @@
 from plone.dexterity.utils import getAdditionalSchemata
 
 
+# TODO Port get_behavior_schema to bes.lims
 def get_behavior_schema(context, behavior):
     """Returns the schema of the context that is provided by the behavior
     interface passed-in, if any

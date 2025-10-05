@@ -27,6 +27,7 @@ from senaite.core.catalog import SETUP_CATALOG
 from senaite.core.decorators import readonly_transaction
 
 
+# TODO Port Bottles to bes.lims
 class Bottles(BrowserView):
     """Returns a JSON with the Container from Bottle-like types that are
     registered in the system

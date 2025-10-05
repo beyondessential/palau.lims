@@ -22,6 +22,7 @@ from palau.lims.utils import is_growth_editable
 from senaite.ast.datamanagers import ASTAnalysisDataManager
 
 
+# TODO Port is_field_writeable to bes.lims
 def is_field_writeable(self, field):
     if field.getName() == "GrowthNumber":
         # GrowthNumber field applies to multiple analyses for same

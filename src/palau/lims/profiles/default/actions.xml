@@ -7,7 +7,9 @@
   <!-- Portal Tabs (Located in the upper right button) -->
   <object name="portal_tabs" meta_type="CMF Action Category" purge="False">
 
-    <!-- Statistic reports -->
+    <!-- Statistic reports
+    TODO Port statistics_reports from actions.xml to bes.lims
+    -->
     <object name="statistic_reports" meta_type="CMF Action" i18n:domain="palau.lims">
       <property name="title" i18n:translate="">Statistic reports</property>
       <property name="description" i18n:translate="Statistic reports"/>
@@ -21,7 +23,9 @@
       <property name="visible">True</property>
     </object>
 
-    <!-- WHONET export view -->
+    <!-- WHONET export view
+    TODO Port export_whonet from actions.xml to bes.lims
+    -->
     <object name="export_whonet" meta_type="CMF Action" i18n:domain="palau.lims">
       <property name="title" i18n:translate="">Export to WHONET</property>
       <property name="description" i18n:translate=""/>

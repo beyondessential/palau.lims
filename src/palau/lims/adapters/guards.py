@@ -24,6 +24,7 @@ from palau.lims.utils import is_unknown_doctor
 from zope.interface import implements
 
 
+# TODO Port SampleGuardAdapter to bes.lims
 class SampleGuardAdapter(object):
     implements(IGuardAdapter)
 

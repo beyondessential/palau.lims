@@ -34,6 +34,7 @@ from zope.component import adapter
 from zope.interface import implementer
 
 
+# TODO Port RecordsValidator to bes.lims
 @implementer(IAddSampleRecordsValidator)
 class RecordsValidator(object):
     """Add Sample form records validator
@@ -213,6 +214,7 @@ class RecordsValidator(object):
         return error
 
 
+# TODO Port ClientDefaultValue to bes.lims
 @adapter(IGetDefaultFieldValueARAddHook)
 class ClientDefaultValue(object):
     """Adapter that returns the default value for field 'Client' in Add sample
@@ -241,6 +243,7 @@ class ClientDefaultValue(object):
         return client
 
 
+# TODO Port PrimaryAnalysisRequestDefaultValue to bes.lims
 @adapter(IGetDefaultFieldValueARAddHook)
 class PrimaryAnalysisRequestDefaultValue(object):
     """Adapter that returns the default value for field
@@ -273,6 +276,7 @@ class PrimaryAnalysisRequestDefaultValue(object):
         return primary
 
 
+# TODO Port AddSampleTypeInfo to bes.lims
 class AddSampleTypeInfo(AddSampleObjectInfoAdapter):
     """Returns the additional filter queries to apply when the value for the
     SampleType for Sample Add form changes

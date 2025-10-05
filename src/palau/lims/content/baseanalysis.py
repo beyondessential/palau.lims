@@ -56,6 +56,7 @@ UPDATED_FIELDS = [
 ]
 
 
+# TODO Port BaseAnalysisSchemaModifier to bes.lims
 @adapter(IBaseAnalysis)
 @implementer(ISchemaModifier, IBrowserLayerAwareExtender)
 class BaseAnalysisSchemaModifier(object):

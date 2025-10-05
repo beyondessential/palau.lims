@@ -74,6 +74,7 @@ NEW_FIELDS = [
 ]
 
 
+# TODO Port LabContactSchemaExtender to bes.lims
 @adapter(ILabContact)
 @implementer(ISchemaExtender, IBrowserLayerAwareExtender)
 class LabContactSchemaExtender(object):

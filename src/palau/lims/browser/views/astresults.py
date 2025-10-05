@@ -29,6 +29,7 @@ from senaite.ast.utils import get_ast_analyses
 from senaite.ast.utils import get_microorganisms
 
 
+# TODO Port ManageASTResultsView to bes.lims
 class ManageASTResultsView(ManageResultsView):
     """Listing view for AST results entry
     """

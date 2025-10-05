@@ -27,6 +27,7 @@ from senaite.core.interfaces import IHideActionsMenu
 from zope.interface import implementer
 
 
+# TODO Port IWardDepartments to bes.lims
 class IWardDepartments(model.Schema):
     """Ward Departments folder interface
     """
@@ -34,6 +35,7 @@ class IWardDepartments(model.Schema):
     pass
 
 
+# TODO Port WardDepartments to bes.lims
 @implementer(IWardDepartments, IHideActionsMenu)
 class WardDepartments(Container):
     """Ward Departments folder

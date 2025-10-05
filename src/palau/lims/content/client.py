@@ -61,6 +61,7 @@ NEW_FIELDS = [
 ]
 
 
+# TODO Port ClientSchemaExtender to bes.lims
 @adapter(IClient)
 @implementer(IOrderableSchemaExtender, IBrowserLayerAwareExtender)
 class ClientSchemaExtender(object):

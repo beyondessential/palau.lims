@@ -52,6 +52,7 @@ UPDATE_COLUMNS = [
 ]
 
 
+# TODO Port ReportsListingAdapter to bes.lims
 @adapter(IListingView)
 @implementer(IListingViewAdapter)
 class ReportsListingAdapter(object):

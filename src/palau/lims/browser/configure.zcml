@@ -1,8 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:plone="http://namespaces.plone.org/plone"
-    xmlns:browser="http://namespaces.zope.org/browser"
-    i18n_domain="palau.lims">
+    xmlns:browser="http://namespaces.zope.org/browser">
 
   <!-- Package includes -->
   <include package=".content"/>
@@ -27,4 +26,3 @@
     layer="palau.lims.interfaces.IPalauLimsLayer" />
 
 </configure>
-

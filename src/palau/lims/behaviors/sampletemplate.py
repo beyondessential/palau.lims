@@ -38,6 +38,7 @@ from senaite.core.api import measure as mapi
 from zope.interface import Invalid
 
 
+# TODO Port IExtendedSampleTemplateBehavior to 2.x
 @provider(IFormFieldProvider)
 class IExtendedSampleTemplateBehavior(model.Schema):
 
@@ -78,6 +79,7 @@ class IExtendedSampleTemplateBehavior(model.Schema):
             raise Invalid(_("Not a valid volume"))
 
 
+# TODO Port ExtendedSampleTemplate to 2.x
 @implementer(IExtendedSampleTemplateBehavior)
 @adapter(ISampleTemplate)
 class ExtendedSampleTemplate(object):

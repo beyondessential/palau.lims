@@ -24,6 +24,7 @@ from palau.lims import utils
 from senaite.ast.browser.addpanel import AddPanelView as BaseView
 
 
+# TODO Port AddPanelView to bes.lims
 class AddPanelView(BaseView):
 
     def __call__(self):

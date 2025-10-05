@@ -35,6 +35,7 @@ from zope.interface import implementer
 from zope.interface import provider
 
 
+# TODO Port IExtendedPatientBehavior to bes.lims
 @provider(IFormFieldProvider)
 class IExtendedPatientBehavior(model.Schema):
 
@@ -66,6 +67,7 @@ class IExtendedPatientBehavior(model.Schema):
     )
 
 
+# TODO Port ExtendedPatient to bes.lims
 @implementer(IExtendedPatientBehavior)
 @adapter(IPatient)
 class ExtendedPatient(object):

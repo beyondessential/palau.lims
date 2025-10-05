@@ -31,6 +31,7 @@ from zope.component import adapter
 from zope.interface import implementer
 
 
+# TODO Port GrowthNumberField to bes.lims
 class GrowthNumberField(ExtIntegerField):
     """Field extender of IntegerField that stores the GrowthNumber in analysis
     """
@@ -67,6 +68,7 @@ NEW_FIELDS = [
 ]
 
 
+# TODO Port AnalysisSchemaExtender to bes.lims
 @adapter(IAnalysis)
 @implementer(ISchemaExtender, IBrowserLayerAwareExtender)
 class AnalysisSchemaExtender(object):

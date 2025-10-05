@@ -55,6 +55,7 @@ UPDATE_STATUSES = [
 ]
 
 
+# TODO Port SamplesListingAdapter to bes.lims
 class SamplesListingAdapter(object):
     """Generic adapter for sample listings
     """

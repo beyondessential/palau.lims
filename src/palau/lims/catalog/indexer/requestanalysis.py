@@ -22,6 +22,7 @@ from bika.lims.interfaces.analysis import IRequestAnalysis
 from plone.indexer import indexer
 
 
+# TODO Port requestanalysis.date_sampled indexer to bes.lims
 @indexer(IRequestAnalysis)
 def date_sampled(instance):
     """Returns the date when the sample the analysis belongs to was collected

@@ -25,6 +25,7 @@ from senaite.core.api import measure as mapi
 from zope.interface import implementer
 
 
+# TODO Port SampleVolumeValidator to bes.lims
 @implementer(IValidator)
 class SampleVolumeValidator(object):
     """Verifies the value for Volume field from Sample is valid

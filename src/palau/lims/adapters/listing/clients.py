@@ -26,6 +26,7 @@ from palau.lims import messageFactory as _
 from bika.lims import api
 
 
+# TODO Port ClientsListingAdapter to bes.lims
 @adapter(IListingView)
 @implementer(IListingViewAdapter)
 class ClientsListingAdapter(object):

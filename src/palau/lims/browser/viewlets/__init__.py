@@ -24,6 +24,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from senaite.core.api import measure as mapi
 
 
+# TODO Port UnknownDoctorViewlet to bes.lims
 class UnknownDoctorViewlet(ViewletBase):
     """Print a viewlet to display a message string that the Doctor assigned to
     the current Sample is Unknown
@@ -44,6 +45,7 @@ class UnknownDoctorViewlet(ViewletBase):
         return utils.is_unknown_doctor(contact)
 
 
+# TODO Port NotEnoughSampleViewlet to bes.lims
 class NotEnoughSampleViewlet(ViewletBase):
     """Print a viewlet to display a message string that the Volume assigned to
     the sample is not enough based on the minimum volume set in the assigned
@@ -69,6 +71,7 @@ class NotEnoughSampleViewlet(ViewletBase):
         return not utils.is_enough_volume(self.context)
 
 
+# TODO Port OverSampleViewlet to bes.lims
 class OverSampleViewlet(ViewletBase):
     """Print a viewlet to display a message string that the Volume assigned to
     the sample is over based on the maximum volume set in the assigned
@@ -106,6 +109,7 @@ class OverSampleViewlet(ViewletBase):
         return obj_volume > max_volume
 
 
+# TODO Port ErrorDateOfAdmissionViewlet to bes.lims
 class ErrorDateOfAdmissionViewlet(ViewletBase):
     """Print a viewlet to display an error message if the Date of Admission
     (date and time) is after the Sampled Date (date and time).

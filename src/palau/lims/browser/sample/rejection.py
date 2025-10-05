@@ -38,6 +38,7 @@ from slugify import slugify
 from weasyprint.compat import base64_encode
 
 
+# TODO Port RejectionView to bes.lims
 class RejectionView(BrowserView):
     """View of the Sample rejection report
     """
@@ -191,6 +192,7 @@ class RejectionView(BrowserView):
         return {}
 
 
+# TODO Port RejectionPdfView to bes.lims
 class RejectionPdfView(RejectionView):
     """Print view w/o outer contents of the Sample rejection report
     """

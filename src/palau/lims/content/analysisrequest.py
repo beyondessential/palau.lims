@@ -410,6 +410,7 @@ NEW_FIELDS = [
 ]
 
 
+# TODO Port AnalysisRequestSchemaExtender to bes.lims
 @implementer(IOrderableSchemaExtender, IBrowserLayerAwareExtender)
 class AnalysisRequestSchemaExtender(object):
     """Extends the Sample (aka AnalysisRequest) with additional fields
@@ -443,6 +444,7 @@ class AnalysisRequestSchemaExtender(object):
         return NEW_FIELDS
 
 
+# TODO Port AnalysisRequestSchemaExtender to bes.lims
 @implementer(ISchemaModifier, IBrowserLayerAwareExtender)
 class AnalysisRequestSchemaModifier(object):
     adapts(IAnalysisRequest)

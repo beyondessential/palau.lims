@@ -24,6 +24,7 @@ from palau.lims import utils
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 
+# TODO Port SampleView to bes.lims
 class SampleView(AnalysisRequestViewView):
     """Sample view that overrides core's default
     """

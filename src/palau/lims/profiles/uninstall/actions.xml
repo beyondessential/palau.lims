@@ -6,7 +6,9 @@
   <!-- Portal Tabs (Located in the upper right button) -->
   <object name="portal_tabs" meta_type="CMF Action Category">
 
-    <!-- WHONET export view -->
+    <!-- WHONET export view
+     TODO Port uninstall's action export_whonet to bes.lims
+     -->
     <object name="export_whonet"  remove="true" />
 
 	</object>

@@ -24,6 +24,7 @@ from palau.lims.config import UNKNOWN_DOCTOR_FULLNAME
 from Products.CMFCore.permissions import ModifyPortalContent
 
 
+# TODO Port client.ObjectCreatedEventHandler to bes.lims
 def ObjectCreatedEventHandler(client, event):
     """Actions done when a Client object is created.
     System automatically adds an "Unknown" Contact on creation
@@ -37,6 +38,7 @@ def ObjectCreatedEventHandler(client, event):
     create_unknown_doctor(client)
 
 
+# TODO Port client.create_unknown_doctor to bes.lims
 def create_unknown_doctor(client):
     """Creates an unknown doctor for the client passed-in
     """

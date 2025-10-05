@@ -23,6 +23,7 @@ from palau.lims.utils import is_unknown_doctor
 from Products.CMFCore.permissions import ModifyPortalContent
 
 
+# TODO Port contact.AfterTransitionEventHandler to bes.lims
 def AfterTransitionEventHandler(contact, event):  # noqa camelcase
     """Actions to be done when a transition for a contact takes place.
     If the contact is an Unknown doctor, ensures the contact cannot be modified

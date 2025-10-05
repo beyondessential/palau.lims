@@ -31,7 +31,7 @@ FIELDS = {
     }
 }
 
-
+# TODO Port SampleTemplateEditForm to bes.lims
 class SampleTemplateEditForm(EditFormAdapterBase):
     """Edit form adapter for Sample Template
     """
@@ -100,6 +100,7 @@ class SampleTemplateEditForm(EditFormAdapterBase):
         self.add_error_field(field_id, error_msg)
 
 
+# TODO Port ContainerEditForm to bes.lims
 class ContainerEditForm(EditFormAdapterBase):
     """Edit form adapter for Container
     """

@@ -26,6 +26,7 @@ from senaite.core.interfaces import IHideActionsMenu
 from zope.interface import implementer
 
 
+# TODO Port IWards to bes.lims
 class IWards(model.Schema):
     """Wards folder interface
     """
@@ -33,6 +34,7 @@ class IWards(model.Schema):
     pass
 
 
+# TODO Port Wards to bes.lims
 @implementer(IWards, IHideActionsMenu)
 class Wards(Container):
     """Wards folder

@@ -30,6 +30,7 @@ from zope.interface import implementer
 from zope.interface import provider
 
 
+# TODO Port IExtendedContainerTypeBehavior to bes.lims
 @provider(IFormFieldProvider)
 class IExtendedContainerTypeBehavior(model.Schema):
 
@@ -44,6 +45,7 @@ class IExtendedContainerTypeBehavior(model.Schema):
     )
 
 
+# TODO Port ExtendedContainerType to bes.lims
 @implementer(IExtendedContainerTypeBehavior)
 @adapter(IContainerType)
 class ExtendedContainerType(object):

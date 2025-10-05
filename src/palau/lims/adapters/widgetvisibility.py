@@ -22,6 +22,7 @@ from bika.lims import api
 from bika.lims.adapters.widgetvisibility import SenaiteATWidgetVisibility
 
 
+# TODO Port ContainerFieldVisibility to bes.lims
 class ContainerFieldVisibility(SenaiteATWidgetVisibility):
     """Handles Container field visibility in Sample add form and view
     """
@@ -42,6 +43,7 @@ class ContainerFieldVisibility(SenaiteATWidgetVisibility):
         return default
 
 
+# TODO Port BottlesFieldVisibility to bes.lims
 class BottlesFieldVisibility(SenaiteATWidgetVisibility):
     """Handles Bottles field visibility in Sample add form and view
     """
@@ -62,6 +64,7 @@ class BottlesFieldVisibility(SenaiteATWidgetVisibility):
         return default
 
 
+# TODO Port PrimaryAnalysisRequestFieldVisibility to bes.lims
 class PrimaryAnalysisRequestFieldVisibility(SenaiteATWidgetVisibility):
     """Handles the visibility in Sample add form and view
     """

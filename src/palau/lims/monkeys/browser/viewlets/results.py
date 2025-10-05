@@ -23,6 +23,7 @@ from palau.lims.utils import contains_ast_analyses
 from palau.lims.utils import contains_microorganism_identification_test
 
 
+# TODO Port results.available patch to 2.x
 def available(self):
     """Returns true if senaite.ast is installed
     """

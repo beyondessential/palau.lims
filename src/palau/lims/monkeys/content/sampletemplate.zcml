@@ -1,7 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:monkey="http://namespaces.plone.org/monkey"
-    i18n_domain="palau.lims">
+    xmlns:monkey="http://namespaces.plone.org/monkey">
 
   <monkey:patch
       class="senaite.core.content.sampletemplate.SampleTemplate"

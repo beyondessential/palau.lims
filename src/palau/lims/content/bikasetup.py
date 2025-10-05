@@ -33,6 +33,7 @@ DISABLED_FIELDS = (
 )
 
 
+# TODO Port BikaSetupSchemaModifier to bes.lims
 @adapter(IBikaSetup)
 @implementer(ISchemaModifier, IBrowserLayerAwareExtender)
 class BikaSetupSchemaModifier(object):

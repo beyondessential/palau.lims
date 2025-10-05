@@ -25,6 +25,7 @@ from palau.lims import messageFactory as _
 from zope.interface import implementer
 
 
+# TODO Port CreateSupplementaryAdapter to bes.lims
 @implementer(IWorkflowActionUIDsAdapter)
 class CreateSupplementaryAdapter(RequestContextAware):
     """Adapter that handles "create_supplementary" action. Redirects the user

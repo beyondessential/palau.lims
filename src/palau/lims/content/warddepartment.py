@@ -25,6 +25,7 @@ from senaite.core.catalog import SETUP_CATALOG
 from zope.interface import implementer
 
 
+# TODO Port IWardDepartment to bes.lims
 class IWardDepartment(model.Schema):
     """Ward Department content interface
     """
@@ -32,6 +33,7 @@ class IWardDepartment(model.Schema):
     pass
 
 
+# TODO Port WardDepartment to bes.lims
 @implementer(IWardDepartment)
 class WardDepartment(Container):
     """Ward Department content

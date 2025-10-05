@@ -22,6 +22,7 @@ from bika.lims import api
 from slugify import slugify
 
 
+# TODO Port get_report_filename to bes.lims
 def get_report_filename(self, report):
     """Generate the filename for the sample PDF
     sample ID_MRN_pt name_ward

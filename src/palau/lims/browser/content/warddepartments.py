@@ -27,6 +27,7 @@ from senaite.app.listing import ListingView
 from senaite.core.catalog import SETUP_CATALOG
 
 
+# TODO Port WardDepartmentsView to bes.lims
 class WardDepartmentsView(ListingView):
     """Ward Departments listing view
     """
