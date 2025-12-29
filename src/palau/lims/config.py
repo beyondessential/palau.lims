@@ -138,19 +138,19 @@ ID_FORMATTING = [
         "form": "{parent_ar_id}P{partition_count:01d}",
         "prefix": "analysisrequestpartition",
         "sequence_type": "",
-        "split-length": 2
+        "split_length": 2
     }, {
         "portal_type": "AnalysisRequestRetest",
         "form": "{parent_base_id}R{retest_count:01d}",
         "prefix": "analysisrequestretest",
         "sequence_type": "",
-        "split-length": 2
+        "split_length": 2
     }, {
         "portal_type": "AnalysisRequestSecondary",
         "form": "{parent_ar_id}S{secondary_count:01d}",
         "prefix": "analysisrequestsecondary",
         "sequence_type": "",
-        "split-length": 2
+        "split_length": 2
     }, {
         "portal_type": "Worksheet",
         "form": "WS{yymmdd}-{seq:02d}",
