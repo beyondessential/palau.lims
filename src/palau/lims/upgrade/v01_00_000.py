@@ -25,6 +25,7 @@ from bika.lims.api import security as sapi
 from bika.lims.interfaces import IVerified
 from palau.lims import logger
 from palau.lims import PRODUCT_NAME as product
+from palau.lims.config import ID_FORMATTING
 from palau.lims.config import PRIORITIES
 from bes.lims.tamanu.config import TAMANU_USER
 from palau.lims.setuphandlers import setup_behaviors
@@ -574,3 +575,51 @@ def disable_sampling_workflow(tool):
     setup.setSamplingWorkflowEnabled(False)
     setup.setScheduleSamplingEnabled(False)
     logger.info("Disable sampling workflow fields [DONE]")
+
+
+def fix_split_length(tool):
+    """Updates the ID Server's split_length parameter for the portal types
+    AnalysisRequestPartition, AnalysisRequestRetest, AnalysisRequestSecondary
+    """
+    logger.info("Fix ID Server's split length ...")
+    portal_types = [
+        "AnalysisRequestPartition",
+        "AnalysisRequestRetest",
+        "AnalysisRequestSecondary"
+    ]
+
+    # Group our formatting by portal_type
+    formatting = {}
+    for item in ID_FORMATTING:
+        portal_type = item.get("portal_type")
+        if portal_type not in portal_types:
+            continue
+        formatting[portal_type] = item
+
+    # Walk through setup's formatting and update
+    setup = api.get_setup()
+    new_formatting = []
+    for item in setup.getIDFormatting():
+        # do not update unless a formatting in config exists
+        portal_type = item.get("portal_type")
+        if portal_type not in formatting:
+            new_formatting.append(item)
+            continue
+
+        # do not update unless the split_length is not valid
+        split_length = item.get("split_length")
+        if api.to_int(split_length, default=-1) >= 0:
+            new_formatting.append(item)
+            continue
+
+        # do not update unless 'form' hasn't changed
+        new_item = formatting.get(portal_type)
+        if item.get("form") != new_item.get("form"):
+            new_formatting.append(item)
+            continue
+
+        # assign the formatting from configuration
+        new_formatting.append(new_item)
+
+    setup.setIDFormatting(new_formatting)
+    logger.info("Fix ID Server's split length [DONE]")

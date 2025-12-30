@@ -3,6 +3,18 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Fix ID's split length for partition, retest and secondary samples"
+      description="
+        Updates the ID server's split_length parameter for the portal types
+        AnalysisRequestPartition, AnalysisRequestRetest and
+        AnalysisRequestSecondary
+      "
+      source="1023"
+      destination="1024"
+      handler=".v01_00_000.fix_split_length"
+      profile="palau.lims:default"/>
+
+  <genericsetup:upgradeStep
       title="Disable sampling workflow fields from setup"
       description="Disable sampling workflow fields from setup"
       source="1022"
