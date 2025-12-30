@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #271 Fix missing value for split length in ID Server
 - #265 Compatibility with bes.lims#83 (Add Tamanu ID field)
 - #253 Add ASTM consumer for Cepheid's GeneXpert
 - #261 Remove getDepartmentTitle patch for Analysis
