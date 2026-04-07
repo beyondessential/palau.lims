@@ -482,10 +482,6 @@ msgstr ""
 msgid "This Sample has been invalidated due to erroneously published results"
 msgstr ""
 
-#: palau/lims/impress/reports/Default.pt:236
-msgid "This Sample has been replaced by"
-msgstr ""
-
 #: palau/lims/behaviors/patient.py:62
 #: palau/lims/browser/content/warddepartments.py:55
 #: palau/lims/browser/content/wards.py:54
