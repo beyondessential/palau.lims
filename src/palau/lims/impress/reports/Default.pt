@@ -131,6 +131,14 @@
      .report .section-resultsinterpretation, .report .section-signatures {
        font-size: 90%;
      }
+     .report .section-resultsinterpretation table {
+       border-collapse: collapse;
+       width: 100%;
+     }
+     .report .section-resultsinterpretation table td, .report .section-resultsinterpretation table th {
+       border: 1px solid #999;
+       padding: 0.2rem;
+     }
      .report .section-signatures {
        border-top:2px solid black;
        padding-top:10px;
