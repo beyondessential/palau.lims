@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - #282 Render results interpretation tables in final PDF
+- #281 Remove 'replaced by' line from invalid reports
 - #271 Fix missing value for split length in ID Server
 - #265 Compatibility with bes.lims#83 (Add Tamanu ID field)
 - #253 Add ASTM consumer for Cepheid's GeneXpert
