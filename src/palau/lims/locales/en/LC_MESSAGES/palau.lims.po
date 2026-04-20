@@ -348,7 +348,7 @@ msgid "Positive"
 msgstr ""
 
 #: palau/lims/impress/reports/Default.pt:263
-msgid "Preliminary report"
+msgid "Invalid report"
 msgstr ""
 
 #: palau/lims/content/analysisrequest.py:266
