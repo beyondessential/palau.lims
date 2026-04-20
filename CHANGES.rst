@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #283 Update report message from 'Preliminary report' to 'Invalid report'
 - #282 Render results interpretation tables in final PDF
 - #281 Remove 'replaced by' line from invalid reports
 - #271 Fix missing value for split length in ID Server
