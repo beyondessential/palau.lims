@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #283 Update preliminary report conditions for not invalidated and provisional samples
 - #282 Render results interpretation tables in final PDF
 - #281 Remove 'replaced by' line from invalid reports
 - #271 Fix missing value for split length in ID Server

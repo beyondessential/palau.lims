@@ -15,7 +15,8 @@
           content_width options/content_width|nothing;
           content_height options/content_height|nothing;
           primary model/PrimaryAnalysisRequest|nothing;
-          provisional python:view.is_provisional(model);">
+          provisional python:view.is_provisional(model);
+          invalidated model/is_invalid;">
 
   <!-- Documentation
   https://pagetemplates.readthedocs.io/en/latest/tal.html
@@ -237,11 +238,11 @@
       <div class="w-100 mb-2">
 
         <!-- Invalidated sample -->
-        <div class="alert alert-danger" tal:condition="model/is_invalid">
+        <div class="alert alert-danger" tal:condition="invalidated">
           <div i18n:translate="">This Sample has been invalidated due to erroneously published results</div>
 
         <!-- Secondary sample -->
-        <div class="alert alert-info" tal:condition="primary">
+        <div class="alert alert-info" tal:condition="">
           <div>
             <span i18n:translate="">Supplementary report for</span>
             <a tal:attributes="href primary/absolute_url"
@@ -260,7 +261,7 @@
         </tal:retestreport>
 
         <!-- Sample not yet verified or published -->
-        <div class="alert alert-info" tal:condition="provisional">
+        <div class="alert alert-info" tal:condition="python: provisional and not invalidated">
           <div i18n:translate="">Preliminary report</div>
         </div>
       </div>
