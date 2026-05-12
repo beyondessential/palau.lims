@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #284 Move BaseAnalysis ResultOptions schema override to bes.lims
 - #282 Render results interpretation tables in final PDF
 - #281 Remove 'replaced by' line from invalid reports
 - #271 Fix missing value for split length in ID Server
