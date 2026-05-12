@@ -26,12 +26,6 @@
       provides="archetypes.schemaextender.interfaces.ISchemaExtender"
       factory=".labcontact.LabContactSchemaExtender" />
 
-  <!-- Schema modifier for Service/Analysis-like types -->
-  <adapter
-      name="palau.lims.baseanalysis.schemamodifier"
-      provides="archetypes.schemaextender.interfaces.ISchemaModifier"
-      factory=".baseanalysis.BaseAnalysisSchemaModifier" />
-
   <!-- Schema extender for Analysis-like types -->
   <adapter
       name="palau.lims.analysis.schemaextender"
