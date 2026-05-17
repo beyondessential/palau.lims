@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #286 Add senaite.panic dependency
 - #283 Update preliminary report conditions for not invalidated and provisional samples
 - #282 Render results interpretation tables in final PDF
 - #281 Remove 'replaced by' line from invalid reports
