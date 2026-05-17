@@ -11,6 +11,7 @@
   <!-- Be sure to install the following dependencies if not yet installed -->
   <dependencies>
     <dependency>profile-bes.lims:default</dependency>
+    <dependency>profile-senaite.panic:default</dependency>
     <dependency>profile-senaite.storage:default</dependency>
   </dependencies>
 
