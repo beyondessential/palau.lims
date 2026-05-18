@@ -240,7 +240,7 @@
         <!-- Invalidated sample -->
         <div class="alert alert-danger" tal:condition="invalidated">
           <div i18n:translate="">This Sample has been invalidated due to erroneously published results</div>
-
+        </div>
         <!-- Secondary sample -->
         <div class="alert alert-info" tal:condition="">
           <div>

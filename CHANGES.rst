@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #288 Fix All reports being saved as one PDF
 - #286 Add senaite.panic dependency
 - #283 Update preliminary report conditions for not invalidated and provisional samples
 - #282 Render results interpretation tables in final PDF
