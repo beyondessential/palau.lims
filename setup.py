@@ -53,6 +53,7 @@ setup(
     zip_safe=False,
     install_requires=[
         "bes.lims>=1.0.0",
+        "senaite.panic>=2.1.0",
         "senaite.storage>=2.6.0",
     ],
     extras_require={

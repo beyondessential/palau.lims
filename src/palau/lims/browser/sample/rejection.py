@@ -21,6 +21,7 @@
 import copy
 from datetime import datetime
 
+from bes.lims.utils import get_laboratory
 from bika.lims import api
 from bika.lims.browser import BrowserView
 from bika.lims.utils import createPdf
@@ -65,7 +66,7 @@ class RejectionView(BrowserView):
     def laboratory(self):
         """Returns a supermodel of the LIMS's laboratory object
         """
-        laboratory = api.get_setup().laboratory
+        laboratory = get_laboratory()
         return SuperModel(laboratory)
 
     @property

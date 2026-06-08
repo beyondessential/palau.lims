@@ -5,6 +5,10 @@ Changelog
 ------------------
 
 - #284 Move BaseAnalysis ResultOptions schema override to bes.lims
+- #293 Compatibility with core#2810 (Laboratory to DX)
+- #288 Fix All reports being saved as one PDF
+- #286 Add senaite.panic dependency
+- #283 Update preliminary report conditions for not invalidated and provisional samples
 - #282 Render results interpretation tables in final PDF
 - #281 Remove 'replaced by' line from invalid reports
 - #271 Fix missing value for split length in ID Server
