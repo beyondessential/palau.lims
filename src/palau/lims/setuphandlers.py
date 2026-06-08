@@ -17,7 +17,7 @@
 #
 # Copyright 2023-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
-
+from bes.lims.utils import get_laboratory
 from bika.lims import api
 from bika.lims.browser.analysisrequest.add2 import AR_CONFIGURATION_STORAGE
 from BTrees.OOBTree import OOBTree
@@ -314,8 +314,7 @@ def setup_laboratory(portal):
     """Setup Laboratory
     """
     logger.info("Setup Laboratory ...")
-    setup = api.get_setup()
-    lab = setup.laboratory
+    lab = get_laboratory()
     api.edit(lab, check_permissions=False, **dict(LABORATORY_SETTINGS))
     logger.info("Setup Laboratory [DONE]")
 
