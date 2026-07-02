@@ -4,6 +4,7 @@ Changelog
 1.0.0 (Unreleased)
 ------------------
 
+- #298 Add GeneXpert keyword mappings for MTB/RIF and Carba-R assays
 - #284 Move BaseAnalysis ResultOptions schema override to bes.lims
 - #293 Compatibility with core#2810 (Laboratory to DX)
 - #288 Fix All reports being saved as one PDF
