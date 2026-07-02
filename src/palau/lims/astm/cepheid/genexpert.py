@@ -55,16 +55,20 @@ KEYWORDS_MAPPING = (
     # R|25|^XpertRES^^XpertRSV^Xpress SARS-CoV-2_Flu_RSV plus^1^RSV^|NEGATIVE^||
     ("XpertRSV", ["XpertRSV"]),
     ("RSV", ["XpertRSV"]),
+    # R|1|^XpertMTB^^MTB^Xpert MTB/RIF^1^MTB^|DETECTED^||
+    ("MTB", ["Xpert"]),
+    # R|8|^XpertMTB^^MTB^Xpert MTB/RIF^1^Resistance^|DETECTED^||
+    ("Resistance", ["RIF"]),
     # R|1|^X-Carba^^IMP^Xpert_Carba-R^1^IMP^|NOT DETECTED^||
-    ("IMP", []),
+    ("IMP", ["X-Carba"]),
     # R|8|^X-Carba^^VIM^Xpert_Carba-R^1^VIM^|NOT DETECTED^||
-    ("VIM", []),
+    ("VIM", ["X-Carba"]),
     # R|15|^X-Carba^^NDM^Xpert_Carba-R^1^NDM^|NOT DETECTED^||
-    ("NDM", []),
+    ("NDM", ["X-Carba"]),
     # R|22|^X-Carba^^KPC^Xpert_Carba-R^1^KPC^|NOT DETECTED^||
-    ("KPC", []),
+    ("KPC", ["X-Carba"]),
     # R|29|^X-Carba^^OXA48^Xpert_Carba-R^1^OXA48^|NOT DETECTED^||
-    ("OXA48", []),
+    ("OXA48", ["X-Carba"]),
 )
 
 
