@@ -201,8 +201,6 @@ class ASTMBaseImporter(Base):
             # skip no capture date found
             return False
 
-        units = self.get_test_units(record)
-
         sample_id = api.get_id(self.sample)
 
         # try to resolve the keyword counterpart
@@ -225,6 +223,9 @@ class ASTMBaseImporter(Base):
         if api.is_floatable(value):
             value = api.to_float(value)
             result_type = "numeric"
+
+        # only set units for numeric results
+        units = self.get_test_units(record) if result_type == "numeric" else ""
 
         # purge analysis
         # TODO Allow to configure this in a fieldset in Instrument
