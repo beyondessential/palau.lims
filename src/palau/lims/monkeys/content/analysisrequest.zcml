@@ -53,18 +53,6 @@
 
   <monkey:patch
       class="bika.lims.content.analysisrequest.AnalysisRequest"
-      original="getSite"
-      ignoreOriginal="True"
-      replacement=".analysisrequest.getSite" />
-
-  <monkey:patch
-      class="bika.lims.content.analysisrequest.AnalysisRequest"
-      original="setSite"
-      ignoreOriginal="True"
-      replacement=".analysisrequest.setSite" />
-
-  <monkey:patch
-      class="bika.lims.content.analysisrequest.AnalysisRequest"
       original="setResultsInterpretationDepts"
       replacement=".analysisrequest.setResultsInterpretationDepts"/>
 

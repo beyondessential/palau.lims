@@ -57,18 +57,6 @@ def setWardDepartment(self, value):
     self.getField("WardDepartment").set(self, value)
 
 
-def getSite(self):
-    """Returns the Site assigned to the sample, if any
-    """
-    return self.getField("Site").get(self)
-
-
-def setSite(self, value):
-    """Assigns the site to the sample
-    """
-    self.getField("Site").set(self, value)
-
-
 def getClinicalInformation(self):
     """Returns the clinical information from the sample
     """
