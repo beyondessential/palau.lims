@@ -28,7 +28,6 @@ from bes.lims.extender.field import ExtStringField
 from bes.lims.extender.field import ExtTextField
 from bes.lims.extender.field import ExtUIDReferenceField
 from bika.lims import api
-from bika.lims import senaiteMessageFactory as _sc
 from bika.lims.browser.widgets import DateTimeWidget
 from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.interfaces import IAnalysisRequest
@@ -38,7 +37,6 @@ from palau.lims.config import PRIORITIES
 from palau.lims.config import SAMPLE_FIELDS_ORDER
 from palau.lims.content import disable_field
 from palau.lims.content import update_field
-from palau.lims.content.fields import ExtSiteField
 from palau.lims.interfaces import IPalauLimsLayer
 from palau.lims.permissions import FieldEditBottles
 from palau.lims.permissions import FieldEditClinicalInformation
@@ -52,10 +50,8 @@ from palau.lims.validators import SampleVolumeValidator
 from Products.Archetypes.Widget import StringWidget
 from Products.Archetypes.Widget import TextAreaWidget
 from Products.CMFCore.permissions import View
-from senaite.core.browser.widgets import QuerySelectWidget
 from senaite.core.browser.widgets import ReferenceWidget
 from senaite.core.catalog import SETUP_CATALOG
-from senaite.core.permissions import FieldEditSamplePoint
 from zope.component import adapts
 from zope.interface import implementer
 
@@ -362,51 +358,6 @@ NEW_FIELDS = [
             }
         ),
     ),
-
-    ExtSiteField(
-        "Site",
-        mode="rw",
-        read_permission=View,
-        write_permission=FieldEditSamplePoint,
-        widget=QuerySelectWidget(
-            label=_sc(
-                "label_sample_site",
-                default="Site"),
-            description=_sc(
-                "description_sample_site",
-                default="Location where the sample was taken"),
-            render_own_label=True,
-            catalog=SETUP_CATALOG,
-            search_index="Title",
-            value_key="uid",
-            search_wildcard=True,
-            multi_valued=False,
-            allow_user_value=True,
-            i18n_domain="palau.lims",
-            visible={
-                "add": "edit",
-                "secondary": "disabled",
-            },
-            query={
-                "portal_type": "SamplePoint",
-                "is_active": True,
-                "sort_on": "sortable_title",
-                "sort_order": "ascending"
-            },
-            columns=[
-                {
-                    "name": "Title",
-                    "align": "left",
-                    "label": _(u"Title"),
-                }, {
-                    "name": "Description",
-                    "align": "left",
-                    "label": _(u"Description"),
-                },
-            ],
-        )
-    ),
-
 ]
 
 
